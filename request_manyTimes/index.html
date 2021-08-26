@@ -1,0 +1,83 @@
+﻿
+<html>
+	<head>
+		<script language="javascript" src="../js/jq/jquery-1.8.0.min.js"></script>
+		<script language="javascript">
+				var stop=false,count=0,handle;
+				$(document).ready(function(){
+					var me=this;
+					//var stop=false,count=0;
+					var url=document.getElementById('text').value;
+					var urls=[
+						//'http://kg.qq.com/share.html?s=XP0QlG4QvZkN',
+						//'http://kg.qq.com/share.html?s=SygCmwB251Jd'
+					],i=0;
+					var showText=document.getElementById('showText');
+					var iframe=$("#targetUrl");
+					iframe.attr('src',url);
+					var dis="block";
+					function pp(){
+						if(i<urls.length){
+							iframe.attr('src',urls[i]);
+							i++;
+						}else{
+							iframe.attr('src',url);
+							i=0;
+						}
+							//var url=document.getElementById('text').value;
+							//iframe.attr('src',url);
+							//for(var i in urls){
+							//for(var i=0;i<urls.length;i++){
+							//		console.info(urls[i])
+									iframe.attr('src',urls[i]);
+							//}
+							//count+=1;
+							//showText.innerHTML=count;
+					}
+					function setBgColor(dom,down){
+						down=down||false;
+						dom.style.backgroundColor=down?"red":"#eeeeee";
+					}
+					$("#btnRunStop").click(
+						function () {
+							stop=!stop;
+							if(stop){
+								setBgColor(this,!stop);
+								$(this).val('start');
+								clearInterval(handle);
+							}else{
+								$(this).val('stop','stop');
+								setBgColor(this,!stop);
+								url=document.getElementById('text').value;
+								handle=setInterval(pp,1000);
+
+							}
+						}
+					);
+
+					$("#btnRunHide").click(
+						function () {
+							var frame=document.getElementById('targetUrl');
+							if(dis=="block"){
+								setBgColor(this,true);
+								frame.style.display=dis="none";
+							}else{		
+								setBgColor(this);						
+								frame.style.display=dis="block";
+							}
+							
+						}
+					);
+					handle=setInterval(pp,1000);
+				});
+		</script>
+	</head>
+	<body>
+		<input type="text" id="text" value="http://kg.qq.com/share.html?s=OVdf9OlMZtgd"/>
+		<input type="button" style="background-color:red;" id="btnRunStop" value="stop"/>
+		<input type="button" id="btnRunHide" value="hide"/>
+		<br/>
+		<iframe style="width:1000px;height:500px;" id="targetUrl" name="targetUrl" src=""/>
+		<p id="showText"></p>
+	</body>
+</html>

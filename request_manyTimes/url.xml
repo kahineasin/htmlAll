@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<books>
+<book title="标题一" image="images/1.jpg">
+<description>描述一</description>
+</book>
+<book title="标题二" image="images/2.jpg">
+<description>描述二</description>
+</book>
+<book title="标题三" image="images/3.jpg">
+<description>描述三</description>
+</book>
+<demo 自定义属性="这里可以自定义值" image="demo/1.jpg">
+<description>demo</description>
+<custom id="customId">自定义显示内容</custom>
+</demo>
+</books>

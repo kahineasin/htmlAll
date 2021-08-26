@@ -1,0 +1,720 @@
+<html>
+    <head>
+        <title></title>
+		<script language="javascript" src="../js/jq/jquery-1.8.0.min.js"></script>
+    </head>
+    <body>
+        <form id="inputForm" action="base!save.action" enctype="multipart/form-data" method="post">
+<input name="id" id="studentId" type="hidden" value="ff8080815e55cbdc015e567cb6737b84">
+<input name="operType" id="operType" type="hidden" value="">
+<div class="tblWrap">	
+	<table width="100%" class="eduFormTbl" border="0" cellspacing="0" cellpadding="0">
+	  <tbody><tr style="display: none;">
+	  	  <td align="center" class="eduFormTbl_title" colspan="6">
+
+
+ 
+
+
+
+
+
+<span id="spanTitle" style="color: red;"></span>
+<script type="text/javascript">
+    var opTilte = $('#spanTitle').text();
+    if (opTilte && opTilte != "")
+        $('#spanTitle').parent().parent().show();
+    else
+        $('#spanTitle').parent().parent().hide();
+</script></td>
+	  </tr>
+	  <tr>
+	      <td colspan="6">
+	          <span style="color: blue; font-size: 14px; font-weight: bold;">温馨提示：
+	          <br>1.学籍号构成：由户籍类型（1位字母）+入学年份（4位）+流水号（6位）。
+	          <br>2.接受生均定额补助的幼儿必须填写明确的户口镇区，否则生均定额补助名册及相关统计表中将不纳入该生。
+	          </span>
+	      </td>
+	  </tr>
+	  <tr>
+	  	<th style="width: 150px; height: 30px;">年级、班级<font color="red">*</font></th>
+	  	<td colspan="5">
+	  		
+
+
+
+ 
+
+
+
+
+
+<script type="text/javascript">
+<!--
+
+    var firstVal = "<option value=''>请选择</option>";
+    var gradeId = '40283cb7314a867401314a8918430004';
+    $(function () {
+        $("#checkedSchoolId").change(function () {
+            fillGrade($('#checkedGradeId').val(), $('#checkedSchoolId').val());
+        });
+        fillGrade(gradeId, $('#checkedSchoolId').val());
+    });
+    function switchschool(deptId, schoolId, type) {
+        deptId = $('#checkedDeptId').val();
+        var schoolType = $("#schoolType").val();
+        if ("" == deptId) {
+            $('#checkedSchoolId').html(firstVal);
+            if ("pageLoad" != type) {
+                $('#checkedClassId').html(firstVal);
+            }
+            return;
+        }
+        $.post("http://xqjy.zsedu.net/auto-complete!getSchool.action", { deptId: deptId, isGroup: null, state: '', schoolType: schoolType },
+            function (data) {
+                var str = firstVal;
+                $(data).each(function (i) {
+                    str += "<option value='" + data[i].id + "'>" + data[i].name + "</option>";
+                });
+                $('#checkedSchoolId').html(str);
+                if (schoolId > "") {
+                    setTimeout(function () {
+                        $('#checkedSchoolId').val(schoolId);
+                        fillGrade(gradeId, schoolId);
+                    }, 1);
+                }
+
+                if ("pageLoad" != type) {
+                    $('#checkedClassId').html(firstVal);
+                } else {
+                    fillGrade(gradeId, schoolId);
+                    switchClassByGradeAndSchool(true);
+                }
+            }, "json");
+    }
+
+    function fillGrade(gradeId, deptId) {
+        $.post("/auto-complete!getGrade.action", { deptId: deptId },
+            function (data) {
+                var str = firstVal;
+                $(data).each(function (i) {
+                    str += "<option value='" + data[i].id + "'>" + data[i].gradeName + "</option>";
+                });
+                $('#checkedGradeId').html(str);
+                if (gradeId > "") {
+                    setTimeout(function () {
+                        $('#checkedGradeId').val(gradeId);
+                    }, 1);
+                }
+
+            }, "json");
+    }
+
+    function switchClassByGradeAndSchool(isInit) {
+        if (gradeIdVal == '') {
+            $('#checkedClassId').html(firstVal);
+            return;
+        }
+        var targetElClassId = "";
+
+        var gradeIdVal = isInit ? gradeId : $('#checkedGradeId').val();
+        var schoolIdVal = $('#checkedSchoolId').val();
+        if (schoolIdVal == "")
+            schoolIdVal = '100cf0mq9srigx0f1usa7l114';
+
+        var classIdVal = '000000005dcb3890015e23e256544808';
+        if (gradeIdVal != "" || schoolIdVal != "")
+            getClass(schoolIdVal, gradeIdVal, classIdVal, classHTML, "spanClassId", firstVal, 'checkedClassId', targetElClassId, 'null', 'null', 'null');
+    }
+    var classHTML = "";
+    //-->
+</script>
+
+	
+	<input name="param.deptId" id="checkedDeptId" type="hidden" value="100cf0mq9srigx0f1usa7luok">
+	
+	
+	<input name="param.schoolId" id="checkedSchoolId" type="hidden" value="100cf0mq9srigx0f1usa7l114">   
+ 
+	
+
+	<select name="param.gradeId" id="checkedGradeId" style="width: 80px;" onchange="switchClassByGradeAndSchool()"><option value="">请选择</option><option value="40283cb7314a867401314a88f31c0002">小小班</option><option value="40283cb7314a867401314a8918430004">小班</option><option value="40283cb7314a867401314a8934be0007">中班</option><option value="40283cb7314a867401314a896af00009">大班</option></select>
+<script type="text/javascript">
+    fillGrade(gradeId, $('#checkedSchoolId').val());
+</script>
+
+
+	<span id="spanClassId">
+	<select name="param.classId" id="checkedClassId" style="width: 100px;"><option value="">请选择</option><option value="000000005dcb3890015e23e256544809">小一班</option><option value="000000005dcb3890015e23e256544808">小二班</option></select>
+	</span>
+<script type="text/javascript">
+    classHTML = $("#spanClassId").html();
+    switchClassByGradeAndSchool(true);
+
+</script>
+
+
+
+
+	  	</td>
+	  </tr>
+	  <tr>
+	  	<th style="height: 30px;">学籍号</th>
+	  	<td>
+
+
+	  		
+
+	  	</td>
+	  	<th style="width: 150px;">学号</th>
+		<td colspan="3"><input name="fieldMap.studentNo" class="{maxlength:10,messages:{maxlength:'最多10个字符'}}" type="text" size="15" value="" theme="simple"></td>
+	  </tr>
+	  <tr>
+	  	<th style="height: 30px;">证件类型</th>
+		<td>
+			<select name="idCardType" class="{required:true}" id="idCardType">
+    <option value="">请选择</option>
+    <option selected="selected" value="1">中国大陆身份证</option>
+    <option value="2">护照</option>
+    <option value="3">港澳台身份证</option>
+    <option value="4">国外身份证</option>
+    <option value="5">其他</option>
+    <option value="6">无证件</option>
+
+
+</select>
+
+
+		</td>
+	  	<th>证件号码</th>
+		<td>
+		
+			<input name="idCard" id="idCard" type="text" value="440229201403315629">
+		
+		
+		
+		
+		</td>
+		<td nowrap="nowrap" colspan="2">上传照片：<input name="upload" id="upload" onchange="checkphoto(this)" type="file" value=""></td>
+	  </tr>
+	  <tr>
+	  	<th style="height: 30px;">姓名<font color="red">*</font></th>
+		<td>
+
+			<input name="name" class="{required:true,maxlength:50,messages:{maxlength:'50字内'}}" id="name" type="text" size="15" value="刘洣伊">
+
+
+		</td>
+		<th>性别<font color="red">*</font></th>
+		<td>
+		
+			<input name="genderId" class="{required:true}" id="genderId1" type="radio" value="1"><label class="{required:true}" for="genderId1">男</label>
+<input name="genderId" class="{required:true}" id="genderId0" type="radio" checked="checked" value="0"><label class="{required:true}" for="genderId0">女</label>
+
+		
+		
+		</td>
+		<td rowspan="6" colspan="2">
+			<div id="preview" style="width: 120px; height: 150px; display: none;"></div>
+			<p id="image"></p>
+			
+			&nbsp;
+		</td>
+	  </tr>
+	  <tr>
+		<th style="height: 30px;">出生日期<font color="red">*</font></th>
+		<td>
+		
+			
+  				
+  			<input name="birthday" class="Wdate required" id="birthday" onclick="WdatePicker()" type="text" size="15" value="2014-03-31">
+		
+		
+		</td>
+		<th>出生地<font color="red">*</font></th>
+		<td>
+		
+			<input name="birthPlace" class="{required:true}" id="birthPlace" type="text" size="15" value="湖北省公安县">
+		
+		
+		</td>
+	  </tr>
+	  <tr>
+	  	<th style="height: 30px;">入学日期<font color="red">*</font></th>
+		<td>
+
+			
+  				
+  			<input name="entryTime" class="Wdate required" id="entryTime" onclick="WdatePicker()" type="text" size="15" value="2017-09-01">
+
+		
+		</td>
+	  	<th>入本园日期</th>
+		<td>
+  		
+			
+  				
+  			<input name="entryKindergartenDate" class="Wdate" id="entryKindergartenDate" onclick="WdatePicker()" type="text" size="15" value="2017-09-01">
+		
+		
+		</td>
+	  </tr>
+	  <tr>
+	  	<th style="height: 30px;">民族</th>
+		<td>
+		
+			<select name="nationId" id="nationId">
+    <option selected="selected" value="100bykuq7yoy3l4euk3up8l9j">汉族</option>
+    <option value="100bykuq7yoy3l4euk3up8nq9">蒙古族</option>
+    <option value="100bykuq7yoy3l4euk3up8q6z">回族</option>
+    <option value="100bykuq7yoy3l4euk3up8snp">藏族</option>
+    <option value="100bykuq7yoy3l4euk3up8v4f">维吾尔族</option>
+    <option value="100bykuq7yoy3l4euk3up8xl5">苗族</option>
+    <option value="100bykuq7yoy3l4euk3up901v">彝族</option>
+    <option value="100bykuq7yoy3l4euk3up92il">壮族</option>
+    <option value="100bykuq7yoy3l4euk3up94zb">布依族</option>
+    <option value="100bykuq7yoy3l4euk3up97g1">朝鲜族</option>
+    <option value="100bykuq7yoy3l4euk3up99wr">满族</option>
+    <option value="100bykuq7yoy3l4euk3up9cdh">侗族</option>
+    <option value="100bykuq7yoy3l4euk3up9eu7">瑶族</option>
+    <option value="100bykuq7yoy3l4euk3up9hax">白族</option>
+    <option value="100bykuq7yoy3l4euk3up9jrn">土家族</option>
+    <option value="100bykuq7yoy3l4euk3up9m8d">哈尼族</option>
+    <option value="100bykuq7yoy3l4euk3vsvf48">哈萨克族</option>
+    <option value="100bykuq7yoy3l4euk3vsvhky">傣族</option>
+    <option value="100bykuq7yoy3l4euk3vsvk1o">黎族</option>
+    <option value="100bykuq7yoy3l4euk3vsvmie">傈僳族</option>
+    <option value="100bykuq7yoy3l4euk3vsvoz4">佤族</option>
+    <option value="100bykuq7yoy3l4euk3vsvrfu">畲族</option>
+    <option value="100bykuq7yoy3l4euk3vsvtwk">高山族</option>
+    <option value="100bykuq7yoy3l4euk3vsvwda">拉祜族</option>
+    <option value="100bykuq7yoy3l4euk3vsvyu0">水族</option>
+    <option value="100bykuq7yoy3l4euk3vsw1aq">东乡族</option>
+    <option value="100bykuq7yoy3l4euk3vsw3rg">纳西族</option>
+    <option value="100bykuq7yoy3l4euk3vsw686">景颇族</option>
+    <option value="100bykuq7yoy3l4euk3vsw8ow">柯尔克孜族</option>
+    <option value="100bykuq7yoy3l4euk3vswb5m">土族</option>
+    <option value="100bykuq7yoy3l4euk3vswdmc">达斡尔族</option>
+    <option value="100bykuq7yoy3l4euk3vswg32">仫佬族</option>
+    <option value="100bykuq7yoy3l4euk3vswijs">羌族</option>
+    <option value="100bykuq7yoy3l4euk3vswl0i">布朗族</option>
+    <option value="100bykuq7yoy3l4euk3vswnh8">撒拉族</option>
+    <option value="100bykuq7yoy3l4euk3vswpxy">毛南族</option>
+    <option value="100bykuq7yoy3l4euk3vswseo">仡佬族</option>
+    <option value="100bykuq7yoy3l4euk3wwh6q3">锡伯族</option>
+    <option value="100bykuq7yoy3l4euk3wwh96t">阿昌族</option>
+    <option value="100bykuq7yoy3l4euk3wwhbnj">普米族</option>
+    <option value="100bykuq7yoy3l4euk3wwhe49">塔吉克族</option>
+    <option value="100bykuq7yoy3l4euk3wwhgkz">怒族</option>
+    <option value="100bykuq7yoy3l4euk3wwhj1p">乌孜别克族</option>
+    <option value="100bykuq7yoy3l4euk3wwhlif">俄罗斯族</option>
+    <option value="100bykuq7yoy3l4euk3wwhnz5">鄂温克族</option>
+    <option value="100bykuq7yoy3l4euk3wwhqfv">德昂族</option>
+    <option value="100bykuq7yoy3l4euk3wwhswl">保安族</option>
+    <option value="100bykuq7yoy3l4euk3wwhvdb">裕固族</option>
+    <option value="100bykuq7yoy3l4euk3wwhxu1">京族</option>
+    <option value="100bykuq7yoy3l4euk3wwi0ar">塔塔尔族</option>
+    <option value="100bykuq7yoy3l4euk3wwi2rh">独龙族</option>
+    <option value="100bykuq7yoy3l4euk3wwi587">鄂伦春族</option>
+    <option value="100bykuq7yoy3l4euk3wwi7ox">赫哲族</option>
+    <option value="100bykuq7yoy3l4euk3wwia5n">门巴族</option>
+    <option value="100bykuq7yoy3l4euk3wwicmd">珞巴族</option>
+    <option value="100bykuq7yoy3l4euk3wwif33">基诺族</option>
+    <option value="100bykuq7yoy3l4euk3vswpxz">穿青人族</option>
+    <option value="100bykuq7yoy3l4euk3wwihjt">其他</option>
+    <option value="100bykuq7yoy3l4euk3y04afo">外国血统中国籍人士</option>
+
+
+</select>
+
+
+		
+		
+		</td>
+	    <th style="height: 30px;">户口性质</th>
+	  	<td>
+	  	
+			<select name="accountNature" id="accountNature">
+    
+    
+    
+    
+
+
+<option value="1">非农村</option><option value="2">农村</option><option value="3">无户口</option></select>
+
+
+		
+		
+	  	</td>
+	  </tr>
+	  <tr>
+	  	<th style="height: 30px;">户口所在地<font color="red">*</font></th>
+	  	<td colspan="3">
+			<select name="param.hksheng" class="noDisplay" id="hksheng" onchange="resetMenu()"><option value="-1">请选择</option><option value="110000000">北京市</option><option value="120000000">天津市</option><option value="130000000">河北省</option><option value="140000000">山西省</option><option value="150000000">内蒙古自治区</option><option value="210000000">辽宁省</option><option value="220000000">吉林省</option><option value="230000000">黑龙江省</option><option value="310000000">上海市</option><option value="320000000">江苏省</option><option value="330000000">浙江省</option><option value="340000000">安徽省</option><option value="350000000">福建省</option><option value="360000000">江西省</option><option value="370000000">山东省</option><option value="410000000">河南省</option><option value="420000000">湖北省</option><option value="430000000">湖南省</option><option value="440000000">广东省</option><option value="450000000">广西壮族自治区</option><option value="460000000">海南省</option><option value="500000000">重庆市</option><option value="510000000">四川省</option><option value="520000000">贵州省</option><option value="530000000">云南省</option><option value="540000000">西藏自治区</option><option value="610000000">陕西省</option><option value="620000000">甘肃省</option><option value="630000000">青海省</option><option value="640000000">宁夏回族自治区</option><option value="650000000">新疆维吾尔自治区</option><option value="710000000">台湾省</option><option value="810000000">香港特别行政区</option><option value="820000000">澳门特别行政区</option><option value="000000000">未申报户口</option><option value="999999999">外国</option></select> 
+	  		<select name="param.hkshi" class="noDisplay" id="hkshi" style="visibility: visible;" onchange="resetMenu()"><option value="-1">请选择</option><option value="440100000">广州市</option><option value="440200000">韶关市</option><option value="440300000">深圳市</option><option value="440400000">珠海市</option><option value="440500000">汕头市</option><option value="440600000">佛山市</option><option value="440700000">江门市</option><option value="440800000">湛江市</option><option value="440900000">茂名市</option><option value="441200000">肇庆市</option><option value="441300000">惠州市</option><option value="441400000">梅州市</option><option value="441500000">汕尾市</option><option value="441600000">河源市</option><option value="441700000">阳江市</option><option value="441800000">清远市</option><option value="441900000">东莞市</option><option value="442000000">中山市</option><option value="445100000">潮州市</option><option value="445200000">揭阳市</option><option value="445300000">云浮市</option></select> 
+	  		<select name="param.hkxian" class="noDisplay" id="hkxian" style="visibility: visible;"><option value="-1">请选择</option><option value="442000001">石岐区</option><option value="442000002">东区</option><option value="442000003">火炬开发区</option><option value="442000004">西区</option><option value="442000005">南区</option><option value="442000100">小榄镇</option><option value="442000101">黄圃镇</option><option value="442000102">民众镇</option><option value="442000103">东凤镇</option><option value="442000104">东升镇</option><option value="442000105">古镇</option><option value="442000106">沙溪镇</option><option value="442000107">坦洲镇</option><option value="442000108">港口镇</option><option value="442000109">三角镇</option><option value="442000110">横栏镇</option><option value="442000111">南头镇</option><option value="442000112">阜沙镇</option><option value="442000113">南朗镇</option><option value="442000114">三乡镇</option><option value="442000115">板芙镇</option><option value="442000116">大涌镇</option><option value="442000117">神湾镇</option><option value="442000118">五桂山镇</option><option value="442000999">无镇区</option></select>
+		</td>
+	  </tr>
+	  <tr>
+	  	<th style="height: 30px;">户口信息补充</th>
+	  	<td colspan="3">
+	  		<div id="accountAddress" style="float: left;">广东省中山市南区</div>
+	  		<div style="float: left;">
+	  			
+					<input name="accountPlaceInfo" class="{maxlength:50,messages:{maxlength:'50字内'}}" id="accountPlaceInfo" type="text" size="40" value="兴南路25号星汇云锦花园天英星苑20栋1003房">
+				
+				（填写街道门牌等信息）
+	  		</div>
+	  	</td>
+	  </tr>
+	  <tr>
+		<th style="height: 30px;">户籍类型</th>
+	  	<td>
+	  	
+			<select name="householdType" id="householdType">
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+<option value="1">本市</option></select>
+
+
+		
+		
+	  	</td>
+	  	<th>籍贯</th>
+	  	<td colspan="3">
+			<select name="param.jgsheng" class="noDisplay" id="jgsheng" {disable_sel}=""><option value="-1">请选择</option><option value="110000000">北京市</option><option value="120000000">天津市</option><option value="130000000">河北省</option><option value="140000000">山西省</option><option value="150000000">内蒙古自治区</option><option value="210000000">辽宁省</option><option value="220000000">吉林省</option><option value="230000000">黑龙江省</option><option value="310000000">上海市</option><option value="320000000">江苏省</option><option value="330000000">浙江省</option><option value="340000000">安徽省</option><option value="350000000">福建省</option><option value="360000000">江西省</option><option value="370000000">山东省</option><option value="410000000">河南省</option><option value="420000000">湖北省</option><option value="430000000">湖南省</option><option value="440000000">广东省</option><option value="450000000">广西壮族自治区</option><option value="460000000">海南省</option><option value="500000000">重庆市</option><option value="510000000">四川省</option><option value="520000000">贵州省</option><option value="530000000">云南省</option><option value="540000000">西藏自治区</option><option value="610000000">陕西省</option><option value="620000000">甘肃省</option><option value="630000000">青海省</option><option value="640000000">宁夏回族自治区</option><option value="650000000">新疆维吾尔自治区</option><option value="710000000">台湾省</option><option value="810000000">香港特别行政区</option><option value="820000000">澳门特别行政区</option><option value="000000000">未申报户口</option><option value="999999999">外国</option></select> 
+  			<select name="param.jgshi" class="noDisplay" id="jgshi" style="visibility: visible;" {disable_sel}=""><option value="-1">请选择</option><option value="440100000">广州市</option><option value="440200000">韶关市</option><option value="440300000">深圳市</option><option value="440400000">珠海市</option><option value="440500000">汕头市</option><option value="440600000">佛山市</option><option value="440700000">江门市</option><option value="440800000">湛江市</option><option value="440900000">茂名市</option><option value="441200000">肇庆市</option><option value="441300000">惠州市</option><option value="441400000">梅州市</option><option value="441500000">汕尾市</option><option value="441600000">河源市</option><option value="441700000">阳江市</option><option value="441800000">清远市</option><option value="441900000">东莞市</option><option value="442000000">中山市</option><option value="445100000">潮州市</option><option value="445200000">揭阳市</option><option value="445300000">云浮市</option></select> 
+  			<select name="param.jgxian" class="noDisplay" id="jgxian" style="visibility: hidden;" {disable_sel}=""></select>
+	  	</td>
+	  </tr>
+	  <tr>
+	  	<th style="height: 30px;">家庭电话</th>
+	  	<td>
+	  	
+			<input name="familyTel" class="{isPhone:true,maxlength:16,messages:{isPhone:'错误',maxlength:'错误'}}" id="familyTel" type="text" size="15" value="">
+		
+		
+	  	</td>
+	  	<th>家庭住址<font color="red">*</font></th>
+	  	<td colspan="3">
+	  	
+	  		<input name="familyAddress" class="{required:true,maxlength:100,messages:{maxlength:'100字内'}}" id="familyAddress" type="text" size="50" value="兴南路25号星汇云锦花园天英星苑20栋1003房">
+		
+		
+	  	</td>
+	  </tr>
+	  <tr>
+	  	<th style="height: 30px;">是否独生子女<font color="red">*</font></th>
+	  	<td>
+	  	
+			<select name="isOnlyChild" class="{required:true}" id="isOnlyChild">
+    <option value="">请选择</option>
+    <option selected="selected" value="1">是</option>
+    <option value="2">否</option>
+
+
+</select>
+
+
+		
+		
+	  	</td>
+	  	<th>是否寄宿生<font color="red">*</font></th>
+	  	<td colspan="3">
+	  	
+			<select name="isLiveSchoolChild" class="{required:true}" id="isLiveSchoolChild">
+    <option value="">请选择</option>
+    <option value="1">是</option>
+    <option selected="selected" value="2">否</option>
+
+
+</select>
+
+
+		
+		
+	  	</td>
+	  </tr>
+	  <tr>
+	  	<th nowrap="nowrap">是否进城务工<br>人员随迁子女<font color="red">*</font></th>
+	  	<td>
+	  	
+			<select name="isParentFollowChild" class="{required:true}" id="isParentFollowChild">
+    <option value="">请选择</option>
+    <option selected="selected" value="1">是</option>
+    <option value="2">否</option>
+
+
+</select>
+
+
+		
+		
+	  	</td>
+	  	<th>是否留守儿童<font color="red">*</font></th>
+	  	<td colspan="3">
+	  	
+			<select name="isLeftChild" class="{required:true}" id="isLeftChild">
+    <option value="">请选择</option>
+    <option value="1">是</option>
+    <option selected="selected" value="2">否</option>
+
+
+</select>
+
+
+		
+		
+	  	</td>
+	  </tr>
+	  <tr><td style="height: 40px; color: red;" colspan="6">以下为低保、孤儿和残疾儿信息填写：</td></tr>
+	  <tr>
+	  	<th style="height: 30px;">是否低保</th>
+	  	<td>
+	  	
+			<select name="isGovermentHelp" id="isGovermentHelp">
+    <option value="">请选择</option>
+    <option value="1">是</option>
+    <option value="2">否</option>
+
+
+</select>
+
+
+		
+		
+	  	</td>
+	  	<th nowrap="nowrap">低保、低收入证号</th>
+	  	<td colspan="3">
+	  	
+			<input name="govermentHelpNo" id="govermentHelpNo" type="text" value="">
+		
+		
+	  	</td>
+	  </tr>
+	   <tr>
+	  	<th style="height: 30px;">是否孤儿</th>
+	  	<td>
+	  	
+			<select name="isOrphanChild" id="isOrphanChild">
+    <option value="">请选择</option>
+    <option value="1">是</option>
+    <option value="2">否</option>
+
+
+</select>
+
+
+		
+		
+	  	</td>
+	  	<th>儿童福利证号</th>
+	  	<td colspan="3">
+	  	
+			<input name="childWelfareNo" id="childWelfareNo" type="text" value="">
+		
+		
+	  	</td>
+	  </tr>
+	  <tr>
+	  	<th style="height: 30px;">是否残疾幼儿</th>
+	  	<td>
+	  	
+			<select name="isDisabledChild" id="isDisabledChild">
+    <option value="">请选择</option>
+    <option value="1">是</option>
+    <option value="2">否</option>
+
+
+</select>
+
+
+		
+		
+	  	</td>
+	  	<th>残疾幼儿类别</th>
+	  	<td colspan="3">
+	  	
+			<select name="disabledType" id="disabledType">
+    <option value="">请选择</option>
+    <option value="1">视力残疾</option>
+    <option value="2">听力残疾</option>
+    <option value="3">言语残疾</option>
+    <option value="4">肢体残疾</option>
+    <option value="5">智力残疾</option>
+    <option value="6">精神残疾</option>
+    <option value="7">多重残疾</option>
+    <option value="8">其他残疾</option>
+
+
+</select>
+
+
+		
+		
+		<span style="padding: 0px 50px;">残疾人证号</span>
+		<span>
+	  	
+			<input name="disabledNo" id="disabledNo" type="text" value="">
+		
+		
+		</span>
+	  	</td>
+	  </tr>
+	  <tr>
+	  	<th style="height: 30px;">是否接受资助<font color="red">*</font></th>
+	  	<td colspan="5">
+	  	
+			<select name="isAcceptHelp" id="isAcceptHelp">
+    <option value="">请选择</option>
+    <option value="1">是</option>
+    <option value="2">否</option>
+
+
+</select>
+
+
+		
+		
+	  	</td>
+	  </tr>
+	  <tr>
+		<td align="center" style="height: 50px;" colspan="6">
+			
+
+
+ 
+
+
+
+
+
+			<input name="nextIndex" id="nextIndex" type="hidden" value="1">
+			
+
+			<input class="btn" type="submit" value=" 保存 ">
+			&nbsp;
+
+			<input class="btn" onclick="next(1)" type="button" value="下一项">&nbsp;
+			
+
+		</td>
+	  </tr>
+	</tbody></table>
+</div>
+<script type="text/javascript">
+    var sheng = '440000000';
+    var shi = '442000000';
+    var xian = '';
+    creatSelect("jgsheng", "jgshi", "jgshi_array", jgsheng_array, sheng);
+    creatSelect("jgshi", "jgxian", "jgxian_array", jgshi_array[sheng], shi);
+    creatSelect("jgxian", "", "", jgxian_array[shi], xian);
+    //alert(getValueByCode(jgsheng_array,sheng) +"\n"+getValueByCode(jgshi_array[sheng],shi) +"\n"+getValueByCode(jgxian_array[shi],xian));
+    sheng = '440000000';
+    shi = '442000000';
+    xian = '442000005';
+    creatSelect("hksheng", "hkshi", "shi_array", sheng_array, sheng);
+    creatSelect("hkshi", "hkxian", "xian_array", shi_array[sheng], shi);
+    creatSelect("hkxian", "", "", xian_array[shi], xian);
+    //alert(getValueByCode(sheng_array,sheng) +"\n"+getValueByCode(shi_array[sheng],shi) +"\n"+getValueByCode(xian_array[shi],xian));
+
+    window.parent.isSaveStudent = true;
+
+
+    function next(nextIndex) {
+        if (window.parent.isSaveStudent)
+            window.parent.tabs.activate(nextIndex);
+        else
+            alert("请先填写基本信息");
+    }
+
+
+    function resetMenu() {
+        var hksheng = $("#hksheng").val();
+        var hkshi = $("#hkshi").val();
+        var householdType = $("#householdType");
+        var value = householdType.val();
+        $("#householdType option").remove();
+
+        if (hksheng == '') {
+            if (value == '1') {
+                householdType.append("<option value='1'>本市</option>");
+            } else if (value == '98') {
+                householdType.append("<option value='98'>其它</option>");
+            } else if (value == '6') {
+                householdType.append("<option value='6'>无户籍</option>");
+            } else if (value == '5') {
+                householdType.append("<option value='5'>境外</option>");
+            } else if (value == '3') {
+                householdType.append("<option value='3'>港澳</option>");
+            } else if (value == '4') {
+                householdType.append("<option value='4'>台湾</option>");
+            } else if (value == '7') {
+                householdType.append("<option value='7'>省外</option>");
+            } else if (value == '2') {
+                householdType.append("<option value='2'>本省外市</option>");
+            } else {
+                householdType.append("<option value='1'>本市</option>");
+            }
+        } else if (hksheng == '-1') {
+            householdType.append("<option value='98'>其它</option>");
+        } else if (hksheng == '000000000') {
+            householdType.append("<option value='6'>无户籍</option>");
+        } else if (hksheng == '999999999') {
+            householdType.append("<option value='5'>境外</option>");
+        } else if (hksheng == '810000000' || hksheng == '820000000') {
+            householdType.append("<option value='3'>港澳</option>");;
+        } else if (hksheng == '710000000') {
+            householdType.append("<option value='4'>台湾</option>");
+        } else if (hksheng != '440000000') {
+            householdType.append("<option value='7'>省外</option>");
+        } else {
+            if (hkshi == '442000000') {
+                householdType.append("<option value='1'>本市</option>");
+            } else {
+                householdType.append("<option value='2'>本省外市</option>");
+            }
+        }
+    }
+    function fillAccoutAddr() {
+        var hksheng = $('#hksheng').find("option:selected").text();
+        hksheng = hksheng == '请选择' ? '' : hksheng;
+        var hkshi = $('#hkshi').find("option:selected").text();
+        hkshi = hkshi == '请选择' ? '' : hkshi;
+        var hkxian = $('#hkxian').find("option:selected").text();
+        hkxian = hkxian == '请选择' ? '' : hkxian;
+        $("#accountAddress").html(hksheng + hkshi + hkxian);
+    }
+
+    function fillAccountNature() {
+        var hksheng = $('#hksheng').val();
+        var accountNature = $('#accountNature');
+        accountNature.find('option').remove();
+        if (hksheng == '000000000') {
+            accountNature.append("<OPTION value=3>无户口</OPTION>");
+        } else if (hksheng == '999999999' || hksheng == '810000000'
+				|| hksheng == '820000000' || hksheng == '710000000') {
+            accountNature.append("<OPTION value=99>其他</OPTION>");
+        } else {
+            accountNature.append("<OPTION value=1>非农村</OPTION><OPTION value=2>农村</OPTION><OPTION value=3>无户口</OPTION>");
+        }
+
+        $('#accountNature').val('1');
+    }
+
+    resetMenu();
+    fillAccountNature()
+    fillAccoutAddr();
+	</script>
+</form>
+    </body>
+</html>

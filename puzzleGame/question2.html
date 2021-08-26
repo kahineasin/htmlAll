@@ -1,0 +1,332 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>question2</title>
+    <meta name="viewport" id="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <script language="javascript" type="text/javascript" src="script/pfUtil.js"></script>
+    <style type="text/css">
+        html, body, ul, li, ol, dl, dd, dt, p, h1, h2, h3, h4, h5, h6, form, fieldset, legend, img
+        {
+            margin: 0;
+            padding: 0;
+        }
+        body
+        {
+            /*background: pink;*/
+            background: skyblue;
+        }
+        #picbox
+        {
+            width: 300px;
+            height: 300px;
+            /*background: url('image/puzzle_001_300x300.jpg');*/
+            background: skyblue;
+            position: relative;
+            margin: 50px auto;
+        }
+        .pic
+        {
+            width: 97px;
+            height: 97px;
+            float: left;
+            background: url('image/puzzle_002_300x300.jpg');
+            position: absolute;
+            transition: all 0.5s ease 0s;
+        }
+        .controller
+        {
+            display:none;
+            text-align: center;
+            position: relative;
+        }
+        #times
+        {
+            position: absolute;
+            color: red;
+            top: 15px;
+            left: 300px;
+            font-size: 20px;
+        }
+        
+        #outputSpan
+        {
+            overflow: auto;
+        }
+        .answerDiv
+        {
+            padding:0px 20px 0px 20px;
+            text-align: center;
+            position: relative;
+        }
+        .answerDiv input
+        {
+            width:36px;
+            margin:0px 5px;
+            font-size:28px;
+            border-bottom:solid 3px #666;
+        }
+        .pic i
+        {
+            display:block;
+            position:absolute;
+ 
+            width: 22px;
+            height: 22px;
+            color:White;background-color:#666;
+            font-size:18px;
+            }
+            
+        .pic i.lt
+        {
+            left:-8px;
+            top:-8px;
+            }
+            
+        .pic i.rt
+        {
+            right:-8px;
+            top:-8px;
+            }
+    </style>
+</head>
+<body>
+    <div class='controller'>
+        <h1>
+            拼图游戏</h1>
+        <button id='go'>
+            go</button>
+        <span id='times'></span>
+    </div>
+    <div id='picbox'>
+        <div class="pic" data-index='1' style='background-position: 0px 0px; left: 0px; top: 0px;'><i class="rt">1</i>
+        </div>
+        <div class="pic" data-index='2' style='background-position: -100px 0px; left: 130px;
+            top: 10px;'><i class="rt">2</i>
+        </div>
+        <div class="pic" data-index='3' style='background-position: -200px 0px; left: 270px;
+            top: 60px;'><i class="lt">3</i>
+        </div>
+        <div class="pic" data-index='4' style='background-position: 0px -100px; left: 10px;
+            top: 160px;'><i class="rt">4</i>
+        </div>
+        <div class="pic" data-index='5' style='background-position: -100px -100px; left: 150px;
+            top: 200px;'><i class="lt">5</i>
+        </div>
+        <div class="pic" data-index='6' style='display:none;background-position: -200px -100px; left: 200px;
+            top: 100px;'>
+        </div>
+        <div class="pic" data-index='7' style='display:none;background-position: 0px -200px; left: 0px;
+            top: 200px;'>
+        </div>
+        <div class="pic" data-index='8' style='display:none;background-position: -100px -200px; left: 100px;
+            top: 200px;'>
+        </div>
+        <div class="pic" data-index='9' style='display:none;background-position: -200px -200px; left: 200px;
+            top: 200px;'>
+        </div>
+    </div>
+    <div class="answerDiv"><input type="number" /><input type="number" /><input type="number" /><input type="number" /><input type="number" /></div>
+    <p id='outputSpan'>
+    </p>
+
+    <script>
+        var picbox = document.getElementById('picbox');
+        var pic = document.querySelectorAll('.pic');
+        var answer = document.querySelectorAll('.answerDiv input');
+        var picWidth = pic[0].offsetWidth;
+        var picHeight = pic[0].offsetHeight;
+        var picboxWidth = picbox.offsetWidth;
+        var picboxHeight = picbox.offsetHeight;
+        var go = document.getElementById('go');
+        var times = document.getElementById('times'); //定时。用于扩展
+        var dx, dy, newLeft, newtop, startTime, endTime;
+        var dragging = '';
+        var allSuccess = false;
+        var outputSpan = document.getElementById('outputSpan'); //日志,便于测试
+        function doGo() {
+            startTime = Date.parse(new Date()); //获取到期1970年1月1日到当前时间的毫秒数，这个方法不常见，这里为试用
+            for (var i = 0; i < pic.length; i++) {
+//                if (i > 4) { pic[i].style.display = "none"; } else {
+                    pic[i].style.display = "block"; //设置显示拼图，游戏开始
+                    //pic[i].innerHTML = '<i>'+i+'</i>;
+//                }
+            }
+            //picbox.style.background = "#fff";
+            for (var i = 0; i < 20; i++) { //随机打乱
+                var a = Math.floor(Math.random() * 9);
+                var b = Math.floor(Math.random() * 9);
+                if (a != b) {
+                    random(a, b);
+                }
+            }
+        }
+        go.addEventListener('touchstart', function() {
+
+            doGo();
+        });
+        for (var i = 0; i < pic.length; i++) {
+            pic[i].addEventListener('touchstart', function(e) {
+                pfPreventDefault(e);
+                if (dragging !== '') { return; }
+                if (isAnyoneMoving()) { return; }
+                dragging = this.getAttribute('data-index');
+                this.style.zIndex = 100; //设置拖拽元素的z-index值，使其在最上面。
+                dx = e.targetTouches[0].pageX - this.offsetLeft; //记录触发拖拽的水平状态发生改变时的位置
+                dy = e.targetTouches[0].pageY - this.offsetTop; //记录触发拖拽的垂直状态发生改变时的位置
+                this.startX = this.offsetLeft; //记录当前初始状态水平发生改变时的位置
+                this.startY = this.offsetTop; //offsetTop等取得的值与this.style.left获取的值区别在于前者不带px,后者带px
+                this.style.transition = 'none';
+                //alert('x:' + this.startX + ' y:' + this.startY);
+            });
+            pic[i].addEventListener('touchmove', function(e) {
+                pfPreventDefault(e);
+                writeLog('2');
+                if (dragging !== this.getAttribute('data-index')) { return; }
+                newLeft = e.targetTouches[0].pageX - dx; //记录拖拽的水平状态发生改变时的位置
+                newtop = e.targetTouches[0].pageY - dy;
+                if (newLeft <= -picWidth / 2) { //限制边界代码块，拖拽区域不能超出边界的一半
+                    newLeft = -picWidth / 2;
+                } else if (newLeft >= (picboxWidth - picWidth / 2)) {
+                    newLeft = (picboxWidth - picWidth / 2);
+                }
+                if (newtop <= -picHeight / 2) {
+                    newtop = -picWidth / 2;
+                } else if (newtop >= (picboxHeight - picHeight / 2)) {
+                    newtop = (picboxHeight - picHeight / 2);
+                }
+                this.style.left = newLeft + 'px';
+                this.style.top = newtop + 'px'; //设置目标元素的left,top
+            });
+            pic[i].addEventListener('touchend', function(e) {
+                writeLog('3');
+                //alert('stop');
+                if (dragging !== this.getAttribute('data-index')) { return; }
+                dragging = '';
+                this.style.zIndex = 0;
+                this.style.transition = 'all 0.5s ease 0s'; //添加css3动画效果
+                this.endX = e.changedTouches[0].pageX - dx;
+                this.endY = e.changedTouches[0].pageY - dy; //记录滑动结束时的位置，与进入元素对比，判断与谁交换
+                var obj = change(e.target, this.endX, this.endY); //调用交换函数
+                if (obj == e.target) { //如果交换函数返回的是自己
+                    obj.style.left = this.startX + 'px';
+                    obj.style.top = this.startY + 'px';
+                } else { //否则
+                    var _left = obj.style.left;
+                    obj.style.left = this.startX + 'px';
+                    this.style.left = _left;
+                    var _top = obj.style.top;
+                    obj.style.top = this.startY + 'px';
+                    this.style.top = _top;
+                    var _index = obj.getAttribute('data-index');
+                    obj.setAttribute('data-index', this.getAttribute('data-index'));
+                    this.setAttribute('data-index', _index); //交换函数部分，可提取
+                }
+            });
+//            pic[i].addEventListener('transitionend', function() {
+//                writeLog('4');
+//                //alert('transitionend');
+//                if (allSuccess === true) { return; }
+//                if (isSuccess()) {
+//                    allSuccess = true;
+//                    alert("成功了");
+//                    //console.log('成功了！'); //此处监听事件有bug，会添加上多次事件。
+//                } else {
+//                    // pic[i].removeEventListener('transitionend');
+//                }
+//            });
+        }
+
+
+        for (var i = 0; i < answer.length; i++) {
+            answer[i].addEventListener('change', function(e) {
+                if (isSuccess()) {
+                    alert("成功了,页面将跳转");
+                    window.location.href = "question3.html";
+                } else {
+                    //alert("答案错误");
+                }
+            });
+        }
+        
+        //手机端没有mousemove
+        //        document.onmousemove = function() {
+        //            //alert(1);
+        //            writeLog('m');
+        //        };
+        //        picbox.onmousemove = function() {
+        //            //alert(1);
+        //            writeLog('m');
+        //        };
+        function change(obj, x, y) { //交换函数，判断拖动元素的位置是不是进入到目标原始1/2，这里采用绝对值得方式
+            for (var i = 0; i < pic.length; i++) { //还必须判断是不是当前原素本身。将自己排除在外
+                if (Math.abs(pic[i].offsetLeft - x) <= picWidth / 2 && Math.abs(pic[i].offsetTop - y) <= picHeight / 2 && pic[i] != obj)
+                    return pic[i];
+            }
+            return obj; //返回当前
+        }
+        function random(a, b) { //随机打乱函数，其中交换部分，可以提取出来封装
+            var aEle = pic[a];
+            var bEle = pic[b];
+            var _left;
+            _left = aEle.style.left;
+            aEle.style.left = bEle.style.left;
+            bEle.style.left = _left;
+            var _top;
+            _top = aEle.style.top;
+            aEle.style.top = bEle.style.top;
+            bEle.style.top = _top;
+            var _index;
+            _index = aEle.getAttribute("data-index");
+            aEle.setAttribute("data-index", bEle.getAttribute("data-index"));
+            bEle.setAttribute("data-index", _index);
+        }
+        function isSuccess() { //判断成功标准
+            var str = '';
+            var answers = [5,4,3,2,1];
+            for (var i = 0; i < answer.length; i++) {
+                var v = answer[i].value;
+                if (v == null || v === undefined) {
+                    return false;
+                }
+                if (parseInt(v) !== answers[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        function isAnyoneMoving() { //任何一个移动中(由于动画延迟造成的
+            //            for (var i = 0; i < pic.length; i++) {
+            //                if (parseInt(pic[i].style.left.replace('px', '')) % 100 !== 0
+            //                || parseInt(pic[i].style.top.replace('px', '')) % 100 !== 0) {
+            ////                    alert(pic[i].startX);
+            ////                    alert(parseInt(pic[i].style.left.replace('px', '')));
+            //                    showLog('hasOneMoving');
+            //                    return true;
+            //                }
+            //            }
+            //            showLog('stoping');
+            return false;
+        }
+
+        function writeLog(s) {
+            //outputSpan.innerHTML +=s;
+        }
+        function showLog(s) {
+            outputSpan.innerHTML = s;
+        }
+        function pfPreventDefault(e) {
+            e.preventDefault();
+            //$pf.stopPropagation(e);
+        }
+
+        //        var time;
+        //        setInterval(function() { //定时函数，额。。。待续。
+        //            endTime = Date.parse(new Date());
+        //            times.innerHTML = (endTime - startTime) / 1000 || '';
+        //        }, 1000);
+        //doGo();
+    </script>
+
+</body>
+</html>

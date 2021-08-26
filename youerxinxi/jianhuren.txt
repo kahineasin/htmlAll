@@ -1,0 +1,262 @@
+
+
+
+
+
+ 
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta http-equiv="Cache-Control" content="no-store"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/> 
+	
+
+
+ 
+
+
+
+
+
+<link href="/template/default/css/index.css" rel="stylesheet" type="text/css" />
+<link href="/template/default/css/ext-all.css" rel="stylesheet" type="text/css" />
+<link href="/template/default/css/xtheme-blue.css" rel="stylesheet" type="text/css" />
+<script src="/js/jquery.js" type="text/javascript"></script>
+<script src="/js/validate/jquery.validate.js" type="text/javascript"></script>
+
+<!-- 隔行变色 -->
+<script type="text/javascript">
+
+$(function() {
+	$("#table1").find("td").hover(
+		function(){
+			$(this).parent("tr").removeClass().addClass("tr1");
+		},
+		function(){
+			$(this).parent("tr").removeClass().addClass("tr2");
+		}
+	);
+});
+
+var ctx = '';
+
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?011b01f3ac33d7a87fb55dbe8abe1792";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script src="/js/frame-css.js" type="text/javascript"></script>
+
+	<script type="text/javascript" src="/js/validate/jquery.MetaData.js"></script>
+	<script type="text/javascript" src="/js/validate/jquery.validate.js"></script>
+	<script type="text/javascript" src="/js/validate/jquery.validate.expand.js"></script>	
+	<script type="text/javascript" src="/js/validate/messages_cn.js"></script>
+	<script type="text/javascript">
+	//<!--
+	$().ready(function(){
+		//$("#inputForm").validate();
+		//为inputForm注册validate函数
+			$("#inputForm").validate();
+		
+		$("#idcard").blur(function(){
+			var idCard = this.value;
+				if (idCard != "" && $('#idCardType').val() == "1"){
+					if (!isIdCardNo(idCard)){
+						alert("身份证号码格式错误");
+						$("#idCard").focus();
+					}
+				}
+		})
+		$("#save").click(function(){
+			if($("#isGuardian").val() == 'true' && 
+						($("#cellphone").val()=='' ||　$("#cellphone").val()==null)){
+			alert("监护人移动电话必填，请填写后再保存。");
+			return false;
+		}
+		})
+	});
+  	//-->
+	</script>
+	<style type="text/css">
+    #large{position:absolute;display:none;z-index:999;}
+	</style>
+</head>
+
+<body>
+
+<form id="inputForm" action="family!save.action" method="post">
+<input type="hidden" name="id" value="" />
+<input type="hidden" name="operType" value="" />
+<div class="tblWrap">	
+	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="eduFormTbl">
+	  <tr class="eduListTbl_search">
+  	  	<td colspan="4" align="center"><span style="color:red"></span></td>
+  	  </tr>
+	  <tr>
+		<th colspan="4" class="eduFormTbl_title">新建家庭情况</th>
+	  </tr>
+	  <tr>
+		<th width="15%">关系<font color="red">*</font></th>
+		<td width="35%">
+			<select name="memberRelation" id="memberRelation" class="required">
+    <option value="1">父亲</option>
+    <option value="2">母亲</option>
+    <option value="3">哥哥</option>
+    <option value="4">姐姐</option>
+    <option value="5">弟弟</option>
+    <option value="6">妹妹</option>
+    <option value="7">爷爷</option>
+    <option value="8">奶奶</option>
+    <option value="9">监护人</option>
+    <option value="10">其他</option>
+
+
+</select>
+
+
+		</td>
+		<th width="15%">姓名<font color="red">*</font></th>
+		<td width="35%">
+			<input type="text" name="name" value="" id="name" class="{required:true,maxlength:10,messages:{maxlength:'10字内'}}"/>
+		</td>
+	  </tr>
+	  <tr>
+		<th>证件类别</th>
+		<td><select name="idCardType" id="idCardType" class="{required:true}">
+    <option value=""
+    >请选择</option>
+    <option value="1">中国大陆身份证</option>
+    <option value="2">护照</option>
+    <option value="3">港澳台身份证</option>
+    <option value="4">国外身份证</option>
+    <option value="5">其他</option>
+    <option value="6">无证件</option>
+
+
+</select>
+
+</td>
+		<th>证件号码<font color="red">*</font></th>
+		<td>
+			<input type="text" name="idcard" value="" id="idcard" class="required"/>
+		</td>
+	  </tr>
+	  <tr>
+		<th>港澳台侨</th>
+		<td width="35%">
+			<select name="familyOverSeasType" id="familyOverSeasType" class="required">
+    <option value=""
+    >请选择</option>
+    <option value="1">香港同胞</option>
+    <option value="2">香港同胞亲属</option>
+    <option value="3">澳门同胞</option>
+    <option value="4">澳门同胞亲属</option>
+    <option value="5">台湾同胞</option>
+    <option value="6">台湾同胞亲属</option>
+    <option value="7">华侨</option>
+    <option value="8">侨眷</option>
+    <option value="9">归侨</option>
+    <option value="10">归侨子女</option>
+    <option value="11">归国留学人员</option>
+    <option value="12">非华裔中国人</option>
+    <option value="13">外籍华裔人</option>
+    <option value="14">非港澳台侨</option>
+    <option value="15">外国人</option>
+    <option value="16">其他</option>
+
+
+</select>
+
+
+		</td>
+		<th>婚姻状况</th>
+		<td><select name="maritalStatus" id="maritalStatus">
+    <option value="1">未婚</option>
+    <option value="2">已婚</option>
+    <option value="3">离异</option>
+    <option value="4">丧偶</option>
+    <option value="5">其他</option>
+    <option value="6">省缺</option>
+
+
+</select>
+
+</td>
+	  </tr>
+	  <tr>
+		<th>工作单位</th>
+		<td><input type="text" name="workplace" value="" id="workplace" class="{maxlength:50,messages:{maxlength:'50字内'}}"/></td>
+		<th>工作电话</th>
+		<td>
+			<input type="text" name="telephone" value="" id="telephone" class="{isPhone:true,maxlength:16,messages:{isPhone:'格式错误',maxlength:'16字內'}}"/>
+
+		</td>
+	  </tr>
+	  <tr>
+	  	<th>移动电话(监护人必填)<font color="red">*</font></th>
+		<td>
+			<input type="text" name="cellphone" value="" id="cellphone" class="{isMobile:true,maxlength:16,messages:{isMobile:'格式错误',maxlength:'16字內'}}"/>
+		</td>
+		<th>是否监护人<font color="red">*</font></th>
+		<td><select name="isGuardian" id="isGuardian" class="required">
+    <option value=""
+    >请选择</option>
+    <option value="true" selected="selected">是</option>
+    <option value="false">否</option>
+
+
+</select>
+
+</td>
+	  </tr>
+	  <tr>
+	  	<td colspan="4" align="center">
+	  		
+				
+
+
+ 
+
+
+
+
+
+			<input type="hidden" name="nextIndex" value="2" id="nextIndex"/>
+			
+				<input type="button" value="上一项" onclick="next(0)" class="btn"/>&nbsp;
+			
+			
+			<input type="submit" class="btn" value=" 保存 " id="save"/>&nbsp;
+			<input type="submit" name="param.addnext" value="保存并新增" class="btn"/>&nbsp;
+			&nbsp;
+			
+			<input type="button" value="下一项" class="btn" onclick="next(2)" />&nbsp;
+			
+			<script type="text/javascript">
+				function next(nextIndex){
+					if(window.parent.isSaveStudent)
+						window.parent.tabs.activate(nextIndex);
+					else
+						alert("请先填写基本信息");
+				}
+			</script>
+			
+		 	 <input type="button" value="返回" class="btn" onclick="history.back()"/>
+	  	</td>
+	  </tr>
+	</table>
+</div>
+</form>
+</body>
+</html>

@@ -1,0 +1,26 @@
+﻿<html>
+	<head>
+        <title>testJQ</title>
+		<script language="javascript" src="../js/jq/jquery-1.8.0.min.js"></script>
+		<script language="javascript">
+		    $(document).ready(function() {
+		        $('#dblBtn').dblclick(function() {
+		            alert("双击成功");
+		        });
+		        var i = $('#l1');
+		        var c = $('.l');
+		        var c0 = $($('.l')[0]);
+		        var a = "";
+		    });
+		</script>
+	</head>
+	<body>
+	    <input type="button" id="dblBtn" value="双击"/>
+        <ul>
+            <li class="l" id="l1">a</li>
+            <li class="l" id="l2">b</li>
+            <li class="l" id="l3">c</li>
+            <li class="l" id="l4">d</li>
+        </ul>
+	</body>
+</html>

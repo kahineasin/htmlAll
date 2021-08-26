@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<style>
+		body{
+			font-family: Verdana, Roboto, 'Droid Sans', Meiryo, 'ＭＳ Ｐゴシック', 'Hiragino Kaku Gothic ProN', sans-serif;
+		}
+		.top_image {
+			width:100%;
+			position:absolute;
+			top:0;
+		}
+		.text_bg {
+			font-size: 16px;
+			color: #FFF;
+			position: relative;
+			background-color: rgba(33,33,33,0.90);
+			top: 200px;
+			width: 400px;
+			height: 300px;
+			margin: 0 auto;
+		}
+		.text_box {
+			margin: 15px;
+		}
+		.text {
+			line-height:1.25;
+		}
+		.top {
+			padding-top: 40px;
+			padding-bottom: 10px;
+		}
+		.bottom {
+			padding-bottom:20px;
+		}
+		.link_box {
+			text-align: center;
+			top: 20px;
+			position: relative;
+		}
+		.link_box a {
+			font-size: 23px;
+			font-weight:bold;
+			color:#FFFF22;
+		}
+		</style>
+	</head>
+	<body>
+		<div stye="width:800px;height:550px; overflow:hidden;">
+			<img class="top_image" src="./img_pc/parts/index/top_pc.png?1" />
+		</div>
+		<div class="text_bg">
+			<div class="text_box">
+				<div class="text top">
+					大変申し訳ございません。<br>
+					ご利用の環境は非対応となっております。
+				</div>
+				<div class="text bottom">
+					グランドスポルトPC版はGoogle Chromeを推奨ブラウザとさせて頂いております。<br>
+					以下のサイトよりGoogle Chromeをダウンロードしてプレイしてください。
+				</div>
+				<div class="link_box">
+					<a href="https://www.google.com/intl/ja/chrome/browser/desktop/index.html" target="_blacnk">Google Chromeをダウンロード</a>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

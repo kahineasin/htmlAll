@@ -1,0 +1,144 @@
+﻿<html>
+	<head>
+        <title>resume</title>
+		<script language="javascript" src="/js/jq/jquery-1.8.0.min.js"></script>         
+        <script type="text/javascript" src="/js/canvas/html2canvas.js"></script>    
+		<script language="javascript">
+		    
+		    $(document).ready(function () {
+		        function bindEvents() {
+		            $(".example1").on("click", function (event) {
+		                event.preventDefault();
+		                html2canvas(document.getElementById("textArea"), {
+		                    allowTaint: true,
+		                    taintTest: false,
+		                    onrendered: function (canvas) {
+		                        canvas.id = "mycanvas";
+		                        //生成base64图片数据    
+		                        var dataUrl = canvas.toDataURL();
+
+		                        /**  
+                                 * 在本地进行文件保存  
+                                 * @param  {String} data     要保存到本地的图片数据  
+                                 * @param  {String} filename 文件名  
+                                 */
+		                        var saveFile = function (data, filename) {
+		                            var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+		                            save_link.href = data;
+		                            save_link.download = filename;
+
+		                            var event = document.createEvent('MouseEvents');
+		                            event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+		                            save_link.dispatchEvent(event);
+		                        };
+
+		                        // 下载后的图片名  
+		                        var filename = 'wxj_jianli_' + (new Date()).getTime() + '.jpg';
+		                        // download  
+		                        saveFile(dataUrl, filename);
+		                    }
+		                });
+		            });
+		            $("#print").on('click', function () {
+		                var newstr = document.getElementById("textArea").outerHTML;
+		                var oldstr = document.body.innerHTML;
+		                document.body.innerHTML = newstr;
+		                window.print();
+		                document.body.innerHTML = oldstr;
+		                bindEvents();
+		            });
+		            $("#hidebtn").on('click', function () {
+		                $("#toolbar").hide();
+		            });
+		        }
+		        bindEvents();
+			});
+		</script>
+        <style type="text/css">
+            .a4 {
+                margin:auto;
+                width:210mm;
+                position:relative;
+            }
+            table {
+                margin:2px 0px;
+                border:1px solid #000;
+            }
+            table thead {
+                height:40px;
+                background-color:#aaa;/*注意背景颜色太浅的话打印时显示不出来*/
+            }
+            table thead  tr td{
+                border-bottom:1px solid #aaa;
+                padding:2px 4px;
+            }
+            table tbody tr td {
+                /*text-align:center;*/
+            }
+            table tr td .label{
+                display:inline-block;
+                width:150px;
+            }
+            table tr td a{
+                color:black;
+            }
+            table hr {
+                border:1px solid #aaa;border-top:0px;
+            }
+        </style>
+	</head>
+	<body>
+        <div class="a4" id="textArea">
+        <h4 style="width:100%;text-align:center">吴肖均的简历</h4>
+        <table style="width:100%" >
+            <thead><tr><td colspan="2"><b>个人信息</b></td></tr></thead>
+            <tbody>
+                <tr><td style="width:50%"><span class="label" >姓名:</span><span>吴肖均</span></td><td><span class="label" >性别:</span><span>男</span></td></tr>
+                <tr><td style="width:50%"><span class="label" >出生日期:</span><span>1984年9月3日</span></td><td><span class="label" >居住地:</span><span>中山</span></td></tr>
+                <tr><td style="width:50%"><span class="label" >第一学历:</span><span>本科</span></td><td><span class="label" >工作年限:</span><span>9年</span></td></tr>
+                <tr><td style="width:50%"><span class="label" >手机:</span><span>15907658484</span></td><td><span class="label" >电子邮件:</span><span>251561897@qq.com</span></td></tr>
+            </tbody>
+        </table>
+        <table style="width:100%" >
+            <thead><tr><td><b>自我评价</b></td></tr></thead>
+            <tbody>
+                <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;就读时，本人理科成绩优秀，在工作中，算法能力强。1年的asp/.net网站开发，4年mvc开发经验，熟练掌握sql、asp、.net、mvc5、html、javascript、jquery、extjs等语言技术，熟练使用vs2012、sql2008进行开发，另外还学过C++等.
+这里（<a href="http://yp.sellgirl.com/">http://yp.sellgirl.com/</a>）是我分别用C#、C++、C所写的几个小程序。
+</td></tr>
+            </tbody>
+        </table>
+        <table style="width:100%" >
+            <thead><tr><td><b>工作经验</b></td></tr></thead>
+            <tbody >
+                <tr><td><span class="label" >2015/6--至今:</span><span>润东科技技术有限公司(50-150人)</span></td></tr>
+                <tr><td><span class="label" >所属行业:</span><span>计算机软件</span></td></tr>
+                <tr><td><b><span class="label" >开发部:</span><span>软件工程师（工资7000）</span></b></td></tr>
+                <tr><td>mvc5,基于bs 的erp系统开发</td></tr>
+                <tr><td><hr /></td></tr>
+            </tbody>
+            <tbody>
+                <tr><td><span class="label" >2013/8--2015/6:</span><span>中山网讯网络 （少于50人）</span></td></tr>
+                <tr><td><span class="label" >所属行业:</span><span>计算机软件</span></td></tr>
+                <tr><td><b><span class="label" >开发部:</span><span>软件工程师（工资4000）</span></b></td></tr>
+                <tr><td>C#网站开发/软件开发 sql数据库开发</td></tr>
+                <tr><td><hr /></td></tr>
+            </tbody>
+            <tbody>
+                <tr><td><span class="label" >2012--2013:</span><span>中山品牌网</span></td></tr>
+                <tr><td><span class="label" >所属行业:</span><span>计算机软件</span></td></tr>
+                <tr><td><b><span class="label" >开发部:</span><span>技术员</span></b></td></tr>
+                <tr><td>asp .net 网站开发</td></tr>
+            </tbody>
+        </table>
+        <table style="width:100%" >
+            <thead><tr><td colspan="4"><b>教育经历</b></td></tr></thead>
+            <tbody>
+                <tr><td>2004 /6 -- 2008 /6</td><td>广东药学院(中山校区)</td><td>计算机科学与技术</td><td>本科</td></tr>
+                <tr><td>1998 /6 -- 2004 /6</td><td>中山纪念中学</td><td></td><td></td></tr>
+            </tbody>
+        </table>
+
+        </div>     
+        <div id="toolbar"><input id="print" type="button" value="打印" />  <input class="example1" type="button" value="导出图片,不支持ie" />  <input id="hidebtn" type="button" value="隐藏按钮" />  简历更新时间:2017-8-18   </div>
+	</body>
+</html>

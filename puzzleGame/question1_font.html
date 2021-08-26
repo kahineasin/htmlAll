@@ -1,0 +1,322 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>question1</title>
+    <meta name="viewport" id="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <script language="javascript" type="text/javascript" src="script/pfUtil.js"></script>
+    <script language="javascript" type="text/javascript" src="script/sellgirl.js"></script>
+    <style type="text/css">
+        html, body, ul, li, ol, dl, dd, dt, p, h1, h2, h3, h4, h5, h6, form, fieldset, legend, img
+        {
+            margin: 0;
+            padding: 0;
+        }
+        body
+        {
+            /*background: pink;*/
+            background: rgb(194,193,193);/*lightblue;*/
+        }
+        #picbox
+        {
+            width: 300px;
+            height: 300px;
+            /*width: 550px;
+            height: 550px;*/
+            /*background: url('image/puzzle_001_300x300.jpg');*/
+            /*background-color:lightblue;*/
+            background-color:white;
+            position: relative;
+            margin: 50px auto;
+        }
+        /*.pic
+        {
+            width: 97px;
+            height: 97px;
+            float: left;
+            background: url('image/puzzle_001_300x300.jpg');
+            position: absolute;
+            transition: all 0.5s ease 0s;
+        }*/
+        .controller
+        {
+            display:none;
+            text-align: center;
+            position: relative;
+        }
+        #times
+        {
+            position: absolute;
+            color: red;
+            top: 15px;
+            left: 300px;
+            font-size: 20px;
+        }
+        
+        #outputSpan
+        {
+            overflow: auto;
+        }
+        .desDiv
+        {
+            padding:30px 20px 0px 20px;
+            text-align: left;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="desDiv">
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;"疫情发生至今我都忘了在家呆了多少天了。
+
+正在追的剧，想要追的剧，都追完了。
+
+而就在刚刚，我正准备将我大概一星期前拆开的瓜子，全倒出来重新数一遍的时候。我咳嗽了。
+
+喉咙发干，全身关节疼痛，脑袋发晕，乏力。各种症状随着我的体内自检哗啦啦啦地都浮现了。<br />
+
+&nbsp;&nbsp;&nbsp;&nbsp;“卧槽，不是开门拿个外卖都中招吧。”
+
+随即我立马打通在这阵子医院上班的大舅的电话。<br />
+
+&nbsp;&nbsp;&nbsp;&nbsp;“得了吧你这就是闲的！”大舅毫不客气地回答“你这人关家里十几天，天天没正经事干，没正经饭吃，没病都熬出病来。”说罢大舅就以病号太多为名挂掉了我的电话。<br />
+
+&nbsp;&nbsp;&nbsp;&nbsp;虽说我不明白大舅作为医院里的花匠为什么也需要接诊病号，但是我决定还是接受他的建议，找点正经事做，譬如到楼下去拿拿报纸。
+
+大半年没有开过邮箱。里头的报纸估计能够让我读到疫情结束了吧。
+
+但夹在里头的一个没有邮戳没有封口的信封引起了我的注意。
+
+里头装着的是一堆剪成一个个方块的图案。似乎是个拼图。"
+</p>
+    </div>
+    <div class='controller'>
+        <h1>
+            拼图游戏</h1>
+        <button id='go'>
+            go</button>
+        <span id='times'></span>
+    </div>
+    <div id='picbox'>
+<!--        <div class="pic" data-index='1' style='background-position: 0px 0px; left: 0px; top: 0px;'>
+        </div>
+        <div class="pic" data-index='2' style='background-position: -100px 0px; left: 100px;
+            top: 0px;'>
+        </div>
+        <div class="pic" data-index='3' style='background-position: -200px 0px; left: 200px;
+            top: 0px;'>
+        </div>
+        <div class="pic" data-index='4' style='background-position: 0px -100px; left: 0px;
+            top: 100px;'>
+        </div>
+        <div class="pic" data-index='5' style='background-position: -100px -100px; left: 100px;
+            top: 100px;'>
+        </div>
+        <div class="pic" data-index='6' style='background-position: -200px -100px; left: 200px;
+            top: 100px;'>
+        </div>
+        <div class="pic" data-index='7' style='background-position: 0px -200px; left: 0px;
+            top: 200px;'>
+        </div>
+        <div class="pic" data-index='8' style='background-position: -100px -200px; left: 100px;
+            top: 200px;'>
+        </div>
+        <div class="pic" data-index='9' style='background-position: -200px -200px; left: 200px;
+            top: 200px;'>
+        </div>-->
+    </div>
+    <p id='outputSpan'>
+    </p>
+
+    <script>
+        //sellgirl.createPuzzle(document.getElementById('picbox'), 'image/puzzle_001_300x300.jpg', 3, 3);
+        //var puzzle = sellgirl.createPuzzle(document.getElementById('picbox'), 'image/puzzle_001.jpg', 4, 5, { autoGo: false });
+        //var puzzle = sellgirl.createPuzzle(document.getElementById('picbox'), 'image/puzzle_001_300x300.jpg', 5, 5, { autoGo: false });
+        var puzzle = sellgirl.createPuzzle(document.getElementById('picbox'), 'image/puzzle_001_300x300.jpg', 5, 5);
+        
+        go.addEventListener('touchstart', function() {
+            puzzle.go();
+        });
+
+        //var picbox = document.getElementById('picbox');
+        //var pic = document.querySelectorAll('.pic');
+        //var picWidth = pic[0].offsetWidth;
+        //var picHeight = pic[0].offsetHeight;
+        //var picboxWidth = picbox.offsetWidth;
+        //var picboxHeight = picbox.offsetHeight;
+        //var go = document.getElementById('go');
+        //var times = document.getElementById('times'); //定时。用于扩展
+        //var dx, dy, newLeft, newtop, startTime, endTime;
+        //var dragging = '';
+        //var allSuccess = false;
+        //var outputSpan = document.getElementById('outputSpan'); //日志,便于测试
+        //function doGo() {
+        //    startTime = Date.parse(new Date()); //获取到期1970年1月1日到当前时间的毫秒数，这个方法不常见，这里为试用
+        //    for (var i = 0; i < pic.length; i++) {
+        //        pic[i].style.display = "block"; //设置显示拼图，游戏开始
+        //    }
+        //    //picbox.style.background = "#fff";
+        //    for (var i = 0; i < 20; i++) { //随机打乱
+        //        var a = Math.floor(Math.random() * 9);
+        //        var b = Math.floor(Math.random() * 9);
+        //        if (a != b) {
+        //            random(a, b);
+        //        }
+        //    }
+        //}
+        //go.addEventListener('touchstart', function() {
+
+        //    doGo();
+        //});
+        //for (var i = 0; i < pic.length; i++) {
+        //    pic[i].addEventListener('touchstart', function(e) {
+        //        pfPreventDefault(e);
+        //        if (dragging !== '') { return; }
+        //        if (isAnyoneMoving()) { return; }
+        //        dragging = this.getAttribute('data-index');
+        //        this.style.zIndex = 100; //设置拖拽元素的z-index值，使其在最上面。
+        //        dx = e.targetTouches[0].pageX - this.offsetLeft; //记录触发拖拽的水平状态发生改变时的位置
+        //        dy = e.targetTouches[0].pageY - this.offsetTop; //记录触发拖拽的垂直状态发生改变时的位置
+        //        this.startX = this.offsetLeft; //记录当前初始状态水平发生改变时的位置
+        //        this.startY = this.offsetTop; //offsetTop等取得的值与this.style.left获取的值区别在于前者不带px,后者带px
+        //        this.style.transition = 'none';
+        //        //alert('x:' + this.startX + ' y:' + this.startY);
+        //    });
+        //    pic[i].addEventListener('touchmove', function(e) {
+        //        pfPreventDefault(e);
+        //        writeLog('2');
+        //        if (dragging !== this.getAttribute('data-index')) { return; }
+        //        newLeft = e.targetTouches[0].pageX - dx; //记录拖拽的水平状态发生改变时的位置
+        //        newtop = e.targetTouches[0].pageY - dy;
+        //        if (newLeft <= -picWidth / 2) { //限制边界代码块，拖拽区域不能超出边界的一半
+        //            newLeft = -picWidth / 2;
+        //        } else if (newLeft >= (picboxWidth - picWidth / 2)) {
+        //            newLeft = (picboxWidth - picWidth / 2);
+        //        }
+        //        if (newtop <= -picHeight / 2) {
+        //            newtop = -picWidth / 2;
+        //        } else if (newtop >= (picboxHeight - picHeight / 2)) {
+        //            newtop = (picboxHeight - picHeight / 2);
+        //        }
+        //        this.style.left = newLeft + 'px';
+        //        this.style.top = newtop + 'px'; //设置目标元素的left,top
+        //    });
+        //    pic[i].addEventListener('touchend', function(e) {
+        //        writeLog('3');
+        //        //alert('stop');
+        //        if (dragging !== this.getAttribute('data-index')) { return; }
+        //        dragging = '';
+        //        this.style.zIndex = 0;
+        //        this.style.transition = 'all 0.5s ease 0s'; //添加css3动画效果
+        //        this.endX = e.changedTouches[0].pageX - dx;
+        //        this.endY = e.changedTouches[0].pageY - dy; //记录滑动结束时的位置，与进入元素对比，判断与谁交换
+        //        var obj = change(e.target, this.endX, this.endY); //调用交换函数
+        //        if (obj == e.target) { //如果交换函数返回的是自己
+        //            obj.style.left = this.startX + 'px';
+        //            obj.style.top = this.startY + 'px';
+        //        } else { //否则
+        //            var _left = obj.style.left;
+        //            obj.style.left = this.startX + 'px';
+        //            this.style.left = _left;
+        //            var _top = obj.style.top;
+        //            obj.style.top = this.startY + 'px';
+        //            this.style.top = _top;
+        //            var _index = obj.getAttribute('data-index');
+        //            obj.setAttribute('data-index', this.getAttribute('data-index'));
+        //            this.setAttribute('data-index', _index); //交换函数部分，可提取
+        //        }
+        //    });
+        //    pic[i].addEventListener('transitionend', function() {
+        //        writeLog('4');
+        //        //alert('transitionend');
+        //        if (allSuccess === true) { return; }
+        //        if (isSuccess()) {
+        //            allSuccess = true;
+        //            alert("成功了");
+                    
+        //            //alert("成功了,页面将跳转");
+        //            //window.location.href = "question3.html";
+                    
+        //            //console.log('成功了！'); //此处监听事件有bug，会添加上多次事件。
+        //        } else {
+        //            // pic[i].removeEventListener('transitionend');
+        //        }
+        //    })
+        //}
+        ////手机端没有mousemove
+        ////        document.onmousemove = function() {
+        ////            //alert(1);
+        ////            writeLog('m');
+        ////        };
+        ////        picbox.onmousemove = function() {
+        ////            //alert(1);
+        ////            writeLog('m');
+        ////        };
+        //function change(obj, x, y) { //交换函数，判断拖动元素的位置是不是进入到目标原始1/2，这里采用绝对值得方式
+        //    for (var i = 0; i < pic.length; i++) { //还必须判断是不是当前原素本身。将自己排除在外
+        //        if (Math.abs(pic[i].offsetLeft - x) <= picWidth / 2 && Math.abs(pic[i].offsetTop - y) <= picHeight / 2 && pic[i] != obj)
+        //            return pic[i];
+        //    }
+        //    return obj; //返回当前
+        //}
+        //function random(a, b) { //随机打乱函数，其中交换部分，可以提取出来封装
+        //    var aEle = pic[a];
+        //    var bEle = pic[b];
+        //    var _left;
+        //    _left = aEle.style.left;
+        //    aEle.style.left = bEle.style.left;
+        //    bEle.style.left = _left;
+        //    var _top;
+        //    _top = aEle.style.top;
+        //    aEle.style.top = bEle.style.top;
+        //    bEle.style.top = _top;
+        //    var _index;
+        //    _index = aEle.getAttribute("data-index");
+        //    aEle.setAttribute("data-index", bEle.getAttribute("data-index"));
+        //    bEle.setAttribute("data-index", _index);
+        //}
+        //function isSuccess() { //判断成功标准
+        //    var str = '';
+        //    for (var i = 0; i < pic.length; i++) {
+        //        str += pic[i].getAttribute('data-index');
+        //    }
+        //    if (str == '123456789') {
+        //        return true;
+        //    }
+        //    return false;
+        //}
+        //function isAnyoneMoving() { //任何一个移动中(由于动画延迟造成的
+        //    //            for (var i = 0; i < pic.length; i++) {
+        //    //                if (parseInt(pic[i].style.left.replace('px', '')) % 100 !== 0
+        //    //                || parseInt(pic[i].style.top.replace('px', '')) % 100 !== 0) {
+        //    ////                    alert(pic[i].startX);
+        //    ////                    alert(parseInt(pic[i].style.left.replace('px', '')));
+        //    //                    showLog('hasOneMoving');
+        //    //                    return true;
+        //    //                }
+        //    //            }
+        //    //            showLog('stoping');
+        //    return false;
+        //}
+
+        //function writeLog(s) {
+        //    //outputSpan.innerHTML +=s;
+        //}
+        //function showLog(s) {
+        //    outputSpan.innerHTML = s;
+        //}
+        //function pfPreventDefault(e) {
+        //    e.preventDefault();
+        //    //$pf.stopPropagation(e);
+        //}
+
+        ////        var time;
+        ////        setInterval(function() { //定时函数，额。。。待续。
+        ////            endTime = Date.parse(new Date());
+        ////            times.innerHTML = (endTime - startTime) / 1000 || '';
+        ////        }, 1000);
+        //doGo();
+    </script>
+
+</body>
+</html>
