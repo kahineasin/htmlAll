@@ -1,0 +1,81 @@
+﻿<html>
+	<head>
+        <title>testJQ</title>
+		<script language="javascript" src="../js/jq/jquery-1.8.0.min.js"></script>
+		<script language="javascript">
+		    $(document).ready(function () {
+				$('#editBtn').click(function(){
+				                        
+				var timeN=parseInt($('#tN').val());
+										function isTimeLine(s){
+                            return s!==null&&s!==undefined&&s.length>9&&s[0]==='['&&s[3]===':'&&s[9]===']';
+                        }
+                        function keyToTime(key){
+                            return parseFloat(key.substr(1, 3)) * 60 + parseFloat(key.substring(4, 10));
+                        }
+                        function timeToKey(time){
+							var one=parseInt(time/60);
+							var two=parseInt(time-(one*60));
+							//var three=time-(one*60)-two;
+                            return '['+PrefixInteger(one,2)+':'+PrefixInteger(two,2)+'.'
+							//+PrefixInteger(three,2)
+							+(time-(one*60)-two).toFixed(2).substr(2,2)
+							+']';
+                        }        
+						/**
+   * 左边补0
+   * padZeroLeft(15,4)==0015
+   * @param num
+   * @param n
+   * @returns
+   */
+  function padZeroLeft(num, n) {
+    return (
+      Array(n > ("" + num).length ? n - ("" + num).length + 1 : 0).join("0") +
+      num
+    );
+  }
+						function PrefixInteger(num, n) {
+            //return (Array(n).join(0) + num).slice(-n);
+			return padZeroLeft(num,n);
+        }
+				function getNewRow(line){
+					var newLine=line;
+					                            while(isTimeLine(line)){
+                                //timeArr.push(line.substr(0,10));
+								var time=line.substr(0,10);
+								var newTime=timeToKey(keyToTime(time)+timeN);
+								
+								//newLine=newTime+newLine.substr(10,newLine.length-10);
+                                //line=line.substr(10,line.length-10);
+								
+								var replaceStartIdx=newLine.length-line.length;
+								newLine=newLine.substr(0,replaceStartIdx)+newTime+newLine.substr(replaceStartIdx+10,newLine.length-10);
+                                line=line.substr(10,line.length-10);
+                            }
+							return newLine;
+				}
+		        var t = $('#srcT').val();
+				//debugger;
+		        var a=t.split('\n');
+				var r=[];
+				for(var i=0;i<a.length;i++){
+					//alert(a[i]);
+					var newI=getNewRow(a[i]);
+					r.push(newI);
+					//debugger;
+				}
+				$('#dstT').val(r.join('\n'));
+				});
+				});
+		</script>
+	</head>
+	<body>
+	<p>首先bs csdn网站卖垃圾一般的代码</p>
+        <textarea id="srcT" rows="40" style="width:40%"></textarea>
+        <textarea id="dstT" rows="40" style="width:40%"></textarea>
+		<br />
+		输入时间偏移量(秒):<input type="number" value="10" id="tN" />
+		<button id="editBtn">改时间</button>
+	</body>
+</html>
