@@ -62,15 +62,6 @@
         delete pfIFrameMessageHandlers[dataName];
       };
 
-      $pf.getMessageFromWindow = function (win, dataName, dataValue, callback) {
-        var responseDataName = "response_" + dataName;
-        $pf.addIFrameMessageListener(responseDataName, function (data) {
-          callback(data);
-          $pf.removeIFrameMessageListener(responseDataName);
-        });
-        win.postMessage({ [dataName]: dataValue }, "*");
-      };
-
       window.addEventListener("message", function (event) {
         //alert("message appear");
         for (var dataName in pfIFrameMessageHandlers) {
@@ -89,6 +80,15 @@
           }
         }
       });
+
+      $pf.getMessageFromWindow = function (win, dataName, dataValue, callback) {
+        var responseDataName = "response_" + dataName;
+        $pf.addIFrameMessageListener(responseDataName, function (data) {
+          callback(data);
+          $pf.removeIFrameMessageListener(responseDataName);
+        });
+        win.postMessage({ [dataName]: dataValue }, "*");
+      };
 
       $pf.addIFrameMessageListener("refresh", function (data) {
         return data + "_" + "id6";
