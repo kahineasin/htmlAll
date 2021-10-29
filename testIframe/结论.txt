@@ -1,0 +1,4 @@
+1.不要研究iframe跨域了，无解的 (不是的)
+//window.frames["targetUrl"].document 这句如果是跨域时会报错:locked a frame with origin "http://localhost:28021" from accessing a cross-origin frame
+
+2.通过message交互,可以跨域
