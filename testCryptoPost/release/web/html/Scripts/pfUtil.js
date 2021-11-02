@@ -2303,6 +2303,65 @@ $pf.initFileField = function (dom) {
   });
 };
 
+var pfIFrameMessageHandlers = {};
+/**
+ * 全能的跨域方式
+ *
+ * 用法:
+ * 监听的页面:
+      $pf.addIFrameMessageListener("getWater", function (data) {
+        return data + "_" + $("#txt01").val();
+      });
+   发出消息的页面:
+        $goBtn3.click(function () {
+          $pf.getMessageFromWindow(
+            window.parent,  //或document.getElementById("targetUrl").contentWindow,
+            "getWater",
+            $("#txt01").val(),
+            function (datapi) {
+              alert("getWater_" + datapi);
+            }
+          );
+        });
+ *
+ * @param {*} dataName
+ * @param {*} callback
+ */
+$pf.addIFrameMessageListener = function (dataName, callback) {
+  pfIFrameMessageHandlers[dataName] = callback;
+};
+$pf.removeIFrameMessageListener = function (dataName) {
+  delete pfIFrameMessageHandlers[dataName];
+};
+
+window.addEventListener("message", function (event) {
+  //alert("message appear");
+  for (var dataName in pfIFrameMessageHandlers) {
+    if (
+      pfIFrameMessageHandlers.hasOwnProperty(dataName) &&
+      event.data.hasOwnProperty(dataName)
+    ) {
+      event.source.postMessage(
+        {
+          ["response_" + dataName]: pfIFrameMessageHandlers[dataName](
+            event.data[dataName]
+          ),
+        },
+        "*"
+      );
+    }
+  }
+});
+
+$pf.getMessageFromWindow = function (win, dataName, dataValue, callback) {
+  var responseDataName = "response_" + dataName;
+  $pf.addIFrameMessageListener(responseDataName, function (data) {
+    callback(data);
+    $pf.removeIFrameMessageListener(responseDataName);
+  });
+  win.postMessage({ [dataName]: dataValue }, "*");
+};
+
 try {
   if (jQuery != null && jQuery != undefined) {
     /*

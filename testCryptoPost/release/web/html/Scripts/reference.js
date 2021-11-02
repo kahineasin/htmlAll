@@ -150,7 +150,7 @@ reference.prototype.generate_signatureString = function (
     if (i < pairs.length - 1) sigString = sigString + "&";
   }
 
-  debugger;
+  //debugger;
   return sigString;
 };
 
@@ -211,7 +211,7 @@ reference.prototype.generate_postData = function (data) {
     }
   }
 
-  debugger;
+  //debugger;
   return list.join("&");
 };
 
