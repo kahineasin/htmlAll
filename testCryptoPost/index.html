@@ -1,273 +1,203 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title></title>
-    <meta charset="utf-8" />
-    <script type="text/javascript" src="Scripts/crypto-js.js"></script>
-    <script type="text/javascript" src="Scripts/reference.js"></script>
-    <script type="text/javascript" src="Scripts/pfUtil.js"></script>
-  </head>
-  <body>
-    <iframe src="http://localhost:4200/main" id="tokenIframe"></iframe>
-    <form>
-      <table>
-        <tr>
-          <td colspan="2">
-            <a href="#" onclick="showUserForm()">用户信息...</a>
-          </td>
-        </tr>
-        <tr class="userFormTr" style="display: none">
-          <td>用户信息</td>
-          <td>
-            <input type="text" id="txtUserName" value="" />
-            <input type="password" id="txtUserPwd" value="" />
-            <!-- <input type="text" id="txtUserPwd" value="" /> -->
-            <input type="text" id="txtUserType" value="NSCloud" />
-            <input type="button" value="登陆" onclick="login()" />
-          </td>
-        </tr>
-        <tr class="userFormTr" style="display: none">
-          <td>authUrl</td>
-          <td>
-            <input
-              type="text"
-              id="txtAuthUrl"
-              value="http://uat-cloud.perfect99.com:10142/NSCloud/Authorization/"
-              style="width: 500px"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2" style="text-align: center">
-            <hr style="border: 1px dotted skyblue" />
-          </td>
-        </tr>
-        <tr>
-          <td>request url:</td>
-          <td>
-            <input
-              type="text"
-              id="txtRequestUrl"
-              value="http://localhost:9097/Motorcycle/SNSAPI/Test/TestNS"
-              style="width: 850px"
-              onblur="onUrlBlur()"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>request method:</td>
-          <td>
-            <input
-              type="text"
-              id="txtMethod"
-              value="POST"
-              style="width: 450px"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>validae domain:</td>
-          <td>
-            <input type="checkbox" id="chkFlag" />
-          </td>
-        </tr>
-        <tr>
-          <td>appId：</td>
-          <td>
-            <input
-              type="text"
-              id="txtAppId"
-              value="408d8304d4c36da99a5e01486fd92311"
-              style="width: 450px"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>appKey：</td>
-          <td>
-            <input
-              type="text"
-              id="txtAppKey"
-              value="AppDsdfwef112221*$#dsfsfew"
-              style="width: 450px"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>secertKey:</td>
-          <td>
-            <input
-              type="text"
-              id="txtSecertKey"
-              value="DdsafwefDfaDfsfd12255esfadDEEFDFDw"
-              style="width: 450px"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>signature_algorithm：</td>
-          <td>
-            <input
-              type="text"
-              id="txtSignature_algorithm"
-              value="HMACSHA1"
-              style="width: 450px"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>token：</td>
-          <td>
-            <input type="text" id="txtToken" value="" style="width: 450px" />
-          </td>
-        </tr>
-        <tr>
-          <td>timestamp：</td>
-          <td>
-            <input
-              type="text"
-              id="txtTimestamp"
-              value="1551110052683"
-              style="width: 450px"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>nonce：</td>
-          <td>
-            <input
-              type="text"
-              id="txtNonce"
-              value="OUKETKDNUC"
-              style="width: 450px"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>body:</td>
-          <td>
-            <input type="checkbox" id="chbBody" />
-          </td>
-        </tr>
-        <tr>
-          <td valign="top">data：</td>
-          <td>
-            <textarea rows="10" id="txtData" style="width: 450px">
-[{"key":"msg","value":"13001026659"}]</textarea
-            >
-          </td>
-        </tr>
-        <tr>
-          <td valign="top"></td>
-          <td>
-            <input type="button" value="发送请求" onclick="post();" />
-            <input
-              type="button"
-              value="json转map"
-              onclick="jsonToMap('txtData');"
-            />
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <td colspan="2" style="text-align: center">
-            <hr style="border: 1px dotted skyblue" />
-          </td>
-        </tr>
-        <tr>
-          <!-- <td colspan="2" style="text-align: center">result</td> -->
-          <td style="text-align: center"></td>
-          <td>result</td>
-        </tr>
-        <tr>
-          <td>post data:</td>
-          <td>
-            <textarea
-              type="text"
-              id="txtPostData"
-              style="height: 100px; width: 450px"
-            ></textarea>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top">authorization:</td>
-          <td>
-            <textarea
-              type="text"
-              id="txtAuthorization"
-              style="height: 100px; width: 450px"
-            ></textarea>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top">signature string：</td>
-          <td>
-            <textarea
-              type="text"
-              id="txtSignatureString"
-              style="height: 100px; width: 450px"
-            ></textarea>
-          </td>
-        </tr>
-        <tr>
-          <td>signature：</td>
-          <td><input type="text" id="txtSignature" style="width: 450px" /></td>
-        </tr>
-        <tr>
-          <td valign="top">result:</td>
-          <td>
-            <textarea
-              id="txtResult"
-              style="height: 120px; width: 450px"
-              onmouseup="onTxtResultResize()"
-            ></textarea>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top">
-            <input
-              type="button"
-              value="根据result生成interface"
-              onclick="generateInterfaceByResult();"
-            />
-          </td>
-          <td>
-            <textarea
-              id="txtInterface"
-              style="height: 120px; width: 450px"
-            ></textarea>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top">
-            <input
-              type="button"
-              value="根据result生成class"
-              onclick="generateClassByResult();"
-            />
-          </td>
-          <td>
-            <textarea
-              id="txtClass"
-              style="height: 120px; width: 450px"
-            ></textarea>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top"></td>
-          <td>
-            <div style="height: 500px; vertical-align: bottom">
-              <span style="vertical-align: bottom">
-                &nbsp;这里的空间是为了使onTxtResultResize不容易由于拖出浏览器范围而不能触发
-              </span>
-              <span style="line-height: 500px"></span>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </form>
-    <script type="text/JavaScript" language="javascript">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title></title>
+  <meta charset="utf-8" />
+  <script type="text/javascript" src="Scripts/crypto-js.js"></script>
+  <script type="text/javascript" src="Scripts/reference.js"></script>
+  <script type="text/javascript" src="Scripts/pfUtil.js"></script>
+</head>
+
+<body>
+  <iframe src="" id="tokenIframe" style="width: 500px; height: 500px;display: none;"></iframe>
+  <form>
+    <table>
+      <tr>
+        <td colspan="2">
+          <a href="#" onclick="showUserForm()">用户信息...</a>
+        </td>
+      </tr>
+      <tr class="userFormTr" style="display: none">
+        <td>用户信息</td>
+        <td>
+          <input type="text" id="txtUserName" value="" />
+          <input type="password" id="txtUserPwd" value="" />
+          <!-- <input type="text" id="txtUserPwd" value="" /> -->
+          <input type="text" id="txtUserType" value="NSCloud" />
+          <input type="button" value="登陆" onclick="login()" />
+        </td>
+      </tr>
+      <tr class="userFormTr" style="display: none">
+        <td>authUrl</td>
+        <td>
+          <input type="text" id="txtAuthUrl" value="http://uat-cloud.perfect99.com:10142/NSCloud/Authorization/"
+            style="width: 500px" title="登陆获得token(可能会使浏览器多开的系统token失效)" />
+        </td>
+      </tr>
+      <tr class="userFormTr" style="display: none">
+        <td>getTokenUrl</td>
+        <td>
+          <input type="text" id="txtGetTokenUrl" value="http://localhost:4200/main" style="width: 500px"
+            title="跨iframe获得系统token(需要在目标系统加代码传递token)" />
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: center">
+          <hr style="border: 1px dotted skyblue" />
+        </td>
+      </tr>
+      <tr>
+        <td>request url:</td>
+        <td>
+          <input type="text" id="txtRequestUrl" value="http://localhost:9097/Motorcycle/SNSAPI/Test/TestNS"
+            style="width: 850px" onblur="onUrlBlur()" />
+        </td>
+      </tr>
+      <tr>
+        <td>request method:</td>
+        <td>
+          <input type="text" id="txtMethod" value="POST" style="width: 450px" />
+        </td>
+      </tr>
+      <tr>
+        <td>validae domain:</td>
+        <td>
+          <input type="checkbox" id="chkFlag" />
+        </td>
+      </tr>
+      <tr>
+        <td>appId：</td>
+        <td>
+          <input type="text" id="txtAppId" value="408d8304d4c36da99a5e01486fd92311" style="width: 450px" />
+        </td>
+      </tr>
+      <tr>
+        <td>appKey：</td>
+        <td>
+          <input type="text" id="txtAppKey" value="AppDsdfwef112221*$#dsfsfew" style="width: 450px" />
+        </td>
+      </tr>
+      <tr>
+        <td>secertKey:</td>
+        <td>
+          <input type="text" id="txtSecertKey" value="DdsafwefDfaDfsfd12255esfadDEEFDFDw" style="width: 450px" />
+        </td>
+      </tr>
+      <tr>
+        <td>signature_algorithm：</td>
+        <td>
+          <input type="text" id="txtSignature_algorithm" value="HMACSHA1" style="width: 450px" />
+        </td>
+      </tr>
+      <tr>
+        <td>token：</td>
+        <td>
+          <input type="text" id="txtToken" value="" style="width: 450px" />
+        </td>
+      </tr>
+      <tr>
+        <td>timestamp：</td>
+        <td>
+          <input type="text" id="txtTimestamp" value="1551110052683" style="width: 450px" />
+        </td>
+      </tr>
+      <tr>
+        <td>nonce：</td>
+        <td>
+          <input type="text" id="txtNonce" value="OUKETKDNUC" style="width: 450px" />
+        </td>
+      </tr>
+      <tr>
+        <td>body:</td>
+        <td>
+          <input type="checkbox" id="chbBody" />
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">data：</td>
+        <td>
+          <textarea rows="10" id="txtData" style="width: 450px">
+[{"key":"msg","value":"13001026659"}]</textarea>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top"></td>
+        <td>
+          <input type="button" value="发送请求" onclick="post();" />
+          <input type="button" value="json转map" onclick="jsonToMap('txtData');" />
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: center">
+          <hr style="border: 1px dotted skyblue" />
+        </td>
+      </tr>
+      <tr>
+        <!-- <td colspan="2" style="text-align: center">result</td> -->
+        <td style="text-align: center"></td>
+        <td>result</td>
+      </tr>
+      <tr>
+        <td>post data:</td>
+        <td>
+          <textarea type="text" id="txtPostData" style="height: 100px; width: 450px"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">authorization:</td>
+        <td>
+          <textarea type="text" id="txtAuthorization" style="height: 100px; width: 450px"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">signature string：</td>
+        <td>
+          <textarea type="text" id="txtSignatureString" style="height: 100px; width: 450px"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td>signature：</td>
+        <td><input type="text" id="txtSignature" style="width: 450px" /></td>
+      </tr>
+      <tr>
+        <td valign="top">result:</td>
+        <td>
+          <textarea id="txtResult" style="height: 120px; width: 450px" onmouseup="onTxtResultResize()"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">
+          <input type="button" value="根据result生成interface" onclick="generateInterfaceByResult();" />
+        </td>
+        <td>
+          <textarea id="txtInterface" style="height: 120px; width: 450px"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">
+          <input type="button" value="根据result生成class" onclick="generateClassByResult();" />
+        </td>
+        <td>
+          <textarea id="txtClass" style="height: 120px; width: 450px"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top"></td>
+        <td>
+          <div style="height: 500px; vertical-align: bottom">
+            <span style="vertical-align: bottom">
+              &nbsp;这里的空间是为了使onTxtResultResize不容易由于拖出浏览器范围而不能触发
+            </span>
+            <span style="line-height: 500px"></span>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </form>
+  <script type="text/JavaScript" language="javascript">
                   var cacheKey='testCryptoPost';
                   var historyCacheKey='testCryptoPostHistory';
                   var styleCacheKey='testCryptoPostStyle';
@@ -403,30 +333,17 @@
                     $pf.setLocalStorage(cacheKey,cacheHistory);
                   }
 
-                  function getToken(callback){
-
-      alert(1);
-      //新版首先尝试在iframe中获得token
-          $pf.getMessageFromWindow(
-            document.getElementById("tokenIframe").contentWindow,
-            "getCryptoPostUserToken",
-            "nomessage",
-            function (datapi) {
-              // alert("getWater_" + datapi);
-              alert("getCryptoPostUserToken_" + datapi);
-              document.getElementById("txtToken").value=datapi;
-                                        if(typeof(callback)=="function"){
-                                          callback(datapi);
-                                        }
-            }
-          );
-          return;
+                  /**
+                   * 登陆获得token(可能会使浏览器多开的系统token失效)
+                   */
+                  function doLogin(callback){
 
             //获得token
             var userName=document.getElementById("txtUserName").value;
             var userPwd=document.getElementById("txtUserPwd").value;
             var userType=document.getElementById("txtUserType").value;
             var authUrl=document.getElementById("txtAuthUrl").value;
+            var getTokenUrl=document.getElementById("txtGetTokenUrl").value;
 
             var requestUrl = document.getElementById("txtRequestUrl").value;
             var method = document.getElementById("txtMethod").value;
@@ -476,7 +393,8 @@
               txtUserName:userName,
               txtUserPwd:userPwd,
               txtUserType:userType,
-              txtAuthUrl:authUrl
+              txtAuthUrl:authUrl,
+              txtGetTokenUrl:getTokenUrl
             };
             $pf.setLocalStorage(userInfoCacheKey,userNeedCacheForm);
                                       //debugger;
@@ -499,11 +417,44 @@
                               }
             }
             });
+                  }
+
+
+
+                  /**
+                   * 跨iframe获得系统token(需要在目标系统加代码传递token)
+                   */
+                  function getToken(callback){
+
+      //alert(1);
+      //新版首先尝试在iframe中获得token
+          $pf.getMessageFromWindow(
+            document.getElementById("tokenIframe").contentWindow,
+            "getCryptoPostUserToken",
+            "nomessage",
+            function (datapi) {
+              // alert("getWater_" + datapi);
+                                          if(datapi!==null&&datapi!==undefined&&datapi!==''){
+              //alert("getCryptoPostUserToken_" + datapi);
+              document.getElementById("txtToken").value=datapi;
+                                        if(typeof(callback)=="function"){
+                                            callback(datapi);
+                                        }
+                                          }
             }
+          );
+          return;
+
+            }
+
+            document.getElementById("tokenIframe").addEventListener('load',function(){
+              getToken();
+            });
 
             function login(){
               //为了登陆后也保存appId等的cache
-              getToken(function(){
+              //getToken(function(){
+              doLogin(function(){
                       var requestUrl = document.getElementById("txtRequestUrl").value;
                       // var method = document.getElementById("txtMethod").value;
                       // var flag = document.getElementById("chkFlag").checked;
@@ -545,12 +496,15 @@
                       //debugger;
                       setFormByCache($pf.getLocalStorage(cacheKey));
                       setFormByCache($pf.getLocalStorage(userInfoCacheKey));
-                      setStyleByCache($pf.getLocalStorage(styleCacheKey));
-                      var curToken=document.getElementById("txtToken").value;
-                      //debugger;
-                      if(curToken==null||curToken==undefined||curToken==""){//为了避免每次刷新都重新登陆,那样会影响原token的有效性(反正post时会自动更新token的)
-                        getToken();
-                      }
+                      setStyleByCache($pf.getLocalStorage(styleCacheKey));                      
+                  document.getElementById("tokenIframe").setAttribute('src',document.getElementById("txtGetTokenUrl").value);
+
+                      //var curToken=document.getElementById("txtToken").value;
+                      // //debugger;
+                      // if(curToken==null||curToken==undefined||curToken==""){//为了避免每次刷新都重新登陆,那样会影响原token的有效性(反正post时会自动更新token的)
+                      //   getToken();
+                      // }
+                      //getToken();
                   };
                   var lastResult=null;
                   //使用算法
@@ -566,7 +520,10 @@
                                             if(resultTest!=null){
                                                 var result=JSON.parse(resultTest);
                                                 if("Token无效或已过期!"==result.Message){
-                                                  getToken(function(){
+                                                  // getToken(function(){
+                                                  //   post();
+                                                  // });
+                                                  doLogin(function(){
                                                     post();
                                                   });
                                                 }else if(result.Result!=null){
@@ -901,5 +858,6 @@
                     }
                   }
     </script>
-  </body>
+</body>
+
 </html>
