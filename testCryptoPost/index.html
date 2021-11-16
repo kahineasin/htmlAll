@@ -510,12 +510,24 @@
       //getToken();
     };
     var lastResult = null;
-    //使用算法
-    function log(request) {
+    var isRePostMaxTime = function () {
       if (rePostingCnt > 5) {
         alert("自动登陆5次失败");
         isPosting = false;
         rePostingCnt = 0;
+        return true;
+      }
+      return false;
+    }
+    //使用算法
+    function log(request) {
+      // if (rePostingCnt > 5) {
+      //   alert("自动登陆5次失败");
+      //   isPosting = false;
+      //   rePostingCnt = 0;
+      //   return;
+      // }
+      if (isRePostMaxTime()) {
         return;
       }
       //debugger;
@@ -659,10 +671,13 @@
       } else {
         isPosting = true;
       }
-      if (rePostingCnt > 5) {
-        alert("自动登陆5次失败");
-        isPosting = false;
-        rePostingCnt = 0;
+      // if (rePostingCnt > 5) {
+      //   alert("自动登陆5次失败");
+      //   isPosting = false;
+      //   rePostingCnt = 0;
+      //   return;
+      // }
+      if (isRePostMaxTime()) {
         return;
       }
 
