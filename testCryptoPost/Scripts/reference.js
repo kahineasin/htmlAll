@@ -240,7 +240,10 @@ reference.prototype.http_request = function (
   } else {
     request.send(null);
   }
-  request.onreadystatechange = callback;
+  //request.onreadystatechange = callback;
+  request.onreadystatechange = function (req) {
+    callback(req);
+  };
 };
 
 ///从键值队中获取值
