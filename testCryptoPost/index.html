@@ -542,13 +542,14 @@
           if (resultTest != null) {
             var result = JSON.parse(resultTest);
             if ("Token无效或已过期!" == result.Message) {
-              debugger;
+              //debugger;
               // getToken(function(){
               //   post();
               // });
               doLogin(function () {
                 post();
               });
+              return;
             } else if (result.Result != null) {
               // result.Result=$pf.tmpReference.base64_decode(result.Result);
               //debugger;
