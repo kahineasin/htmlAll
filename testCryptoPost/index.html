@@ -5,9 +5,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title></title>
   <meta charset="utf-8" />
-  <script type="text/javascript" src="Scripts/crypto-js.js"></script>
-  <script type="text/javascript" src="Scripts/reference.js"></script>
-  <script type="text/javascript" src="Scripts/pfUtil.js"></script>
+  <script type="text/javascript" src="./Scripts/pfUtil.js"></script>
+  <script type="text/javascript" src="./Scripts/crypto-js.js"></script>
+  <script type="text/javascript" src="./Scripts/reference.js"></script>
 </head>
 
 <body>
@@ -51,14 +51,31 @@
       <tr>
         <td>request url:</td>
         <td>
-          <input type="text" id="txtRequestUrl" value="http://localhost:9097/Motorcycle/SNSAPI/Test/TestNS"
-            style="width: 850px" onblur="onUrlBlur()" />
+          <input type="text" id="txtRequestUrl" value="" style="width: 850px" onblur="onUrlBlur()" />
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          <select id="comboUrlHistory" onchange="onComboUrlHistoryChange(this)">
+          </select>
         </td>
       </tr>
       <tr>
         <td>request method:</td>
         <td>
-          <input type="text" id="txtMethod" value="POST" style="width: 450px" />
+          <input type="text" id="txtMethod" value="POST" style="width: 450px" onchange="onMethodChange()" />
+        </td>
+      </tr>
+      <tr>
+        <td>Content-Type:</td>
+        <td>
+          <input type="text" id="txtContentType" value="application/x-www-form-urlencoded" style="width: 300px" />
+          <select id="comboContentType" onchange="onComboContentTypeChange(this)">
+            <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+            <option value="text/html;charset=utf-8">text/html;charset=utf-8</option>
+            <option value="application/json;charset=UTF-8">application/json;charset=UTF-8</option>
+          </select>
         </td>
       </tr>
       <tr>
@@ -495,12 +512,34 @@
       });
     }
 
+    function loadComboHistoryUrlData() {
+      var combo = document.getElementById("comboUrlHistory");
+      var cacheHistory = $pf.getLocalStorage(historyCacheKey);
+      if (cacheHistory == null || cacheHistory.length < 1) {
+        return;
+      }
+      for (var i = 0; i < cacheHistory.length; i++) {
+        var item = cacheHistory[i];
+        var opt = document.createElement("option");
+        opt.value = item.txtRequestUrl;
+        opt.innerText = item.txtRequestUrl;
+        // if (item.txtRequestUrl == url) {
+        //   return item;
+        // }
+        combo.appendChild(opt);
+      }
+    }
     window.onload = function () {
       //debugger;
       setFormByCache($pf.getLocalStorage(cacheKey));
       setFormByCache($pf.getLocalStorage(userInfoCacheKey));
       setStyleByCache($pf.getLocalStorage(styleCacheKey));
-      document.getElementById("tokenIframe").setAttribute('src', document.getElementById("txtGetTokenUrl").value);
+      loadComboHistoryUrlData();
+      try {
+        document.getElementById("tokenIframe").setAttribute('src', document.getElementById("txtGetTokenUrl").value);
+      } catch (e) {
+        console.info(e);
+      }
 
       //var curToken=document.getElementById("txtToken").value;
       // //debugger;
@@ -566,8 +605,8 @@
                 undefined,
                 4
               );
-              isPosting = false;
             }
+            isPosting = false;
           }
           document.getElementById("txtResult").value = t;
 
@@ -667,6 +706,7 @@
        4. [{ "key": "dockerName", "value": "jdk8-jre" }]  ok
      * */
     post = function () {
+      //debugger;
       if (isPosting) {
         rePostingCnt++;
       } else {
@@ -689,6 +729,7 @@
 
       var requestUrl = document.getElementById("txtRequestUrl").value;
       var method = document.getElementById("txtMethod").value;
+      var contentType = document.getElementById("txtContentType").value;
       var flag = document.getElementById("chkFlag").checked;
       var applicationId = document.getElementById("txtAppId").value;
       var applicationKey = document.getElementById("txtAppKey").value;
@@ -744,7 +785,7 @@
       ref.set_nonce(nonce);
       ref.set_timestamp(timestamp);
       //debugger;
-      ref.request(method, requestUrl, token, data, body, log);
+      ref.request(method, requestUrl, token, data, body, log, { contentType: contentType });
 
       document.getElementById("txtPostData").value = ref.get_postData();
       document.getElementById("txtAuthorization").value = ref.get_authorization();
@@ -759,7 +800,9 @@
         txtSecertKey: secretKey,
         txtToken: document.getElementById("txtToken").value,
         chbBody: body,
-        txtData: document.getElementById("txtData").value
+        txtData: document.getElementById("txtData").value,
+        txtMethod: method,
+        txtContentType: contentType
       };
       $pf.setLocalStorage(cacheKey, needCacheForm);
       //setHistory(requestUrl,needCacheForm);
@@ -895,6 +938,27 @@
           trs[i].style.display = "table-row";
         }
       }
+    }
+    function onMethodChange() {
+      // if ("POST" === $('#txtMethod').val()) {
+      //   $('#txtContentType').val("application/x-www-form-urlencoded");
+      // } else {
+      //   $('#txtContentType').val("text/html;charset=utf-8");
+      // }
+      if ("POST" === document.getElementById("txtMethod").value) {
+        document.getElementById("txtContentType").value = "application/x-www-form-urlencoded";
+      } else {
+        document.getElementById("txtContentType").value = "text/html;charset=utf-8";
+      }
+    }
+    function onComboContentTypeChange(dom) {
+      // var me = this;
+      document.getElementById("txtContentType").value = dom.value;
+    }
+    function onComboUrlHistoryChange(dom) {
+      // var me = this;
+      document.getElementById("txtRequestUrl").value = dom.value;
+      onUrlBlur();
     }
   </script>
 </body>
