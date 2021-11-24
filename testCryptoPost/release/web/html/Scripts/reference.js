@@ -28,8 +28,21 @@ reference.prototype.request = function (
   token,
   postData,
   body,
-  callback
+  callback,
+  userOpt
 ) {
+  var defaultOpt = {
+    contentType: "application/x-www-form-urlencoded",
+  };
+  // if(opt===null||opt===undefined){
+  //   opt={};
+  // }
+  // if(opt.contentType===null||opt===undefined){
+  //   opt={};
+  // }
+  //var opt = Object.create(defaultOpt, userOpt);
+  var opt = Object.assign(defaultOpt, userOpt);
+  //alert("contentType: " + opt.contentType);
   this.callback = callback;
   var httpMethod = httpMethod.toUpperCase();
   var authData = this.get_authorizationData();
@@ -67,7 +80,8 @@ reference.prototype.request = function (
     "application/x-www-form-urlencoded",
     this.postData,
     null,
-    callback
+    callback,
+    opt
   );
 };
 
@@ -223,16 +237,20 @@ reference.prototype.http_request = function (
   contentType,
   data,
   headers,
-  callback
+  callback,
+  opt
 ) {
   var request = new XMLHttpRequest();
   request.open(method, url, true);
-  if (method == "POST")
-    request.setRequestHeader(
-      "Content-Type",
-      "application/x-www-form-urlencoded"
-    );
-  else request.setRequestHeader("Content-Type", "text/html;charset=utf-8");
+  // if (method == "POST") {
+  //   request.setRequestHeader(
+  //     "Content-Type",
+  //     "application/x-www-form-urlencoded"
+  //   );
+  // } else {
+  //   request.setRequestHeader("Content-Type", "text/html;charset=utf-8");
+  // }
+  request.setRequestHeader("Content-Type", opt.contentType);
 
   request.setRequestHeader("Authorization", authorization);
   if (method == "POST") {
@@ -240,7 +258,10 @@ reference.prototype.http_request = function (
   } else {
     request.send(null);
   }
-  request.onreadystatechange = callback;
+  //request.onreadystatechange = callback;
+  request.onreadystatechange = function (req) {
+    callback(req);
+  };
 };
 
 ///从键值队中获取值

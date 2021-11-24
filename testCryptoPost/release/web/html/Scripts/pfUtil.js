@@ -38,7 +38,10 @@ function pfRequestSuccess(success) {
  *perfect工具类，此类希望在所有项目中能版本唯一
  *by wxj
  */
+//debugger;
 var $pf = $pf || {};
+// var opf = typeof $pf == "undefined" ? {} : $pf;
+// $pf = opf;
 
 $pf.post = function (url, data, success, dataType) {
   var newSuccess = pfRequestSuccess(success);

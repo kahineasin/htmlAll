@@ -135,7 +135,7 @@
       <tr>
         <td valign="top">data：</td>
         <td>
-          <textarea rows="10" id="txtData" style="width: 450px">
+          <textarea rows="10" id="txtData" style="width: 650px" onmouseup="onTxtResultResize()">
 [{"key":"msg","value":"13001026659"}]</textarea>
         </td>
       </tr>
@@ -144,6 +144,7 @@
         <td>
           <input type="button" value="发送请求" onclick="post();" />
           <input type="button" value="json转map" onclick="jsonToMap('txtData');" />
+          <input type="button" value="urlParam转map" onclick="urlParamToMap('txtData');" />
         </td>
         <td></td>
       </tr>
@@ -255,6 +256,7 @@
       }
     }
     var post = null;
+    var doPost = null;
     var setStyleByCache = function (cacheForm) {
 
       if (cacheForm != null) {
@@ -586,7 +588,7 @@
               //   post();
               // });
               doLogin(function () {
-                post();
+                doPost();
               });
               return;
             } else if (result.Result != null) {
@@ -618,12 +620,17 @@
     function saveStyleCache() {
       var url = document.getElementById("txtRequestUrl").value;
       var txtResultDom = document.getElementById("txtResult");
+      var txtDataDom = document.getElementById("txtData");
       var needCacheStyle = {
         txtRequestUrl: url,//这个是作为key的
         txtResult: {
           //attr:{rows:'10'},
           style: { width: txtResultDom.style.width, height: txtResultDom.style.height }
-        }
+        },
+        txtData: {
+          //attr:{rows:'10'},
+          style: { width: txtDataDom.style.width, height: txtDataDom.style.height }
+        },
       }
       $pf.setLocalStorage(styleCacheKey, needCacheStyle);
       setHistory(historyStyleCacheKey, url, needCacheStyle);
@@ -696,6 +703,49 @@
         document.getElementById(domId).value = JSON.stringify(r);
       }
     }
+    function urlParamToMap(domId) {
+      var s = document.getElementById(domId).value;
+      var sArray = s.split("&");
+
+      var r = [];
+      for (var i = 0; i < sArray.length; i++) {
+        var si = sArray[i].split("=");
+        var item = {};
+        item['key'] = si[0];
+        item['value'] = si[1];
+        r.push(item);
+      }
+      if (r.length > 0) {
+        //document.getElementById(domId).value = JSON.stringify(r);
+        // document.getElementById(domId).value = JSON.stringify(r, undefined,
+        //   4);
+        document.getElementById(domId).value = JSON.stringify(r).replaceAll('},{', '},\r\n{');
+      }
+
+      // if (sArray.length > 0) {
+      //   // var r = [];
+      //   // for (var i = 0; i < sArray.length; i++) {
+      //   //   var si = sArray[i].split("=");
+      //   //   var item = {};
+      //   //   item['key'] = si[0];
+      //   //   item['value'] = si[1];
+      //   //   r.push(item);
+      //   // }
+      //   // if (r.length > 0) {
+      //   //   document.getElementById(domId).value = JSON.stringify(r);
+      //   // }
+
+      //   // var r = [];
+      //   var r="[";
+      //   for (var i = 0; i < sArray.length; i++) {
+      //     var si = sArray[i].split("=");
+      //     r+="{\""+si[0]+"\"}";
+      //   }
+      //   if (r.length > 0) {
+      //     document.getElementById(domId).value = JSON.stringify(r);
+      //   }
+      // }
+    }
     /**
      * 现在的兼容方式已经非常好，对于 http://uat-cloud.perfect99.com:10142/NSCloud/SNSAPI/DcosRegistryImage/GetDockerList
      * 下面几种参数都可以测试通过:
@@ -705,7 +755,7 @@
        3. [{ key: "dockerName", value: "jdk8-jre" }]   	ok
        4. [{ "key": "dockerName", "value": "jdk8-jre" }]  ok
      * */
-    post = function () {
+    doPost = function () {
       //debugger;
       if (isPosting) {
         rePostingCnt++;
@@ -811,6 +861,10 @@
 
       saveStyleCache();
     };
+    var post = function () {
+      rePostingCnt = 0;
+      doPost();
+    }
     function onUrlBlur() {
       //debugger;
       //var his=getHistory(document.getElementById("txtRequestUrl").value);
@@ -894,7 +948,7 @@
 
       var s = "";
       if (objItem != null) {
-        s += "export class RegistryImageClass implements RegistryImage{\r\n"
+        s += "export class RegistryImageUIModel implements RegistryImage{\r\n"
         for (var j in objItem) {
           if (objItem.hasOwnProperty(j)) {
             var value = objItem[j];

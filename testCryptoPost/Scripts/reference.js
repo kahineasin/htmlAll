@@ -67,6 +67,7 @@ reference.prototype.request = function (
 
   this.authorization = this.generate_authorizationString("OAuth", authData);
 
+  //debugger;
   if (httpMethod == "POST" && postData != null && body == false) {
     this.postData = this.generate_postData(postData);
   } else {
