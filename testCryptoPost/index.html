@@ -910,7 +910,7 @@
 
       var s = "";
       if (objItem != null) {
-        s += "export interface RegistryImage {\r\n"
+        s += "export interface RegistryImageModel {\r\n"
         for (var j in objItem) {
           if (objItem.hasOwnProperty(j)) {
             var value = objItem[j];
@@ -949,7 +949,7 @@
 
       var s = "";
       if (objItem != null) {
-        s += "export class RegistryImageUIModel implements RegistryImage{\r\n"
+        s += "export class RegistryImageUIModel implements RegistryImageModel{\r\n"
         for (var j in objItem) {
           if (objItem.hasOwnProperty(j)) {
             var value = objItem[j];
