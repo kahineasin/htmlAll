@@ -521,6 +521,7 @@
       if (cacheHistory == null || cacheHistory.length < 1) {
         return;
       }
+      cacheHistory.sort(function (a, b) { return a.txtRequestUrl.localeCompare(b.txtRequestUrl) });
       for (var i = 0; i < cacheHistory.length; i++) {
         var item = cacheHistory[i];
         var opt = document.createElement("option");
