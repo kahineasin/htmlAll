@@ -136,7 +136,7 @@
         <td valign="top">data：</td>
         <td>
           <textarea rows="10" id="txtData" style="width: 650px" onmouseup="onTxtResultResize()"
-            placeholder='例1,not body:&#13;&#10;[{" key":"aa","value":0}]&#13;&#10;&#13;&#10;例2,is body:&#13;&#10;{"JobId":"c22635c6-e6c9-2272-da8b-9c8ba051a80a","JobName":"testJob001"}'>
+            placeholder='例1,not body:&#13;&#10;[{"key":"aa","value":0}]&#13;&#10;&#13;&#10;例2,is body:&#13;&#10;{"JobId":"c22635c6-e6c9-2272-da8b-9c8ba051a80a","JobName":"testJob001"}'>
 [{"key":"msg","value":"13001026659"}]</textarea>
         </td>
       </tr>
@@ -598,8 +598,15 @@
               //debugger;
               if (typeof result.Result === 'string') {
                 try {
-                  result.Result = JSON.parse($pf.tmpReference.base64_decode(result.Result));
-                } catch (e) { }
+                  //result.Result = JSON.parse($pf.tmpReference.base64_decode(result.Result));//不一定全部是json对象
+                  result.Result = $pf.tmpReference.base64_decode(result.Result);
+                  console.info("------------typeof result.Result----------------");
+                  console.info(typeof result.Result);
+                  console.info(result.Result);
+                  result.Result = JSON.parse(result.Result);
+                } catch (e) {
+                  console.info(e);
+                }
               }
               lastResult = result.Result;
               //t=JSON.stringify(result);
