@@ -111,6 +111,11 @@
             background-color:rgb(255,80,0);
             color:White;
         }
+        .buttonDiv button.lockBtn
+        {
+            background-color:red;
+            color:White;
+        }
     </style>
     
     <script language="javascript" type="text/javascript">
@@ -124,6 +129,7 @@
             var picboxWidth = picbox.offsetWidth;
             var picboxHeight = picbox.offsetHeight;
             var go = document.getElementById('go');
+            var lockBtn = document.getElementById('lockBtn');
             var times = document.getElementById('times'); //定时。用于扩展
             var dx, dy, newLeft, newtop, startTime, endTime;
             var dragging = '';
@@ -147,8 +153,9 @@
             //var btnImg = document.querySelectorAll('.buttonDiv button img')[0];
             var btnImg = document.querySelectorAll('.buttonDiv button')[0];
             var isGoing = false;
+			var isLocking=false;
             function doGo() {
-
+				if(isLocking){return;}
                 if (isGoing) { return; }
                 //alert(1);
                 isGoing = true;
@@ -193,8 +200,16 @@
 
                 //go.removeAttribute('disabled');
             }
+			function doLock(){
+				if(isLocking=!isLocking){
+				lockBtn.innerHTML = "固定";
+				}else{
+				lockBtn.innerHTML = "切换";
+				}
+			}
 
             sellgirl.onClick(go, doGo);
+            sellgirl.onClick(lockBtn, doLock);
             sellgirl.onClick(picbox, doGo);
 
             function writeLog(s) {
@@ -221,6 +236,9 @@
     <div class="buttonDiv">
         <button id='go' class="taobao">
             当前为淘宝版(点击切换)
+        </button>
+        <button id='lockBtn' class="lockBtn">
+            切换
         </button></div>
     <p id='outputSpan'>
     </p>
