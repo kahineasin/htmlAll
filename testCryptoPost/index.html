@@ -923,10 +923,13 @@
           if (objItem.hasOwnProperty(j)) {
             var value = objItem[j];
             var row = j + ": Object;";
-            if (typeof value === 'string') {
+            var typeString = typeof value;
+            if (typeString === 'string') {
               row = j + ": string;";
-            } else if (typeof value == 'number') {
+            } else if (typeString == 'number') {
               row = j + ": number;";
+            } else if (value instanceof Array) {
+              row = j + ": any[];";
             }
             s += ("  " + row + "\r\n");
             //fn();
@@ -962,10 +965,13 @@
           if (objItem.hasOwnProperty(j)) {
             var value = objItem[j];
             var row = j + ": Object;";
-            if (typeof value === 'string') {
+            var typeString = typeof value;
+            if (typeString === 'string') {
               row = j + ": string=\"\";";
-            } else if (typeof value == 'number') {
+            } else if (typeString == 'number') {
               row = j + ": number=0;";
+            } else if (value instanceof Array) {
+              row = j + ": any[];";
             }
             s += ("  " + row + "\r\n");
             //fn();
