@@ -220,11 +220,12 @@
     var isPosting = true;//为了防止post自动登陆时死循环的问题(试过登陆url用的uat,post地址用的正式地址,结果无限循环)
     var rePostingCnt = 0;
 
-    var cacheKey = 'testCryptoPost';
-    var historyCacheKey = 'testCryptoPostHistory';
-    var styleCacheKey = 'testCryptoPostStyle';
-    var historyStyleCacheKey = 'testCryptoPostStyleHistory';
-    var userInfoCacheKey = 'userInfoCacheKey';
+    var fcacheKey = 'testCryptoPost';//api请求参数缓存
+    var historyCacheKey = 'testCryptoPostHistory';//api请求参数历史缓存
+    var styleCacheKey = 'testCryptoPostStyle';//样式缓存
+    var historyStyleCacheKey = 'testCryptoPostStyleHistory';//样式历史缓存
+    var userInfoCacheKey = 'userInfoCacheKey';//登陆信息缓存
+    var userInfoHistoryCacheKey = 'userInfoHistoryCacheKey';//登陆信息历史缓存
     var setFormByCache = function (cacheForm) {
       //var cacheForm=$pf.getLocalStorage(cacheKey);
 
@@ -295,34 +296,7 @@
         }
       }
     }
-    // function getHistory(url){
-    //   var cacheHistory=$pf.getLocalStorage(historyCacheKey);
-    //   if(cacheHistory==null||cacheHistory.length<1){
-    //     return null;
-    //   }
-    //   for(var i=0;i<cacheHistory.length;i++){
-    //     var item=cacheHistory[i];
-    //     if(item.txtRequestUrl==url){
-    //       return item;
-    //     }
-    //   }
-    //   return null;
-    // }
-    // function setHistory(url,newItem){
-    //   var cacheHistory=$pf.getLocalStorage(historyCacheKey);
-    //   if(cacheHistory==null){
-    //     cacheHistory=[];
-    //   }
-    //   for(var i=0;i<cacheHistory.length;i++){
-    //     var item=cacheHistory[i];
-    //     if(item.txtRequestUrl==url){
-    //       cacheHistory.splice(i,1);
-    //       break;
-    //     }
-    //   }
-    //   cacheHistory.push(newItem);
-    //   $pf.setLocalStorage(historyCacheKey,cacheHistory);
-    // }
+
 
     function getHistory(cacheKey, url) {
       var cacheHistory = $pf.getLocalStorage(cacheKey);
@@ -406,20 +380,25 @@
                 alert("登陆失败,请检查用户帐号信息");
               } else {//success
                 document.getElementById("txtToken").value = result.Result.AccessToken;
+
+                debugger;
+                var userNeedCacheForm = {
+                  txtUserName: userName,
+                  txtUserPwd: userPwd,
+                  txtUserType: userType,
+                  txtAuthUrl: authUrl,
+                  txtGetTokenUrl: getTokenUrl
+                };
+                $pf.setLocalStorage(userInfoCacheKey, userNeedCacheForm);
+                userNeedCacheForm.txtRequestUrl = requestUrl;//history是根据此属性找的
+                setHistory(userInfoHistoryCacheKey, requestUrl, userNeedCacheForm);
                 if (typeof (callback) == "function") {
                   callback();
                 }
               }
 
+              // $pf.setLocalStorage(userInfoCacheKey, userNeedCacheForm);//登陆成功时才保存登陆信息--benjamin 20220414
 
-              var userNeedCacheForm = {
-                txtUserName: userName,
-                txtUserPwd: userPwd,
-                txtUserType: userType,
-                txtAuthUrl: authUrl,
-                txtGetTokenUrl: getTokenUrl
-              };
-              $pf.setLocalStorage(userInfoCacheKey, userNeedCacheForm);
               //debugger;
               // if(result.Result!=null){
               //     // result.Result=$pf.tmpReference.base64_decode(result.Result);
@@ -499,9 +478,10 @@
           //chbBody:body,
           //txtData:document.getElementById("txtData").value
         };
-        var oldCache = $pf.getLocalStorage(cacheKey);
+        debugger;
+        var oldCache = $pf.getLocalStorage(fcacheKey);
         if (oldCache == null || oldCache == undefined || oldCache == "") {
-          $pf.setLocalStorage(cacheKey, needCacheForm);
+          $pf.setLocalStorage(fcacheKey, needCacheForm);
         } else {
           //var newCache = Object.create(oldCache,needCacheForm);报错Property description must be an object
           for (var i in needCacheForm) {
@@ -510,7 +490,7 @@
             }
           }
 
-          $pf.setLocalStorage(cacheKey, oldCache);
+          $pf.setLocalStorage(fcacheKey, oldCache);
         }
       });
     }
@@ -535,7 +515,7 @@
     }
     window.onload = function () {
       //debugger;
-      setFormByCache($pf.getLocalStorage(cacheKey));
+      setFormByCache($pf.getLocalStorage(fcacheKey));
       setFormByCache($pf.getLocalStorage(userInfoCacheKey));
       setStyleByCache($pf.getLocalStorage(styleCacheKey));
       loadComboHistoryUrlData();
@@ -863,7 +843,7 @@
         txtMethod: method,
         txtContentType: contentType
       };
-      $pf.setLocalStorage(cacheKey, needCacheForm);
+      $pf.setLocalStorage(fcacheKey, needCacheForm);
       //setHistory(requestUrl,needCacheForm);
       delete needCacheForm.txtToken;//历史没必要保存token
       setHistory(historyCacheKey, requestUrl, needCacheForm);
@@ -881,8 +861,9 @@
       var his = getHistory(historyCacheKey, url);
       if (his != null) {
         setFormByCache(his);
-        //debugger;
+        debugger;
         setStyleByCache(getHistory(historyStyleCacheKey, url));
+        setFormByCache(getHistory(userInfoHistoryCacheKey, url));
       }
       //getToken();
     }
