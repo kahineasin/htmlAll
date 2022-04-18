@@ -381,7 +381,7 @@
               } else {//success
                 document.getElementById("txtToken").value = result.Result.AccessToken;
 
-                debugger;
+                //debugger;
                 var userNeedCacheForm = {
                   txtUserName: userName,
                   txtUserPwd: userPwd,
@@ -478,7 +478,7 @@
           //chbBody:body,
           //txtData:document.getElementById("txtData").value
         };
-        debugger;
+        //debugger;
         var oldCache = $pf.getLocalStorage(fcacheKey);
         if (oldCache == null || oldCache == undefined || oldCache == "") {
           $pf.setLocalStorage(fcacheKey, needCacheForm);
@@ -579,11 +579,17 @@
               if (typeof result.Result === 'string') {
                 try {
                   //result.Result = JSON.parse($pf.tmpReference.base64_decode(result.Result));//不一定全部是json对象
-                  result.Result = $pf.tmpReference.base64_decode(result.Result);
+                  try {
+                    result.Result = $pf.tmpReference.base64_decode(result.Result);
+                  } catch (e2) {
+                    console.info(e2);
+                  }
                   console.info("------------typeof result.Result----------------");
                   console.info(typeof result.Result);
                   console.info(result.Result);
-                  result.Result = JSON.parse(result.Result);
+                  if (typeof result.Result === 'string') {
+                    result.Result = JSON.parse(result.Result);
+                  }
                 } catch (e) {
                   console.info(e);
                 }
@@ -861,7 +867,7 @@
       var his = getHistory(historyCacheKey, url);
       if (his != null) {
         setFormByCache(his);
-        debugger;
+        //debugger;
         setStyleByCache(getHistory(historyStyleCacheKey, url));
         setFormByCache(getHistory(userInfoHistoryCacheKey, url));
       }
@@ -883,6 +889,7 @@
 
       var objItem = null;//对象类型
       var item = lastResult;
+      //debugger;
       //如果外层是pageResult格式,先解出内部
       if (item instanceof Array) {
       } else if (item != null && item.hasOwnProperty("DataSource") && item.hasOwnProperty("RecordCount")) {
