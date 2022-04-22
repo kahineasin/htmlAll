@@ -206,6 +206,20 @@ $pf.toFixed = function (value, decimalDigits) {
     if (typeof value == 'number') { return value.toFixed(decimalDigits); }
     else { return parseFloat(value).toFixed(decimalDigits); }
 };
+						
+/**
+   * 左边补0
+   * padZeroLeft(15,4)==0015
+   * @param num
+   * @param n
+   * @returns
+   */
+  $pf.padZeroLeft=function(num, n) {
+    return (
+      Array(n > ("" + num).length ? n - ("" + num).length + 1 : 0).join("0") +
+      num
+    );
+  };
 
 /**
 * 格式化时间(日期)显示方式
