@@ -1,0 +1,241 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta charset="utf-8">
+
+	<script type="text/JavaScript" src="script/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://sellgirl.com/Content/js/sellgirl/EleResize.js"></script>
+	<script type="text/javascript" src="http://sellgirl.com/Content/js/sellgirl/sellgirl.js"></script>
+	<script type="text/javascript" src="http://sellgirl.com/Content/js/sellgirl/pfUtil.js"></script>
+
+	<style type="text/css">
+		#targetUrl {
+			width: 800px;
+			height: 500px;
+		}
+
+		#urlTBox {
+			width: 600px;
+		}
+
+		.video li {
+			cursor: pointer;
+		}
+
+		.video li[finishStatus='2'] {
+			background-color: skyblue;
+		}
+
+		.video li[isPlaying] {
+			background-color: darkblue;
+		}
+	</style>
+	<script language="javascript">
+		var jsonpCallback = function (data) {
+			console.info(data);
+		};
+		var stop = false, count = 0, handle;
+		$(document).ready(function () {
+			var me = this;
+			var pfPageData = {};
+
+			//var url=document.getElementById('text').value;
+			var urlF = $('#urlTBox');
+			var showText = document.getElementById('showText');
+			var iframea = $("#targetUrl");
+			var targetA = $("#targetA");
+
+			var goBtn = $("#btnRunStop");
+			var jsonTextF = $(".jsonText");
+			var video = $(".video");
+			var process = $('.process');
+			var learned = $('.learned');
+			var postTypeTBox = $('#postTypeTBox');
+
+			var count = 0;
+			var playing = false;
+			var startTime = new Date();
+			var timeId = '';
+			var countTimeId = '';
+			var currentI = -1;
+
+			function play(li, i) {
+				li.attr('isPlaying', 'isPlaying');
+				// var tmpUrl=$pf.formatString('https://perfect.zhixueyun.com/api/v1/course-study/subject/chapter-progress?courseId={0}&_=1589762305438',
+				var tmpUrl = $pf.formatString('https://perfect.zhixueyun.com/#/study/course/detail/10&{0}/6/1',
+					li.attr('attachmentId')
+				);
+
+				try {
+
+					var length = video.children().length;
+					var wWidth = window.innerWidth;
+					var wHeight = window.innerHeight;
+					var w = wWidth / length;
+					var h = wHeight / 2;
+
+					window.open(tmpUrl, "newwindow1", "height=" + h + ", width=" + w + ", top=0, left=" + (w * i) + ",toolbar=no, menubar=no, scrollbars=no, resizable=yes, location=no, status=no");
+
+				}
+				catch (err) {
+				}
+				pfPageData.updateProcess();
+
+			}
+			pfPageData.playNext = function () {
+				currentI++;
+				if (currentI > video.children().length - 1) {
+					clearInterval(timeId);
+					clearInterval(countTimeId);
+					$pf.enableButton(goBtn);
+					pfPageData.updateProcess();
+					playing = false;
+					if ($('.shutdownWhenFinish').is(':checked')) {
+						$pf.post('https://localhost:44303/shutdownsystem');
+					}
+				}
+				video.find('li[isPlaying]').removeAttr('isPlaying').attr('finishStatus', 2);
+				var currentLi = video.children().eq(currentI);
+				while (currentLi.attr('finishStatus') == 2) {
+					currentI++;
+					currentLi = video.children().eq(currentI);
+				}
+
+				play(currentLi, currentI);
+
+			};
+			pfPageData.updateProcess = function () {
+				var finished = video.find('li[finishStatus="2"]').length;
+				process.val($pf.formatString('{0}/{1}', finished, video.children().length));
+			};
+			video.on('click', 'li', function () {
+				if (playing) {
+					alert("播放中");
+					return;
+				}
+				var li = $(this);
+				if (li.attr('finishStatus') == 2) {
+					alert("此记录已播放");
+
+					return;
+				}
+				playing = true;
+				$pf.disableButton(goBtn);
+
+				var idx = video.children().index(li);
+
+				currentI = idx;
+
+				play(video.children().eq(currentI), currentI);
+				startTime = new Date();
+
+
+				timeId = setInterval(function () {
+					pfPageData.playNext();
+
+				}, 60000 * 15);//2000);//60000*15);// 1000);
+
+				countTimeId = setInterval(function () {
+					learned.val($pf.getTimeSpan(startTime, new Date()).toString());
+				}, 5000);
+
+			})
+			goBtn.click(
+				function () {
+
+					var tmpUrl = urlF.val();
+					var param = JSON.parse(jsonTextF.val());
+					var postType = postTypeTBox.val();
+					// $.get(tmpUrl,null,function(data){
+					// 	alert('get:\r\n'+JSON.stringify(data));
+					// });
+					// $.post(tmpUrl,param,function(data){
+					// 	alert('post:\r\n'+JSON.stringify(data));
+					// });
+					$.ajax({
+						url: tmpUrl,
+						headers: {
+							Accept: "application/json; charset=utf-8",
+							'AccessControlAllowCredentials': 'true',
+							'AccessControlAllowOrigin': '*',
+							'Access-Control-Allow-Credentials': 'true',
+							'Access-Control-Allow-Origin': '*',
+							referer: 'https://pay.sellgirl.com:44303/',
+							referrer: 'https://pay.sellgirl.com:44303/',
+							Host: 'pay.sellgirl.com:44303',
+							'Access-Control-Allow-Headers': 'Content-Type,Access-Token',
+							'Access-Control-Expose-Headers': '*',
+							'Access-Control-Allow-Methods': 'POST,GET,OPTIONS,DELETE'
+						},
+						//type: "GET",
+						type: postType,
+						async: true,//同步：true：同步；false：异步
+						cache: false,//缓存
+						//dataType : "jsonp",//跨域访问的重点，设置jsonp
+						data: param,
+						//jsonp: "jsonpCallback",//回调函数
+						xhrFields: {
+							withCredentials: true
+						},
+						crossDomain: true,
+						beforeSend: function (request) {
+							request.setRequestHeader("Test", "Chenxizhang");
+						},
+						success: function (data) {
+							console.info('---------------ajax 跨域成功-----------------');
+							alert('ajax post width header:\r\n' + JSON.stringify(data));
+						}
+					});
+
+					// window.open(tmpUrl, "newwindow1", "height=30, width=30, top=0, left=10,toolbar=no, menubar=no, scrollbars=no, resizable=yes, location=no, status=no");
+
+					return;
+					if (goBtn.val() === 'go') {
+						video.empty();
+
+						var data = JSON.parse(jsonTextF.val());
+						for (var i = 0; i < data.length; i++) {
+							for (var j = 0; j < data[i]['courseChapterSections'].length; j++) {
+
+								video.append(
+									$($pf.formatString('<li attachmentId="{0}" finishStatus="{2}">{1}(finishStatus:{2})</li>',
+										data[i]['courseChapterSections'][j]['attachmentId'],
+										data[i]['courseChapterSections'][j]['name'],
+										data[i]['courseChapterSections'][j]['progress']['finishStatus']
+									))
+								);
+
+							}
+						}
+
+						pfPageData.updateProcess();
+
+					} else {
+						goBtn.val('go');
+					}
+				}
+			);
+		});
+	</script>
+</head>
+
+<body>
+	<textarea style="width:400px" rows="5" class="jsonText">{"code":"benjamin"}</textarea>
+	<br />
+	<input type="text" id="urlTBox" value="https://pay.sellgirl.com:44303/gettest" />
+	<input type="button" id="btnRunStop" value="go" />
+	<input type="text" id="postTypeTBox" value="GET" />
+	<br />
+	<iframe id="targetUrl" src="" style="display: none"></iframe>
+	<a id="targetA" href="#" style="display: none" target="_blank">targetA</a>
+	<p id="showText"></p>
+	<!-- 进度:<input class="process" value="" readonly="readonly">&nbsp;&nbsp;已学习<input class="learned" type="text"
+		readonly="readonly" />&nbsp;&nbsp;完成时关机<input class="shutdownWhenFinish" type="checkbox" />
+	<ol class="video"> -->
+
+	</ol>
+</body>
+
+</html>

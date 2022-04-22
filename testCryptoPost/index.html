@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title></title>
+  <meta charset="utf-8" />
+  <script type="text/javascript" src="./Scripts/pfUtil.js"></script>
+  <script type="text/javascript" src="./Scripts/crypto-js.js"></script>
+  <script type="text/javascript" src="./Scripts/reference.js"></script>
+</head>
+
+<body>
+  <iframe src="" id="tokenIframe" style="width: 500px; height: 500px;display: none;"></iframe>
+  <form>
+    <table>
+      <tr>
+        <td colspan="2">
+          <a href="#" onclick="showUserForm()">用户信息...</a>
+        </td>
+      </tr>
+      <tr class="userFormTr" style="display: none">
+        <td>用户信息</td>
+        <td>
+          <input type="text" id="txtUserName" value="" />
+          <input type="password" id="txtUserPwd" value="" />
+          <!-- <input type="text" id="txtUserPwd" value="" /> -->
+          <input type="text" id="txtUserType" value="NSCloud" />
+          <input type="button" value="登陆" onclick="login()" />
+        </td>
+      </tr>
+      <tr class="userFormTr" style="display: none">
+        <td>authUrl</td>
+        <td>
+          <input type="text" id="txtAuthUrl" value="http://uat-cloud.perfect99.com:10142/NSCloud/Authorization/"
+            style="width: 500px" title="登陆获得token(可能会使浏览器多开的系统token失效)" />
+        </td>
+      </tr>
+      <tr class="userFormTr" style="display: none">
+        <td>getTokenUrl</td>
+        <td>
+          <input type="text" id="txtGetTokenUrl" value="http://localhost:4200/main" style="width: 500px"
+            title="跨iframe获得系统token(需要在目标系统加代码传递token)" />
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: center">
+          <hr style="border: 1px dotted skyblue" />
+        </td>
+      </tr>
+      <tr>
+        <td>request url:</td>
+        <td>
+          <input type="text" id="txtRequestUrl" value="" style="width: 850px" onblur="onUrlBlur()" />
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          <select id="comboUrlHistory" onchange="onComboUrlHistoryChange(this)">
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>request method:</td>
+        <td>
+          <input type="text" id="txtMethod" value="POST" style="width: 450px" onchange="onMethodChange()" />
+        </td>
+      </tr>
+      <tr>
+        <td>Content-Type:</td>
+        <td>
+          <input type="text" id="txtContentType" value="application/x-www-form-urlencoded" style="width: 300px" />
+          <select id="comboContentType" onchange="onComboContentTypeChange(this)">
+            <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+            <option value="text/html;charset=utf-8">text/html;charset=utf-8</option>
+            <option value="application/json;charset=UTF-8">application/json;charset=UTF-8</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>validae domain:</td>
+        <td>
+          <input type="checkbox" id="chkFlag" />
+        </td>
+      </tr>
+      <tr>
+        <td>appId：</td>
+        <td>
+          <input type="text" id="txtAppId" value="408d8304d4c36da99a5e01486fd92311" style="width: 450px" />
+        </td>
+      </tr>
+      <tr>
+        <td>appKey：</td>
+        <td>
+          <input type="text" id="txtAppKey" value="AppDsdfwef112221*$#dsfsfew" style="width: 450px" />
+        </td>
+      </tr>
+      <tr>
+        <td>secertKey:</td>
+        <td>
+          <input type="text" id="txtSecertKey" value="DdsafwefDfaDfsfd12255esfadDEEFDFDw" style="width: 450px" />
+        </td>
+      </tr>
+      <tr>
+        <td>signature_algorithm：</td>
+        <td>
+          <input type="text" id="txtSignature_algorithm" value="HMACSHA1" style="width: 450px" />
+        </td>
+      </tr>
+      <tr>
+        <td>token：</td>
+        <td>
+          <input type="text" id="txtToken" value="" style="width: 450px" />
+        </td>
+      </tr>
+      <tr>
+        <td>timestamp：</td>
+        <td>
+          <input type="text" id="txtTimestamp" value="1551110052683" style="width: 450px" />
+        </td>
+      </tr>
+      <tr>
+        <td>nonce：</td>
+        <td>
+          <input type="text" id="txtNonce" value="OUKETKDNUC" style="width: 450px" />
+        </td>
+      </tr>
+      <tr>
+        <td>body:</td>
+        <td>
+          <input type="checkbox" id="chbBody" />
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">data：</td>
+        <td>
+          <textarea rows="10" id="txtData" style="width: 650px" onmouseup="onTxtResultResize()"
+            placeholder='例1,not body:&#13;&#10;[{"key":"aa","value":0}]&#13;&#10;&#13;&#10;例2,is body:&#13;&#10;{"JobId":"c22635c6-e6c9-2272-da8b-9c8ba051a80a","JobName":"testJob001"}'>
+[{"key":"msg","value":"13001026659"}]</textarea>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top"></td>
+        <td>
+          <input type="button" value="发送请求" onclick="post();" />
+          <input type="button" value="json转map" onclick="jsonToMap('txtData');" />
+          <input type="button" value="urlParam转map" onclick="urlParamToMap('txtData');" />
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: center">
+          <hr style="border: 1px dotted skyblue" />
+        </td>
+      </tr>
+      <tr>
+        <!-- <td colspan="2" style="text-align: center">result</td> -->
+        <td style="text-align: center"></td>
+        <td>result</td>
+      </tr>
+      <tr>
+        <td>post data:</td>
+        <td>
+          <textarea type="text" id="txtPostData" style="height: 100px; width: 450px"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">authorization:</td>
+        <td>
+          <textarea type="text" id="txtAuthorization" style="height: 100px; width: 450px"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">signature string：</td>
+        <td>
+          <textarea type="text" id="txtSignatureString" style="height: 100px; width: 450px"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td>signature：</td>
+        <td><input type="text" id="txtSignature" style="width: 450px" /></td>
+      </tr>
+      <tr>
+        <td valign="top">result:</td>
+        <td>
+          <textarea id="txtResult" style="height: 120px; width: 450px" onmouseup="onTxtResultResize()"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">
+          <input type="button" value="根据result生成interface" onclick="generateInterfaceByResult();" />
+        </td>
+        <td>
+          <textarea id="txtInterface" style="height: 120px; width: 450px"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">
+          <input type="button" value="根据result生成class" onclick="generateClassByResult();" />
+        </td>
+        <td>
+          <textarea id="txtClass" style="height: 120px; width: 450px"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top"></td>
+        <td>
+          <div style="height: 500px; vertical-align: bottom">
+            <span style="vertical-align: bottom">
+              &nbsp;这里的空间是为了使onTxtResultResize不容易由于拖出浏览器范围而不能触发
+            </span>
+            <span style="line-height: 500px"></span>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </form>
+  <script type="text/javascript" language="javascript">
+    var isPosting = true;//为了防止post自动登陆时死循环的问题(试过登陆url用的uat,post地址用的正式地址,结果无限循环)
+    var rePostingCnt = 0;
+
+    var fcacheKey = 'testCryptoPost';//api请求参数缓存
+    var historyCacheKey = 'testCryptoPostHistory';//api请求参数历史缓存
+    var styleCacheKey = 'testCryptoPostStyle';//样式缓存
+    var historyStyleCacheKey = 'testCryptoPostStyleHistory';//样式历史缓存
+    var userInfoCacheKey = 'userInfoCacheKey';//登陆信息缓存
+    var userInfoHistoryCacheKey = 'userInfoHistoryCacheKey';//登陆信息历史缓存
+    var setFormByCache = function (cacheForm) {
+      //var cacheForm=$pf.getLocalStorage(cacheKey);
+
+      if (cacheForm != null) {
+
+        // if(cacheForm.txtAppId){document.getElementById("txtAppId").value=cacheForm.txtAppId};
+        // document.getElementById("txtAppKey").value=cacheForm.txtAppKey;
+        // if(cacheForm.txtSecertKey){document.getElementById("txtSecertKey").value=cacheForm.txtSecertKey};
+
+        var arr = cacheForm;
+
+        for (var j in arr) {
+          if (arr.hasOwnProperty(j)) {
+
+            var fn = arr[j];
+            if (fn != 'undefined') {
+              // if(j=='chbBody'){
+              //   debugger;
+              // }
+              var dom = document.getElementById(j);
+              var v = cacheForm[j];
+              if ($pf.domType.checkbox == $pf.getDomType(dom)) {
+                $pf.setCheckBoxValue(dom, v);
+              } else {
+                dom.value = cacheForm[j];
+              }
+            }
+          }
+        }
+      }
+    }
+    var post = null;
+    var doPost = null;
+    var setStyleByCache = function (cacheForm) {
+
+      if (cacheForm != null) {
+
+        var arr = cacheForm;
+
+        for (var j in arr) {
+          if (arr.hasOwnProperty(j)) {
+
+            var fn = arr[j];
+            if (fn != 'undefined') {
+              // if(j=='chbBody'){
+              //   debugger;
+              // }
+              var dom = document.getElementById(j);
+              // var v=cacheForm[j];
+              // if($pf.domType.checkbox==$pf.getDomType(dom)){
+              //   $pf.setCheckBoxValue(dom,v);
+              // }else{
+              //   dom.value=cacheForm[j];
+              // }
+              var attr = cacheForm[j].attr;
+              var style = cacheForm[j].style;
+              for (var k in style) {
+                if (style.hasOwnProperty(k)) {
+
+                  var styleI = style[k];
+                  if (styleI != 'undefined') {
+                    dom.style[k] = styleI;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+
+    function getHistory(cacheKey, url) {
+      var cacheHistory = $pf.getLocalStorage(cacheKey);
+      if (cacheHistory == null || cacheHistory.length < 1) {
+        return null;
+      }
+      for (var i = 0; i < cacheHistory.length; i++) {
+        var item = cacheHistory[i];
+        if (item.txtRequestUrl == url) {
+          return item;
+        }
+      }
+      return null;
+    }
+    // function getStyleHistory(url){
+    //   return getHistory(historyStyleCacheKey);
+    // }
+    function setHistory(cacheKey, url, newItem) {
+      var cacheHistory = $pf.getLocalStorage(cacheKey);
+      if (cacheHistory == null) {
+        cacheHistory = [];
+      }
+      for (var i = 0; i < cacheHistory.length; i++) {
+        var item = cacheHistory[i];
+        if (item.txtRequestUrl == url) {
+          cacheHistory.splice(i, 1);
+          break;
+        }
+      }
+      cacheHistory.push(newItem);
+      $pf.setLocalStorage(cacheKey, cacheHistory);
+    }
+
+    /**
+     * 登陆获得token(可能会使浏览器多开的系统token失效)
+     */
+    function doLogin(callback) {
+
+      //获得token
+      var userName = document.getElementById("txtUserName").value;
+      var userPwd = document.getElementById("txtUserPwd").value;
+      var userType = document.getElementById("txtUserType").value;
+      var authUrl = document.getElementById("txtAuthUrl").value;
+      var getTokenUrl = document.getElementById("txtGetTokenUrl").value;
+
+      var requestUrl = document.getElementById("txtRequestUrl").value;
+      var method = document.getElementById("txtMethod").value;
+      var flag = document.getElementById("chkFlag").checked;
+      var applicationId = document.getElementById("txtAppId").value;
+      var applicationKey = document.getElementById("txtAppKey").value;
+      var secretKey = document.getElementById("txtSecertKey").value;
+      var algorithm = document.getElementById("txtSignature_algorithm").value;
+      var token = document.getElementById("txtToken").value;
+      var timestamp = document.getElementById("txtTimestamp").value;
+      var nonce = document.getElementById("txtNonce").value;
+      var body = document.getElementById("chbBody").checked;
+
+      var ref2 = new reference(applicationId, applicationKey, secretKey, algorithm, flag, CryptoJS);
+      $pf.tmpReference2 = ref2;
+      ref2.set_nonce(nonce);
+      ref2.set_timestamp(timestamp);
+      //debugger;
+      ref2.request("POST", authUrl, token, [{ key: "userName", value: userName },
+      { key: "password", value: $pf.md5(userPwd).toString().toUpperCase() },
+      //{key:"password",value: "A3F76683622613F0B8DABC44AD95F65D" },
+      { key: "userType", value: userType }], false, function log2(request) {
+        //debugger;
+        var XHR = request.currentTarget;
+        if (XHR.readyState == 4) {
+          if (XHR.status == 200) {
+
+            //document.getElementById("txtResult").value = this.responseText;
+            var resultTest = XHR.responseText;
+            var t = resultTest;
+            if (resultTest != null) {
+              var result = JSON.parse(resultTest);
+              //debugger;
+              if (result.Message != null && result.Message != undefined && result.Message == "签名错误!") {
+                alert("自动获得token失败,请修改appid等字段");
+              } else if (result.Success == "False") {
+                alert("登陆失败,请检查用户帐号信息");
+              } else {//success
+                document.getElementById("txtToken").value = result.Result.AccessToken;
+
+                //debugger;
+                var userNeedCacheForm = {
+                  txtUserName: userName,
+                  txtUserPwd: userPwd,
+                  txtUserType: userType,
+                  txtAuthUrl: authUrl,
+                  txtGetTokenUrl: getTokenUrl
+                };
+                $pf.setLocalStorage(userInfoCacheKey, userNeedCacheForm);
+                userNeedCacheForm.txtRequestUrl = requestUrl;//history是根据此属性找的
+                setHistory(userInfoHistoryCacheKey, requestUrl, userNeedCacheForm);
+                if (typeof (callback) == "function") {
+                  callback();
+                }
+              }
+
+              // $pf.setLocalStorage(userInfoCacheKey, userNeedCacheForm);//登陆成功时才保存登陆信息--benjamin 20220414
+
+              //debugger;
+              // if(result.Result!=null){
+              //     // result.Result=$pf.tmpReference.base64_decode(result.Result);
+              //     debugger;
+              //     result.Result=JSON.parse($pf.tmpReference.base64_decode(result.Result));
+              //     lastResult=result.Result;
+              //     //t=JSON.stringify(result);
+              //     //json美化显示
+              //     t = JSON.stringify(
+              //       result,
+              //       undefined,
+              //       4
+              //     );
+              // }
+            }
+
+
+          }
+        }
+      });
+    }
+
+
+
+    /**
+     * 跨iframe获得系统token(需要在目标系统加代码传递token)
+     */
+    function getToken(callback) {
+
+      //alert(1);
+      //新版首先尝试在iframe中获得token
+      $pf.getMessageFromWindow(
+        document.getElementById("tokenIframe").contentWindow,
+        "getCryptoPostUserToken",
+        "nomessage",
+        function (datapi) {
+          // alert("getWater_" + datapi);
+          if (datapi !== null && datapi !== undefined && datapi !== '') {
+            //alert("getCryptoPostUserToken_" + datapi);
+            document.getElementById("txtToken").value = datapi;
+            if (typeof (callback) == "function") {
+              callback(datapi);
+            }
+          }
+        }
+      );
+      return;
+
+    }
+
+    document.getElementById("tokenIframe").addEventListener('load', function () {
+      getToken();
+    });
+
+    function login() {
+      //为了登陆后也保存appId等的cache
+      //getToken(function(){
+      doLogin(function () {
+        var requestUrl = document.getElementById("txtRequestUrl").value;
+        // var method = document.getElementById("txtMethod").value;
+        // var flag = document.getElementById("chkFlag").checked;
+        var applicationId = document.getElementById("txtAppId").value;
+        var applicationKey = document.getElementById("txtAppKey").value;
+        var secretKey = document.getElementById("txtSecertKey").value;
+        var algorithm = document.getElementById("txtSignature_algorithm").value;
+        var token = document.getElementById("txtToken").value;
+        var timestamp = document.getElementById("txtTimestamp").value;
+        var nonce = document.getElementById("txtNonce").value;
+        var body = document.getElementById("chbBody").checked;
+
+        var needCacheForm = {
+          txtRequestUrl: requestUrl,
+          txtAppId: applicationId,
+          txtAppKey: applicationKey,
+          txtSecertKey: secretKey,
+          txtToken: document.getElementById("txtToken").value//,
+          //chbBody:body,
+          //txtData:document.getElementById("txtData").value
+        };
+        //debugger;
+        var oldCache = $pf.getLocalStorage(fcacheKey);
+        if (oldCache == null || oldCache == undefined || oldCache == "") {
+          $pf.setLocalStorage(fcacheKey, needCacheForm);
+        } else {
+          //var newCache = Object.create(oldCache,needCacheForm);报错Property description must be an object
+          for (var i in needCacheForm) {
+            if (needCacheForm.hasOwnProperty(i)) {
+              oldCache[i] = needCacheForm[i];
+            }
+          }
+
+          $pf.setLocalStorage(fcacheKey, oldCache);
+        }
+      });
+    }
+
+    function loadComboHistoryUrlData() {
+      var combo = document.getElementById("comboUrlHistory");
+      var cacheHistory = $pf.getLocalStorage(historyCacheKey);
+      if (cacheHistory == null || cacheHistory.length < 1) {
+        return;
+      }
+      cacheHistory.sort(function (a, b) { return a.txtRequestUrl.localeCompare(b.txtRequestUrl) });
+      for (var i = 0; i < cacheHistory.length; i++) {
+        var item = cacheHistory[i];
+        var opt = document.createElement("option");
+        opt.value = item.txtRequestUrl;
+        opt.innerText = item.txtRequestUrl;
+        // if (item.txtRequestUrl == url) {
+        //   return item;
+        // }
+        combo.appendChild(opt);
+      }
+    }
+    window.onload = function () {
+      //debugger;
+      setFormByCache($pf.getLocalStorage(fcacheKey));
+      setFormByCache($pf.getLocalStorage(userInfoCacheKey));
+      setStyleByCache($pf.getLocalStorage(styleCacheKey));
+      loadComboHistoryUrlData();
+      try {
+        document.getElementById("tokenIframe").setAttribute('src', document.getElementById("txtGetTokenUrl").value);
+      } catch (e) {
+        console.info(e);
+      }
+
+      //var curToken=document.getElementById("txtToken").value;
+      // //debugger;
+      // if(curToken==null||curToken==undefined||curToken==""){//为了避免每次刷新都重新登陆,那样会影响原token的有效性(反正post时会自动更新token的)
+      //   getToken();
+      // }
+      //getToken();
+    };
+    var lastResult = null;
+    var isRePostMaxTime = function () {
+      if (rePostingCnt > 5) {
+        alert("自动登陆5次失败");
+        isPosting = false;
+        rePostingCnt = 0;
+        return true;
+      }
+      return false;
+    }
+    //使用算法
+    function log(request) {
+      // if (rePostingCnt > 5) {
+      //   alert("自动登陆5次失败");
+      //   isPosting = false;
+      //   rePostingCnt = 0;
+      //   return;
+      // }
+      if (isRePostMaxTime()) {
+        return;
+      }
+      //debugger;
+      var XHR = request.currentTarget;
+      if (XHR.readyState == 4) {
+        if (XHR.status == 200) {
+
+          //document.getElementById("txtResult").value = this.responseText;
+          //debugger;
+          var resultTest = XHR.responseText;
+          var t = resultTest;
+          if (resultTest != null) {
+            var result = JSON.parse(resultTest);
+            if ("Token无效或已过期!" == result.Message) {
+              //debugger;
+              // getToken(function(){
+              //   post();
+              // });
+              doLogin(function () {
+                doPost();
+              });
+              return;
+            } else if (result.Result != null) {
+              // result.Result=$pf.tmpReference.base64_decode(result.Result);
+              //debugger;
+              if (typeof result.Result === 'string') {
+                try {
+                  //result.Result = JSON.parse($pf.tmpReference.base64_decode(result.Result));//不一定全部是json对象
+                  try {
+                    result.Result = $pf.tmpReference.base64_decode(result.Result);
+                  } catch (e2) {
+                    console.info(e2);
+                  }
+                  console.info("------------typeof result.Result----------------");
+                  console.info(typeof result.Result);
+                  console.info(result.Result);
+                  if (typeof result.Result === 'string') {
+                    result.Result = JSON.parse(result.Result);
+                  }
+                } catch (e) {
+                  console.info(e);
+                }
+              }
+              lastResult = result.Result;
+              //t=JSON.stringify(result);
+              //json美化显示
+              t = JSON.stringify(
+                result,
+                undefined,
+                4
+              );
+            }
+            isPosting = false;
+          }
+          document.getElementById("txtResult").value = t;
+
+
+        }
+      }
+    }
+
+    function saveStyleCache() {
+      var url = document.getElementById("txtRequestUrl").value;
+      var txtResultDom = document.getElementById("txtResult");
+      var txtDataDom = document.getElementById("txtData");
+      var needCacheStyle = {
+        txtRequestUrl: url,//这个是作为key的
+        txtResult: {
+          //attr:{rows:'10'},
+          style: { width: txtResultDom.style.width, height: txtResultDom.style.height }
+        },
+        txtData: {
+          //attr:{rows:'10'},
+          style: { width: txtDataDom.style.width, height: txtDataDom.style.height }
+        },
+      }
+      $pf.setLocalStorage(styleCacheKey, needCacheStyle);
+      setHistory(historyStyleCacheKey, url, needCacheStyle);
+    }
+    function stringToJson(str) {
+      var r = null;
+      try {
+        r = JSON.parse(str);
+      } catch (e) {
+        try {
+          r = new Function("return" + str)();
+        } catch (e) {
+          r = eval(str);
+        }
+      }
+      return r;
+    }
+    function isKeyValueList(tmpJsonObj) {
+      if (tmpJsonObj instanceof Array) {
+        if (tmpJsonObj.length < 1) {
+          return true;
+        } else if (tmpJsonObj[0]['key'] != null && tmpJsonObj[0]['key'] != undefined) {
+
+          return true;
+        }
+
+      }
+      return false;
+    }
+    // function isKeyValueListText(str){
+    //   if(str!=null&&str!=undefined){
+    //     return isKeyValueList(JSON.parse(str));
+    //   }
+    //   return false;
+    // }
+    function jsonObjectToKeyValueList(jsonObj) {
+      var r = [];
+      for (var j in jsonObj) {
+        if (jsonObj.hasOwnProperty(j)) {
+          var item = {};
+          item['key'] = j;
+          item['value'] = jsonObj[j];
+          r.push(item);
+        }
+      }
+      return r;
+    }
+    function jsonToMap(domId) {
+      var tmpJson = document.getElementById(domId).value;
+      var r = [];
+      if (tmpJson) {
+        //var tmpJsonObj=JSON.parse(tmpJson);
+        var tmpJsonObj = stringToJson(tmpJson);
+        //debugger;
+        //if(tmpJsonObj instanceof Array){
+        if (isKeyValueList(tmpJsonObj)) {
+          alert('已经是map,无需转换');
+        } else {
+          for (var j in tmpJsonObj) {
+            if (tmpJsonObj.hasOwnProperty(j)) {
+              var item = {};
+              item['key'] = j;
+              item['value'] = tmpJsonObj[j];
+              r.push(item);
+            }
+          }
+        }
+      }
+      if (r.length > 0) {
+        document.getElementById(domId).value = JSON.stringify(r);
+      }
+    }
+    function urlParamToMap(domId) {
+      var s = document.getElementById(domId).value;
+      var sArray = s.split("&");
+
+      var r = [];
+      for (var i = 0; i < sArray.length; i++) {
+        var si = sArray[i].split("=");
+        var item = {};
+        item['key'] = si[0];
+        item['value'] = si[1];
+        r.push(item);
+      }
+      if (r.length > 0) {
+        //document.getElementById(domId).value = JSON.stringify(r);
+        // document.getElementById(domId).value = JSON.stringify(r, undefined,
+        //   4);
+        document.getElementById(domId).value = JSON.stringify(r).replaceAll('},{', '},\r\n{');
+      }
+
+      // if (sArray.length > 0) {
+      //   // var r = [];
+      //   // for (var i = 0; i < sArray.length; i++) {
+      //   //   var si = sArray[i].split("=");
+      //   //   var item = {};
+      //   //   item['key'] = si[0];
+      //   //   item['value'] = si[1];
+      //   //   r.push(item);
+      //   // }
+      //   // if (r.length > 0) {
+      //   //   document.getElementById(domId).value = JSON.stringify(r);
+      //   // }
+
+      //   // var r = [];
+      //   var r="[";
+      //   for (var i = 0; i < sArray.length; i++) {
+      //     var si = sArray[i].split("=");
+      //     r+="{\""+si[0]+"\"}";
+      //   }
+      //   if (r.length > 0) {
+      //     document.getElementById(domId).value = JSON.stringify(r);
+      //   }
+      // }
+    }
+    /**
+     * 现在的兼容方式已经非常好，对于 http://uat-cloud.perfect99.com:10142/NSCloud/SNSAPI/DcosRegistryImage/GetDockerList
+     * 下面几种参数都可以测试通过:
+     *
+     * 1. {dockerName:"jdk8-jre"}		ok
+       2. {"dockerName":"jdk8-jre"}	ok
+       3. [{ key: "dockerName", value: "jdk8-jre" }]   	ok
+       4. [{ "key": "dockerName", "value": "jdk8-jre" }]  ok
+     * */
+    doPost = function () {
+      //debugger;
+      if (isPosting) {
+        rePostingCnt++;
+      } else {
+        isPosting = true;
+      }
+      // if (rePostingCnt > 5) {
+      //   alert("自动登陆5次失败");
+      //   isPosting = false;
+      //   rePostingCnt = 0;
+      //   return;
+      // }
+      if (isRePostMaxTime()) {
+        return;
+      }
+      document.getElementById("txtResult").value = "";
+
+      document.getElementById("txtPostData").value = "";
+      document.getElementById("txtAuthorization").value = "";
+      document.getElementById("txtSignatureString").value = "";
+      document.getElementById("txtSignature").value = "";
+
+      var requestUrl = document.getElementById("txtRequestUrl").value;
+      var method = document.getElementById("txtMethod").value;
+      var contentType = document.getElementById("txtContentType").value;
+      var flag = document.getElementById("chkFlag").checked;
+      var applicationId = document.getElementById("txtAppId").value;
+      var applicationKey = document.getElementById("txtAppKey").value;
+      var secretKey = document.getElementById("txtSecertKey").value;
+      var algorithm = document.getElementById("txtSignature_algorithm").value;
+      var token = document.getElementById("txtToken").value;
+      var timestamp = document.getElementById("txtTimestamp").value;
+      var nonce = document.getElementById("txtNonce").value;
+      var body = document.getElementById("chbBody").checked;
+
+
+
+
+      //旧版不够聪明
+      //var data = document.getElementById("txtData").value == "" ? (body ? "" : null) : body ? document.getElementById("txtData").value : JSON.parse(document.getElementById("txtData").value);
+
+      var txtDataValue = document.getElementById("txtData").value;
+      var data = null;
+      //debugger;
+      //不是body时，request需要的data一定是keyValueList类型,所以自动转换。（不改此块后面的那一行是为了尽量保留原来的逻辑）
+      if ((!body)
+      ) {
+        if (txtDataValue != null && txtDataValue != undefined && txtDataValue != "") {
+          // //var txtDataObj=JSON.parse(txtDataValue);
+          // var txtDataObj=stringToJson(txtDataValue);
+          // if(!isKeyValueList(txtDataObj)){
+          //   var newText=JSON.stringify(jsonObjectToKeyValueList(txtDataObj));
+          //   document.getElementById("txtData").value= newText;
+          //   txtDataValue=newText;
+          // }
+          data = stringToJson(txtDataValue);
+          if (!isKeyValueList(data)) {
+            data = jsonObjectToKeyValueList(data);
+            var newText = JSON.stringify(data);
+            document.getElementById("txtData").value = newText;
+            txtDataValue = newText;
+          }
+        } else {
+          data = null;
+        }
+      } else {
+        if (txtDataValue != null && txtDataValue != undefined && txtDataValue != "") {
+          data = txtDataValue;
+          //data=stringToJson(txtDataValue);
+        } else {
+          data = "";
+          //data=stringToJson(txtDataValue);
+        }
+      }
+
+      var ref = new reference(applicationId, applicationKey, secretKey, algorithm, flag, CryptoJS);
+      $pf.tmpReference = ref;
+      ref.set_nonce(nonce);
+      ref.set_timestamp(timestamp);
+      //debugger;
+      ref.request(method, requestUrl, token, data, body, log, { contentType: contentType });
+
+      document.getElementById("txtPostData").value = ref.get_postData();
+      document.getElementById("txtAuthorization").value = ref.get_authorization();
+      document.getElementById("txtSignatureString").value = ref.get_signatureString();
+      document.getElementById("txtSignature").value = ref.get_signature();
+
+
+      var needCacheForm = {
+        txtRequestUrl: requestUrl,
+        txtAppId: applicationId,
+        txtAppKey: applicationKey,
+        txtSecertKey: secretKey,
+        txtToken: document.getElementById("txtToken").value,
+        chbBody: body,
+        txtData: document.getElementById("txtData").value,
+        txtMethod: method,
+        txtContentType: contentType
+      };
+      $pf.setLocalStorage(fcacheKey, needCacheForm);
+      //setHistory(requestUrl,needCacheForm);
+      delete needCacheForm.txtToken;//历史没必要保存token
+      setHistory(historyCacheKey, requestUrl, needCacheForm);
+
+      saveStyleCache();
+    };
+    var post = function () {
+      rePostingCnt = 0;
+      doPost();
+    }
+    function onUrlBlur() {
+      //debugger;
+      //var his=getHistory(document.getElementById("txtRequestUrl").value);
+      var url = document.getElementById("txtRequestUrl").value;
+      var his = getHistory(historyCacheKey, url);
+      if (his != null) {
+        setFormByCache(his);
+        //debugger;
+        setStyleByCache(getHistory(historyStyleCacheKey, url));
+        setFormByCache(getHistory(userInfoHistoryCacheKey, url));
+      }
+      //getToken();
+    }
+    function onTxtResultResize() {//mouseup事件有个缺点，当拖出浏览器下面时，不会触发当前dom的mouseup事件
+      //debugger;
+      saveStyleCache();
+    }
+    function generateInterfaceByResult() {
+      //var item=null;//对象类型
+      // if(lastResult instanceof Array){
+      //   if(lastResult.length>0){
+      //     item=lastResult[0];
+      //   }
+      // }else{
+      //   item=lastResult;
+      // }
+
+      var objItem = null;//对象类型
+      var item = lastResult;
+      //debugger;
+      //如果外层是pageResult格式,先解出内部
+      if (item instanceof Array) {
+      } else if (item != null && item.hasOwnProperty("DataSource") && item.hasOwnProperty("RecordCount")) {
+        item = item["DataSource"];
+      }
+
+      if (item instanceof Array) {
+        if (item.length > 0) {
+          objItem = item[0];
+        }
+      } else {
+        objItem = item;
+      }
+
+      var s = "";
+      if (objItem != null) {
+        s += "export interface RegistryImageModel {\r\n"
+        for (var j in objItem) {
+          if (objItem.hasOwnProperty(j)) {
+            var value = objItem[j];
+            var row = j + ": Object;";
+            var typeString = typeof value;
+            if (typeString === 'string') {
+              row = j + ": string;";
+            } else if (typeString == 'number') {
+              row = j + ": number;";
+            } else if (value instanceof Array) {
+              row = j + ": any[];";
+            }
+            s += ("  " + row + "\r\n");
+            //fn();
+          }
+        }
+        s += "}";
+      }
+      document.getElementById("txtInterface").value = s;
+    }
+
+    function generateClassByResult() {
+
+      var objItem = null;//对象类型
+      var item = lastResult;
+      //如果外层是pageResult格式,先解出内部
+      if (item instanceof Array) {
+      } else if (item != null && item.hasOwnProperty("DataSource") && item.hasOwnProperty("RecordCount")) {
+        item = item["DataSource"];
+      }
+
+      if (item instanceof Array) {
+        if (item.length > 0) {
+          objItem = item[0];
+        }
+      } else {
+        objItem = item;
+      }
+
+      var s = "";
+      if (objItem != null) {
+        s += "export class RegistryImageUIModel implements RegistryImageModel{\r\n"
+        for (var j in objItem) {
+          if (objItem.hasOwnProperty(j)) {
+            var value = objItem[j];
+            var row = j + ": Object;";
+            var typeString = typeof value;
+            if (typeString === 'string') {
+              row = j + ": string=\"\";";
+            } else if (typeString == 'number') {
+              row = j + ": number=0;";
+            } else if (value instanceof Array) {
+              row = j + ": any[];";
+            }
+            s += ("  " + row + "\r\n");
+            //fn();
+          }
+        }
+        s += "  constructor(m: any) {\r\n"
+        s += "    const me = this;\r\n"
+        for (var j in objItem) {
+          if (objItem.hasOwnProperty(j)) {
+            var row = "me." + j + "=m." + j + ";";
+            s += ("    " + row + "\r\n");
+            //fn();
+          }
+        }
+        s += "  }\r\n";
+        s += "}";
+      }
+      document.getElementById("txtClass").value = s;
+    }
+
+    var isUserFormVisible = false;
+    function showUserForm() {
+      if (isUserFormVisible) {
+        isUserFormVisible = false;
+        var trs = document.getElementsByClassName("userFormTr");
+        for (var i = 0; i < trs.length; i++) {
+          trs[i].style.display = "none";
+        }
+      } else {
+        isUserFormVisible = true;
+        var trs = document.getElementsByClassName("userFormTr");
+        for (var i = 0; i < trs.length; i++) {
+          trs[i].style.display = "table-row";
+        }
+      }
+    }
+    function onMethodChange() {
+      // if ("POST" === $('#txtMethod').val()) {
+      //   $('#txtContentType').val("application/x-www-form-urlencoded");
+      // } else {
+      //   $('#txtContentType').val("text/html;charset=utf-8");
+      // }
+      if ("POST" === document.getElementById("txtMethod").value) {
+        document.getElementById("txtContentType").value = "application/x-www-form-urlencoded";
+      } else {
+        document.getElementById("txtContentType").value = "text/html;charset=utf-8";
+      }
+    }
+    function onComboContentTypeChange(dom) {
+      // var me = this;
+      document.getElementById("txtContentType").value = dom.value;
+    }
+    function onComboUrlHistoryChange(dom) {
+      // var me = this;
+      document.getElementById("txtRequestUrl").value = dom.value;
+      onUrlBlur();
+    }
+  </script>
+</body>
+
+</html>
