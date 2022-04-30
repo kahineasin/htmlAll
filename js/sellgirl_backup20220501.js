@@ -23,10 +23,11 @@ function getOs() {
 }
 var oOs = new getOs();
 
-sellgirl.isOnMobile = (function () {
+sellgirl.isOnMobile = function () {
     var system = {};
     var p = navigator.platform;
     var u = navigator.userAgent;
+
     system.win = p.indexOf("Win") == 0;
     system.mac = p.indexOf("Mac") == 0;
     system.x11 = (p == "X11") || (p.indexOf("Linux") == 0);
@@ -39,7 +40,7 @@ sellgirl.isOnMobile = (function () {
         return false;
     }
     return true;
-})();
+};
 
 /*
 自写ajax方法,使用如下:
@@ -557,68 +558,29 @@ sellgirl.showTip = function (text, opts) {
     func();
 };
 
-/*
-阻止事件
-*/
-sellgirl.stopPropagation = function (event) {
-    if (event.stopPropagation) {
-        event.stopPropagation();
-    } else {
-        event.cancelBubble = true;
-    }
-};
-
-sellgirl.showMask = function (html,opts) {
-
-    opts = opts || {};
-    var me=this;
-
+sellgirl.showMask = function (html) {
     this.sellgirlMaskBox = document.createElement("div");
     //sellgirlMaskBox.id = "sellgirlMaskBox";
     this.sellgirlMaskContentBox = document.createElement("div");
-    this.sellgirlMaskCloseBtn = document.createElement("div");
     //sellgirlMaskContentBox.id = "sellgirlMaskContentBox";
     this.sellgirlMaskBox.appendChild(this.sellgirlMaskContentBox);
-    //this.sellgirlMaskBox.appendChild(this.sellgirlMaskCloseBtn);
     this.sellgirlMaskBox.style.position = 'fixed';
     this.sellgirlMaskBox.style.top = '0px';
     this.sellgirlMaskBox.style.zIndex = '555';
     this.sellgirlMaskBox.style.width = '100%';
     this.sellgirlMaskBox.style.height = '100%';
     this.sellgirlMaskBox.style.textAlign = 'center';
-    this.sellgirlMaskBox.style.backgroundColor = '#efefef';    
-    
+    this.sellgirlMaskBox.style.backgroundColor = '#efefef';
     this.sellgirlMaskContentBox.innerHTML = html;
-    
-    this.sellgirlMaskCloseBtn.style.position = 'fixed';
-    this.sellgirlMaskCloseBtn.style.top = '0px';
-    this.sellgirlMaskCloseBtn.style.right = '0px';
-    this.sellgirlMaskCloseBtn.style.backgroundColor = 'white';  
-    this.sellgirlMaskCloseBtn.style.color = 'red';  
-    this.sellgirlMaskCloseBtn.style.zIndex = 9999;
-    this.sellgirlMaskCloseBtn.style.cursor = 'pointer';  
-    this.sellgirlMaskCloseBtn.innerHTML = "关闭遮罩";
-    this.sellgirlMaskCloseBtn.addEventListener('click', function (event) {
-        sellgirl.stopPropagation(event);
-        me.close();
-    });
-    
-    if (opts.opacity) {this.sellgirlMaskBox.style.opacity = opts.opacity;
-    //this.sellgirlMaskCloseBtn.style.opacity = 10;
-    }
-    
     var winSize = sellgirl.getBrowerViewSize();
     document.body.appendChild(this.sellgirlMaskBox);
-    document.body.appendChild(this.sellgirlMaskCloseBtn);
     this.sellgirlMaskContentBox.style.paddingTop = ((winSize.height - this.sellgirlMaskContentBox.clientHeight) / 2) + 'px';
 };
 
 sellgirl.showMask.prototype.close = function () {
     if (this.sellgirlMaskBox) {
         document.body.removeChild(this.sellgirlMaskBox);
-        document.body.removeChild(this.sellgirlMaskCloseBtn);
         delete this.sellgirlMaskBox;
-        delete this.sellgirlMaskCloseBtn;
     }
 };
 
@@ -627,11 +589,9 @@ sellgirl.showMask.prototype.close = function () {
 *dom:背景图加的位置(canvas是作为dom的子对象添加的,如果图片不显示,调整canvas和dom的z-index关系)(dom支持直接使用document.body)
 *imgUrl:图片地址
 *imgSize:{w:宽,h:高,s:{x:,y:},e:{x:,y:}}  (s和e是图片与"浏览器的左上角到右下角的对角线"对齐的参照线的开始结束点的坐标)
-*canvasProperty:canvas对象的html属性 {opacity,backgroundColor}
-*opts:{loaded:图片加载完事件}
+*opts:canvas对象的html属性
 */
-sellgirl.backgroundImg = function (dom, imgUrl, imgSize, canvasProperty, opts) {
-    canvasProperty = canvasProperty || {};
+sellgirl.backgroundImg = function (dom, imgUrl, imgSize, opts) {
     opts = opts || {};
     if (dom !== document.body && dom.style.zIndex === '') { dom.style.zIndex = '1'; }
 
@@ -647,17 +607,15 @@ sellgirl.backgroundImg = function (dom, imgUrl, imgSize, canvasProperty, opts) {
     canvas.style.zIndex = '-100';
     canvas.style.top = '0px';
     dom.appendChild(canvas);
-    if (canvasProperty.opacity) canvas.style.opacity = canvasProperty.opacity;
+    if (opts.opacity) canvas.style.opacity = opts.opacity;
 
     var ctx1 = canvas.getContext('2d');
     var image1 = new Image();
-    image1.crossOrigin = "anonymous"; //如果图片是跨域,想对canvasDom.toDataURL()就需要这一句--benjamin20200213
 
     //目标是使"图片参照线"匹配到"浏览器的左上角到右下角的对角线
 
-    ////var src = 'img/web_sasha_1920x1080_02.jpg';
-    //var src = imgUrl;
-
+    //var src = 'img/web_sasha_1920x1080_02.jpg';
+    var src = imgUrl;
     var w = imgSize.w, h = imgSize.h;//图片尺寸
     var line = {//图片与"浏览器的左上角到右下角的对角线"对齐的参照线.如果人物是平躺的话,一般就取水平中分线
         s: imgSize.s,
@@ -705,23 +663,11 @@ sellgirl.backgroundImg = function (dom, imgUrl, imgSize, canvasProperty, opts) {
         ////alert('宽'+width+' 高'+height);
         //canvas.width = window.innerWidth;
         //canvas.height = window.innerHeight;
-        //        //为了解决手机上因为viewport而模糊的问题-20171123
-        //        canvas.style.width = window.innerWidth + "px";
-        //        canvas.style.height = window.innerHeight + "px";
-        //        canvas.width = window.innerWidth * pixelTatio;
-        //        canvas.height = window.innerHeight * pixelTatio;
-
-        //应该使用计算的wWidth--benjamin20200213
-        canvas.style.width = wWidth + "px";
-        canvas.style.height = wHeight + "px";
-        canvas.width = wWidth * pixelTatio;
-        canvas.height = wHeight * pixelTatio;
-
-        if (canvasProperty.backgroundColor) {//背景色一定要画到画布上,用户保存图片时才能保存下来(想用css是不行的)
-            ctx1.rect(0, 00, wWidth * pixelTatio, wHeight * pixelTatio);
-            ctx1.fillStyle = canvasProperty.backgroundColor;
-            ctx1.fill();
-        }
+        //为了解决手机上因为viewport而模糊的问题-20171123
+        canvas.style.width = window.innerWidth + "px";
+        canvas.style.height = window.innerHeight + "px";
+        canvas.width = window.innerWidth * pixelTatio;
+        canvas.height = window.innerHeight * pixelTatio;
 
         ctx1.rotate(angleOfDifference * Math.PI / 180);//旋转
 
@@ -732,24 +678,8 @@ sellgirl.backgroundImg = function (dom, imgUrl, imgSize, canvasProperty, opts) {
     }
     image1.onload = function () {
         setImageAngle();
-        if (opts.loaded) {
-            opts.loaded();
-        }
     }
-
-    //缩略图--benjamin20200411
-    var hasThumbnail = opts.thumbnail !== null && opts.thumbnail !== undefined;
-    //var imgThumbnail = null;
-    if (hasThumbnail) {
-        var fullImage = new Image();
-        fullImage.onload = function () {
-            image1.src = fullImage.src;
-            //image1 = fullImage;
-        };
-        fullImage.src = imgUrl;
-    }
-
-    image1.src = hasThumbnail ? opts.thumbnail : imgUrl;
+    image1.src = src;
     if (dom !== document.body) {
         EleResize.on(dom, function () { setImageAngle(); })
     } else {
@@ -1037,7 +967,7 @@ sellgirl.waitTime = function (time) {
     return;
 };
 
-sellgirl.asyncLoadImage = function (dom, imgUrl) {
+sellgirl.asyncLoadImage = function (dom,imgUrl) {
 
     var image1 = new Image();
     image1.onload = function () {
@@ -1045,710 +975,6 @@ sellgirl.asyncLoadImage = function (dom, imgUrl) {
     };
     image1.src = imgUrl;
 
-};
-
-sellgirl.onClick = function (dom, callback) {
-    //debugger;
-    if (sellgirl.isOnMobile) {
-        dom.addEventListener('touchstart', callback);
-    } else {
-        dom.addEventListener('click', callback);
-    }
-};
-
-sellgirl.createMusicPlayer = function (audioContainer,opts) {
-    if(opts===undefined||opts===null){
-        opts={};
-    }
-    //按钮
-    var nextLrcModeBtn = audioContainer.find('#nextLrcModeBtn');
-
-    //缓存
-    function sNumber(num, key, defaultNum) {
-        if (defaultNum === undefined || undefined === null) { defaultNum = 0; }
-        if (num !== null && num !== undefined) {
-            localStorage.setItem(key, num.toString());
-        }
-        return localStorage.getItem(key) == null || localStorage.getItem(key) == 'undefined' ? defaultNum : parseInt(localStorage.getItem(key));
-    }
-    function sCurIdx(curIdx) {
-        return sNumber(curIdx, 'sellgirl_mediaPlayer_curIdx');
-    }
-    function sPlayMode(playMode) {
-        //return sNumber(playMode, 'sellgirl_mediaPlayer_playMode');
-        return sNumber(playMode, 'sellgirl_mediaPlayer_playMode', 2); //默认随机播放
-    }
-    function sLrcMode(lrcMode) {
-        return sNumber(lrcMode, 'sellgirl_mediaLrcer_lrcMode', 1);
-    }
-
-    var medias = {};
-    var curIdx = sCurIdx();
-    var playMode = sPlayMode();
-    var lrcMode = sLrcMode();
-
-    var lrcJSONCache = {};
-    var lrcTimeCache = {}; //歌词对应的时间数组--benjamin20191125
-    //var lrcTime = [];//歌词对应的时间数组--benjamin20191125
-    // var lrcTitle = '';//歌词标题
-    var randomPlayList = [];
-    var randomPlayContainer = null;
-
-    function getPlayLis() {//获得播放列表li
-        return document.getElementsByClassName('sellgirl_player_list_top')[0].children;
-    }
-
-    if (getPlayLis().length - 1 < curIdx) { curIdx = sCurIdx(0); } //当服务器中删除了视频文件时,当前idx可能已经太大了
-
-    function setDefaultBg(oldSrc) {
-        var lis = getPlayLis();
-        for (var i = 0; i < lis.length; i++) {
-//            if (decodeURIComponent('./' + oldSrc.replace(window.location.href.replace(/[^\/]*$/, ''), '')) == lis[i].attributes.getNamedItem('src').nodeValue + '.' + lis[i].attributes.getNamedItem('sgFmts').nodeValue.split(',')[0]) {
-            if (decodeURIComponent(oldSrc.replace(window.location.href.replace(/[^\/]*$/, ''), '')) == lis[i].attributes.getNamedItem('src').nodeValue ) {
-                lis[i].style.backgroundColor = ''; // 'white';//如果加了白色,会挡住 a:hover时的背景色
-            }
-        }
-
-    }
-    function srcIsVideo(src) {
-        var lcSrc = src.toLowerCase();
-        //var formats = ['.mp4', '.ogg', '.mkv'];
-        var formats = ['mp4', 'mkv']; //改为多source后--20180728
-        for (var i = 0; i < formats.length; i++) {
-            if (lcSrc.indexOf(formats[i]) > -1) { return true; }
-        }
-        return false;
-    }
-    function srcIsFlv(src) {
-        var lcSrc = src.toLowerCase();
-        var formats = ['flv']; 
-        for (var i = 0; i < formats.length; i++) {
-            if (lcSrc.indexOf(formats[i]) > -1) { return true; }
-        }
-        return false;
-    }
-    function mediaIsStopped(player) {
-        return player.videoDom.ended || player.videoDom.paused;
-    }
-    var videoPlayers={};
-    function createVideo(src, isVideo) {
-        isVideo = (isVideo !== false); //默认true
-        var oVideo = document.createElement(isVideo ? "video" : "audio");
-        oVideo.autoplay = 'autoplay';
-        oVideo.controls = 'controls';
-        oVideo.className = 'classAudio';
-        oVideo.autobuffer = 'autobuffer';
-        oVideo.setAttribute('sellgirlSrc',src);
-        //oVideo.src = src;
-        oVideo.addEventListener('ended', function () {
-            playNext();
-        });
-        var result={
-            play:function(){oVideo.play();},
-            pause:function(){oVideo.pause();},
-            videoDom:oVideo,
-            isFlv:false,
-            removeSource:function(){
-                var childs = oVideo.childNodes;
-                for (var i = childs.length - 1; i >= 0; i--) {
-                    oVideo.removeChild(childs[i]);
-                }
-            },
-            onTimeUpdate:function(fun){
-              oVideo.ontimeupdate=fun;
-            },
-            onSeeked:function(fun){
-              oVideo.onseeked=fun;
-            },
-            currentTime:function(){
-                return oVideo.currentTime;
-            },
-            setCurrentTime:function(t){
-                return oVideo.currentTime=t;
-            }
-        };
-        videoPlayers[src]=result;
-        return result;
-    }
-    //var flvPlayers={};
-    //需要引用flvjs
-    function createFlv(src) {
-        var oVideo = document.createElement("video");                        
-        oVideo.autoplay = 'autoplay';
-        oVideo.controls = 'controls';
-        oVideo.className = 'classAudio';
-        oVideo.autobuffer = 'autobuffer';
-        oVideo.setAttribute('sellgirlSrc',src);
-        //oVideo.src = src;
-        
-        var flvPlayer = flvjs.createPlayer({
-            type: 'flv',
-            // url: 'http://example.com/flv/video.flv'
-            url: src+'.flv'
-        });
-        flvPlayer.attachMediaElement(oVideo);
-        flvPlayer.load();
-        //flvPlayer.play();
-        oVideo.addEventListener('ended', function() {
-            playNext();
-        });
-//        return oVideo;
-        var result={
-            play:function(){flvPlayer.play();},
-            pause:function(){flvPlayer.pause();},
-            videoDom:oVideo,
-            isFlv:true,
-            removeSource:function(){
-                var childs = oVideo.childNodes;
-                for (var i = childs.length - 1; i >= 0; i--) {
-                    oVideo.removeChild(childs[i]);
-                }
-            },
-            onTimeUpdate:function(fun){
-              oVideo.ontimeupdate=fun;
-            },
-            onSeeked:function(fun){
-              oVideo.onseeked=fun;
-            },
-            currentTime:function(){
-                return oVideo.currentTime;
-            },
-            setCurrentTime:function(t){
-                return oVideo.currentTime=t;
-            }
-        };
-        videoPlayers[src]=result;
-        return result;
-    }
-    var lastTimeIsFlv=false;
-    function liClick(li) {
-
-        var idx = parseInt(li.attributes.getNamedItem('sgIdx').nodeValue);
-        sCurIdx(idx);
-        if (idx === curIdx && medias[idx]) {//当重播时
-            if (!medias[idx].ended) { medias[idx].setCurrentTime ( 0); }
-            medias[idx].play();
-            return;
-        }
-
-        var aus = document.getElementsByClassName('classAudio');
-        var videoLayer = document.getElementsByClassName('videoLayer')[0];
-        
-        if (aus && aus.length > 0) {
-            //var originSrc=aus[0].getAttribute('sellgirlSrc');
-            var originSrc=aus[0].attributes.getNamedItem('sellgirlSrc').nodeValue;
-            var originPlayer=videoPlayers[originSrc];
-            //setDefaultBg(aus[0].src);//iphone不支持此属性currentSrc
-            //setDefaultBg(aus[0].childNodes[0].src); //iphone不支持此属性currentSrc.改为多个source之后要用第一个子节点的url去找当前播放地址
-            //setDefaultBg(lastTimeIsFlv?aus[0].src:aus[0].childNodes[0].src); //iphone不支持此属性currentSrc.改为多个source之后要用第一个子节点的url去找当前播放地址
-            setDefaultBg(originSrc); //iphone不支持此属性currentSrc.改为多个source之后要用第一个子节点的url去找当前播放地址
-
-            if (!mediaIsStopped(originPlayer)) { originPlayer.pause(); }
-            if (!medias[curIdx]) { medias[curIdx] = aus[0]; }
-            videoLayer.removeChild(aus[0]);
-        }
-
-        var src = li.attributes.getNamedItem('src').nodeValue;
-        //debugger;
-        var sgFmts=li.attributes.getNamedItem('sgFmts').nodeValue;
-        //var isVideo = srcIsVideo(src);
-        var isVideo = srcIsVideo(sgFmts); //改为多source之后--20180728
-        var isFlv=srcIsFlv(sgFmts);
-        if (!medias[idx]) {
-            if(typeof(flvjs)==='undefined'||(!isFlv)){
-                medias[idx] = createVideo(src, isVideo);
-            }else{
-                medias[idx] = createFlv(src);
-            }
-        } else {
-            if (isVideo) {//iphone上,如果不重新load的话,有时切换到不同格式时就会显示不了video的图像,没办法先加这句;华为手机上,即使load了也没用,视频直接停了,所以干脆重新创建element
-                var oldVideo = medias[idx];
-                medias[idx] = createVideo(src);
-                delete oldVideo;
-            } else if (medias[idx].currentTime() != 0) {
-                medias[idx].setCurrentTime(0);
-            }
-            var currentPlayer=videoPlayers[src];
-            if (mediaIsStopped(currentPlayer)) { 
-                currentPlayer.play();
-            }
-        }
-        
-        //为了兼容多种浏览器，同时声称多个source节点--20180728var childs = f.childNodes; 
-        medias[idx].removeSource();
-    
-        var fmts = li.attributes.getNamedItem('sgFmts').nodeValue.split(',');
-        var mimeType={
-            mp4:'video/mp4'
-        };
-        
-        if(!isFlv){
-            for (var i = 0; i < fmts.length; i++) {
-                var oSource = document.createElement("source");
-                oSource.src = src + '.' + fmts[i];
-                //oSource.type = 'audio/' + fmts[i];
-                oSource.type = mimeType[fmts[i]]!=undefined?mimeType[fmts[i]]:'audio/' + fmts[i];
-                medias[idx].videoDom.appendChild(oSource);
-            }
-        }
-
-        //videoLayer.appendChild(medias[idx]);
-        videoLayer.appendChild(medias[idx].videoDom);
-        curIdx = idx;
-        li.style.backgroundColor = 'lightblue';
-
-        //显示歌词--benjamin20191125
-        //debugger;
-        if (!isVideo) {
-            function showLrc() {
-
-                var ul = $("#lrclist")[0]; //获取ul
-                $("#lrclist").empty();
-                var i = 0;
-                var lrcJSON = lrcJSONCache[li.innerHTML];
-                // debugger;
-                $.each(lrcJSON, function (key, value) {//遍历lrc
-                    // lrcTime[i++] = parseFloat(key.substr(1,3)) * 60 + parseFloat(key.substring(4,10));//00:00.000转化为00.000格式
-                    ul.innerHTML += "<li><p>" + ((lrcJSON[key] === null || lrcJSON[key] === undefined || lrcJSON[key] === "") ? "&nbsp;" : lrcJSON[key]) + "</p></li>"; //ul里填充歌词
-                });
-                //lrcTime[lrcTime.length] = lrcTime[lrcTime.length-1] + 3;//如不另加一个结束时间，到最后歌词滚动不到最后一句
-
-
-                var currentLine = 0; //当前播放到哪一句歌词了
-                var currentTime; //当前播放的时间
-                //var audio = document.getElementById("audio");
-                //var ppxx;//保存ul的translateY值
-                var $li = $("#lrclist>li"); //获取所有li
-                //debugger;
-                var lrcTime = lrcTimeCache[li.innerHTML];
-                var lastJ = -2;
-                medias[idx].onTimeUpdate( function () {//audio时间改变事件
-                    //debugger;
-                    currentTime = medias[idx].currentTime();
-                    //debugger;
-                    for (var j = currentLine, len = lrcTime.length; j < len; j++) {//这样写的话，liclick时需要重置currentLine为0，索性从0开始找吧
-                        //for (var j=0, len=lrcTime.length; j<len; j++){
-                        if (
-                                (currentTime < lrcTime[j + 1]
-                                  || j + 1 >= lrcTime.length//最后一行时
-                                )
-                                && (currentTime >= lrcTime[j]
-                                  || j === 0//第一行时(如果没这句,当歌词第一句的时间比较大时,就一直不满足了
-                                )
-                               ) {
-                            currentLine = j;
-                            if (//lastJ!==j&&//这样的话，liclick时lastJ没有重置
-                                    (!$li.eq(currentLine).hasClass('on')) &&
-                                    (!$pf.stringIsNullOrWhiteSpace($li.get(currentLine).innerText))) {
-                                // debugger;
-                                //ppxx = 250-(currentLine*32);
-                                // ul.style.transform = "translateY("+ppxx+"px)";
-                                // debugger;
-                                // ul.scrollTop=ppxx;
-                                //$('.sellgirl_player_lrcContainer').scrollTop(currentLine*32);
-
-                                var ppxx = $li.get(currentLine).getBoundingClientRect().top
-                                      - $li.get(0).getBoundingClientRect().top;
-                                //$('.sellgirl_player_lrcContainer').animate({scrollTop:currentLine*32},200);
-                                $('.sellgirl_player_lrcContainer').animate({ scrollTop: ppxx }, 200);
-
-                                // console.log(ppxx);
-                                // ul.scrollTop="1000px";
-                                // $li.get(currentLine-1).className="";
-                                $li.removeClass('on');
-                                // console.log("on"+currentLine);
-                                $li.get(currentLine).className = "on";
-
-                                lastJ = j;
-                            }
-                            break;
-                        }
-                    }
-                });
-                medias[idx].onSeeked(function () {//audio进度更改后事件
-                    currentTime = medias[idx].currentTime();
-                    // console.log("  off"+currentLine);
-                    $li.get(currentLine).className = "";
-                    for (var k = 0, len = lrcTime.length; k < len; k++) {
-                        if (
-                                (currentTime < lrcTime[k + 1]
-                                  || k + 1 >= lrcTime.length//最后一行时
-                                )
-                                && currentTime >= lrcTime[k]
-                               ) {
-                            currentLine = k;
-                            lastJ = -2;
-                            break;
-                        }
-                    }
-                });
-            }
-            if (lrcJSONCache[li.innerHTML] === undefined) {
-                $.post('getLrc_stream.asp?fileName=' + encodeURIComponent(li.attributes.getNamedItem('src').nodeValue.replace('./mp3/', '')), null, function (data) {
-                    if (data !== undefined && data !== null && data !== '') {
-                        // $("#lrclist").css('transform','translateY(26px)');
-
-                        var lrcArray = data.split('\r\n');
-                        var lrcTitle = '';
-                        var lrcJSON = {};
-                        var lrcJSONArray = [];
-                        // debugger;
-                        lrcJSON['[00:00.00]'] = '';//顺序对后面$.foreach是有影响的
-                        function isTimeLine(s){
-                            return s!==null&&s!==undefined&&s.length>9&&s[0]==='['&&s[3]===':'&&s[9]===']';
-                        }
-                        function setLineToTime(line){//为了适应压缩版的歌词(一行有多个时间标签)
-                            var timeArr=[];
-                            while(isTimeLine(line)){
-                                timeArr.push(line.substr(0,10));
-                                line=line.substr(10,line.length-10);
-                            }
-//                            if(isTimeLine(line)){
-//                                lrcJSON[line.substr(0,10)] = line.substr(10,line.length-10);
-//                            }
-                            for(var i=0;i<timeArr.length;i++){
-                                lrcJSON[timeArr[i]] = line;
-                                lrcJSONArray.push({t:timeArr[i],l:line});
-                            }
-                        }
-                        function keyToTime(key){
-                            return parseFloat(key.substr(1, 3)) * 60 + parseFloat(key.substring(4, 10));
-                        }
-                        for (var j = 0; j < lrcArray.length; j++) {
-//                            if (lrcArray[j].indexOf(']') === 9) {
-                            if (isTimeLine(lrcArray[j])) {
-////                                var lrcRow = lrcArray[j].split(']');
-////                                lrcJSON[lrcRow[0] + ']'] = lrcRow[1];
-//                                lrcJSON[lrcArray[j].substr(0,10)] = lrcArray[j].substr(10,lrcArray[j].length-10);
-                                setLineToTime(lrcArray[j]);
-                            } else {
-                                lrcTitle += lrcArray[j];
-                            }
-                        }
-                        //if (lrcJSON['[00:00.00]'] === undefined && lrcJSON['[00:00:00]'] === undefined) {
-                        lrcJSON['[00:00.00]'] = lrcTitle;
-                       lrcJSONArray.push({t:'[00:00.00]',l:lrcTitle});
-//                        
-//                            var aa=$.sort(lrcJSON, function (a,b){
-//                                return parseInt(a.replace(':','').replace('.',''))-parseInt(b.replace(':','').replace('.',''));
-//                            });
-
-                        try{
-                            //压缩版歌词需要重新排序--benjamin 20201205
-                            var lrcJSONArraySort=lrcJSONArray.sort( function (a,b){
-                                //return parseInt(a.t.replace(':','').replace('.',''))-parseInt(b.t.replace(':','').replace('.',''));
-                                return keyToTime(a.t)-keyToTime(b.t);
-                            });
-                            lrcJSON={};
-                            for(var i=0;i<lrcJSONArraySort.length;i++){
-                                lrcJSON[lrcJSONArraySort[i].t]=lrcJSONArraySort[i].l;
-                            }
-                        }catch(e){
-                        
-                        }
-                        
-                        
-                        lrcJSONCache[li.innerHTML] = lrcJSON;
-
-                        var lrcTime = []; //歌词对应的时间数组
-                        i = 0;
-                        $.each(lrcJSON, function (key, value) {//遍历lrc
-                            //lrcTime[i++] = parseFloat(key.substr(1, 3)) * 60 + parseFloat(key.substring(4, 10)); //00:00.000转化为00.000格式
-                            lrcTime[i++] =keyToTime(key);
-                            // ul.innerHTML += "<li><p>"+lrcJSON[key]+"</p></li>";//ul里填充歌词
-                        });
-                        lrcTimeCache[li.innerHTML] = lrcTime;
-                        showLrc();
-                        setLrcModel(nextLrcModeBtn[0]);
-
-                    } else {
-                        delete lrcJSONCache[li.innerHTML];
-                        delete lrcTimeCache[li.innerHTML];
-                        var ul = $("#lrclist")[0]; //获取ul
-                        $("#lrclist").empty();
-                        ul.innerHTML = "<li>无歌词</li>";
-
-                    }
-                });
-            } else {
-                showLrc();
-            }
-
-        }
-    }
-    function play(idx) {
-        var lis = getPlayLis();
-        if (!lis[idx]) { idx = 0 };
-        liClick(lis[idx]);
-    }
-    function playNext() {
-        // debugger;       
-        switch (playMode) {
-            case 0:
-                play(curIdx + 1);
-                break;
-            case 1:
-                play(curIdx);
-                break;
-            case 2: //Random 和传统随机不同,随机抽取,全部轮一遍后再重复
-                // if(randomPlayList.length<1){
-                //     var lis = getPlayLis();
-                //     for (var i = 0; i < lis.length; i++) {
-                //         randomPlayList.push(i);
-                //     }
-                // }
-                // play($pf.listRandomTake(randomPlayList,1,true)[0]);
-
-                play(randomPlayContainer.randomTake(1));
-                setPlayModelLabel(document.getElementsByClassName('sellgirl_player_list_toolbar')[0].children[0]);
-                break;
-            default:
-                break;
-        }
-    }
-    function setPlayModelLabel(dom) {
-        switch (playMode) {
-            case 0:
-                dom.innerHTML = "&lt;顺序播放&gt;";
-                break;
-            case 1:
-                dom.innerHTML = "&lt;单曲循环&gt;";
-                break;
-            case 2:
-                dom.innerHTML = "&lt;随机播放(rest:" + randomPlayContainer.getRestCount() + ")&gt;";
-                break;
-            default:
-                break;
-        }
-    }
-    function setLrcModel(dom) {
-        switch (lrcMode) {
-            case 0:
-                dom.innerHTML = "&lt;多行歌词&gt;";
-                break;
-            case 1:
-                dom.innerHTML = "&lt;单行歌词&gt;";
-                break;
-            default:
-                break;
-        }
-
-        switch (lrcMode) {
-            case 0:
-                $('.sellgirl_player_lrcContainer').height('auto');
-                break;
-            case 1:
-                var lrcLi = $('.sellgirl_player_lrc li').eq(0);
-                if (lrcLi.length > 0) {
-                    $('.sellgirl_player_lrcContainer').height(lrcLi.height() + 21); //21是偏差值
-                }
-                break;
-            default:
-                break;
-        }
-    }
-    var isSongListClosed = false;
-    function expandSongList(useAnimate) {
-        var playerListTop = $('.sellgirl_player_list_top');
-        function setTopHeight(height) {
-            if (useAnimate !== false) {
-                playerListTop.animate({ height: height + 'px' }, 200);
-            } else {
-                playerListTop.height(height + 'px');
-            }
-        }
-        var rect = playerListTop[0].getBoundingClientRect();
-        var h = $(window).height() - rect.top - 5; //5为偏差值,否则会多1个滚动条
-        playerListTop.height("auto");
-        var autoRect = playerListTop[0].getBoundingClientRect();
-        // debugger;
-        playerListTop.height("0px");
-        if (autoRect.height > h) {
-            // playerListTop.height(h);
-            // playerListTop.animate({height:h+'px'},200);
-            setTopHeight(h);
-        } else {
-            //playerListTop.height(autoRect.height);
-            // playerListTop.animate({height:autoRect.height+'px'},200);
-            setTopHeight(autoRect.height);
-        }
-        // $('.sellgirl_player_list_top').animate({height:"100px"},200);
-        isSongListClosed = false;
-    }
-    function closeSongList(useAnimate) {
-        if (useAnimate !== false) {
-            $('.sellgirl_player_list_top').animate({ height: '0px' }, 200);
-        } else {
-            $('.sellgirl_player_list_top').height('0px');
-        }
-        isSongListClosed = true;
-    }
-    function selectSong(dom) {
-        var playerListTop = $('.sellgirl_player_list_top');
-        // var rect = dom.getBoundingClientRect();
-        // var h = $(window).height() - rect.top - 5;//5为偏差值,否则会多1个滚动条
-        // debugger;
-        // if(playerListTop.height()>1){
-        // if(playerListTop.css('display')!=='none'){
-        if (!isSongListClosed) {
-            // playerListTop.hide();
-            // playerListTop.height("0px");
-            closeSongList();
-            // playerListTop.height(0);
-            // playerListTop.prev().hide();
-            dom.innerHTML = "<选歌...>";
-        } else {
-            // // debugger;
-            // //  playerListTop.prev().show();
-            //  var rect = playerListTop[0].getBoundingClientRect();
-            // var h = $(window).height() - rect.top -5;//5为偏差值,否则会多1个滚动条
-            // playerListTop.height(h);
-            // playerListTop.show();
-            // playerListTop.height("auto");
-            expandSongList();
-            dom.innerHTML = "<收起列表>";
-        }
-    }
-
-    ////    var oldOnLoad = window.onload;
-    ////    window.onload = function() {
-    ////        if (oldOnLoad) { oldOnLoad(); }
-
-    ////        var lis = getPlayLis();
-    ////        var idxs = [];
-    ////        for (var i = 0; i < lis.length; i++) {
-    ////            idxs.push(i);
-    ////        }
-    ////        randomPlayContainer = $pf.listRandomTakeContainer(idxs);
-
-    ////        //liClick(lis[curIdx]);
-    ////        playNext(); //默认下一首--benjamin20191130
-
-    ////        if (lis.length < 5) {
-    ////            $('#selectSongBtn').hide();
-    ////            expandSongList(false);
-    ////        } else {
-    ////            // $('.sellgirl_player_list_top').height(0);
-    ////            // $('.sellgirl_player_list_top').hide();
-    ////            // closeSongList();
-    ////            closeSongList(false);
-    ////        }
-    ////        // liClick(getPlayLis()[curIdx]);
-    ////        setPlayModelLabel(document.getElementsByClassName('sellgirl_player_list_toolbar')[0].children[0]);
-    ////        //setLrcModel(document.getElementById('nexLrcModeBtn'));第一次加载歌词是异步的
-    ////    }
-
-    //$(document).ready(function () {
-    //    //        if (oldOnLoad) { oldOnLoad(); }
-
-    //    var lis = getPlayLis();
-    //    var idxs = [];
-    //    for (var i = 0; i < lis.length; i++) {
-    //        idxs.push(i);
-    //    }
-    //    randomPlayContainer = $pf.listRandomTakeContainer(idxs);
-
-    //    //liClick(lis[curIdx]);
-    //    playNext(); //默认下一首--benjamin20191130
-
-    //    if (lis.length < 5) {
-    //        $('#selectSongBtn').hide();
-    //        expandSongList(false);
-    //    } else {
-    //        closeSongList(false);
-    //    }
-    //    // liClick(getPlayLis()[curIdx]);
-    //    setPlayModelLabel(document.getElementsByClassName('sellgirl_player_list_toolbar')[0].children[0]);
-    //    //setLrcModel(document.getElementById('nexLrcModeBtn'));第一次加载歌词是异步的
-    //});
-    function nextPlayMode(dom) {
-        // playMode = playMode > 0 ? 0 : playMode + 1; //2种模式时
-        playMode = playMode > 1 ? 0 : playMode + 1; //3种模式时
-        sPlayMode(playMode);
-        setPlayModelLabel(dom);
-    }
-    function nextLrcMode(dom) {
-        lrcMode = lrcMode > 0 ? 0 : lrcMode + 1; //3种模式时
-        sLrcMode(lrcMode);
-        setLrcModel(dom);
-    }
-
-    return {
-        ready: function () {
-            //监听
-            audioContainer.find('#nextPlayModeBtn').click(function () {
-                nextPlayMode(this);
-            });
-            audioContainer.find('#playNextBtn').click(function () {
-                playNext(this);
-            });
-            audioContainer.find('#selectSongBtn').click(function () {
-                selectSong(this);
-            });
-            nextLrcModeBtn.click(function () {
-                nextLrcMode(this);
-            });
-            audioContainer.find('.sellgirl_player_list_top a').click(function () {
-                liClick(this);
-            });
-            
-
-            //        if (oldOnLoad) { oldOnLoad(); }
-
-            var lis = getPlayLis();
-            var idxs = [];
-            for (var i = 0; i < lis.length; i++) {
-                idxs.push(i);
-            }
-            randomPlayContainer = $pf.listRandomTakeContainer(idxs);
-
-            //liClick(lis[curIdx]);
-            var hasIdx=opts.idx!==undefined&&opts.idx!==null&&opts.idx<lis.length&&opts.idx>-1;
-            var songName=hasIdx?lis[opts.idx].innerHTML:"";
-            var tmpPlayFirstTime=function(){
-            //debugger;
-            
-                if(hasIdx){
-                    play(opts.idx);
-                }else{
-                    playNext(); //默认下一首--benjamin20191130
-                }
-            };
-            
-//            if(sellgirl.isOnMobile){
-//            
-//            }
-            //var tmpMask=new sellgirl.showMask("<p class='sellgirlStartPlayBtn' style='cursor:pointer;'>点击开始播放</p><br /><p class='sellgirlDonotPlayBtn' style='cursor:pointer;color:red;font-size:8px'>不开始播放</p>",{opacity:0.5});
-            //var tmpMask=new sellgirl.showMask("<p class='sellgirlStartPlayBtn' style='cursor:pointer;'>点击开始播放</p><br /><br /><p class='sellgirlDonotPlayBtn' style='cursor:pointer;color:red;font-size:8px'>不开始播放</p>",{opacity:0.5});
-            var tmpMaskStr="";
-            if(hasIdx){
-                tmpMaskStr+="<p>"+songName+"</p>";   
-                tmpMaskStr+="<p class='sellgirlStartPlayBtn' style='cursor:pointer;'>点击开始播放</p>";
-                var tmpMask=new sellgirl.showMask(tmpMaskStr,{opacity:0.5});
-
-                $('.sellgirlStartPlayBtn').parent().parent().click(function(){
-                    tmpPlayFirstTime();
-                    tmpMask.close();
-                });
-            }else{
-            //var tmpMask=new sellgirl.showMask("<p class='sellgirlStartPlayBtn' style='cursor:pointer;'>点击开始播放</p>",{opacity:0.5});
-            }         
-//            $('.sellgirlDonotPlayBtn').click(function(event){
-//                sellgirl.stopPropagation(event);
-//                tmpMask.close();
-//            });
-
-            if (lis.length < 5) {
-                $('#selectSongBtn').hide();
-                expandSongList(false);
-            } else {
-                closeSongList(false);
-            }
-            // liClick(getPlayLis()[curIdx]);
-            setPlayModelLabel(document.getElementsByClassName('sellgirl_player_list_toolbar')[0].children[0]);
-            //setLrcModel(document.getElementById('nexLrcModeBtn'));第一次加载歌词是异步的
-        }
-    };
 };
 
 /*
