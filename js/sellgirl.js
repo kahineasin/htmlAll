@@ -1384,7 +1384,7 @@ sellgirl.createMusicPlayer = function (audioContainer,opts) {
                 });
             }
             if (lrcJSONCache[li.innerHTML] === undefined) {
-                $.post('getLrc_stream.asp?fileName=' + encodeURIComponent(li.attributes.getNamedItem('src').nodeValue.replace('./mp3/', '')), null, function (data) {
+                $.post(encodeURIComponent(li.attributes.getNamedItem('src').nodeValue), null, function (data) {
                     if (data !== undefined && data !== null && data !== '') {
                         // $("#lrclist").css('transform','translateY(26px)');
 
