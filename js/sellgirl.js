@@ -1384,11 +1384,15 @@ sellgirl.createMusicPlayer = function (audioContainer,opts) {
                 });
             }
             if (lrcJSONCache[li.innerHTML] === undefined) {
-                $.get(encodeURIComponent(li.attributes.getNamedItem('lrc').nodeValue), null, function (data) {
+                //var lrcUtl = encodeURIComponent(li.attributes.getNamedItem('lrc').nodeValue);
+                var lrcUtl = encodeURI(li.attributes.getNamedItem('lrc').nodeValue);
+                //alert(lrcUtl);
+                $.get(lrcUtl, null, function (data) {
                     if (data !== undefined && data !== null && data !== '') {
                         // $("#lrclist").css('transform','translateY(26px)');
 
-                        var lrcArray = data.split('\r\n');
+                        var lrcArray = data.indexOf('\r\n') > -1 ? data.split('\r\n') : data.split('\n');// linux系统是\n换行(如github的web系统里面)
+
                         var lrcTitle = '';
                         var lrcJSON = {};
                         var lrcJSONArray = [];
