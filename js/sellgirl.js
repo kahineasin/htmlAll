@@ -1307,6 +1307,7 @@ sellgirl.createMusicPlayer = function (audioContainer,opts) {
                 var i = 0;
                 var lrcJSON = lrcJSONCache[li.innerHTML];
                 // debugger;
+                if (null === lrcJSON||undefined===lrcJSON) { return;}
                 $.each(lrcJSON, function (key, value) {//遍历lrc
                     // lrcTime[i++] = parseFloat(key.substr(1,3)) * 60 + parseFloat(key.substring(4,10));//00:00.000转化为00.000格式
                     ul.innerHTML += "<li><p>" + ((lrcJSON[key] === null || lrcJSON[key] === undefined || lrcJSON[key] === "") ? "&nbsp;" : lrcJSON[key]) + "</p></li>"; //ul里填充歌词
