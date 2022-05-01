@@ -7,6 +7,8 @@
     height: 100%;
     width:100%;
     /*overflow:hidden;*/
+    overflow-x:hidden;
+    overflow-y:auto;
 }
 /* .sellgirl_player_list {
     position: absolute;
@@ -118,7 +120,7 @@
 }
 
 .sellgirl_player_list_top a:hover {
-    text-decoration: underline;/*�����ʽ��ʹ.sellgirl_player_list_top a��ĸ���ʽ��Ч*/
+    text-decoration: underline;/*.sellgirl_player_list_top */
     background-color: #c7d1d6;
 }
 

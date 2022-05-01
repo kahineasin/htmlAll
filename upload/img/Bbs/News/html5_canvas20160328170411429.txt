@@ -1,0 +1,93 @@
+画布
+
+    <canvas width="300px" height="300px" id="cvs">
+        
+	你的浏览器不支持canvas标签！
+    
+    </canvas>
+线段
+
+    <script>
+        var canvas=document.getElementById("cvs");
+        var cxt=canvas.getContext("2d");
+        cxt.lineWidth=10;
+        cxt.strokeStyle="rgb(0,255,0)";
+        cxt.moveTo(20,20);
+        cxt.lineTo(123,30);
+        cxt.stroke();
+    </script>
+封闭路径
+    <script>
+        var canvas=document.getElementById("cvs");
+        var cxt=canvas.getContext("2d");
+        
+        cxt.beginPath();
+        cxt.strokeStyle="green";
+        cxt.lineWidth=5;
+        cxt.moveTo(20,20);
+        cxt.lineTo(80,20);
+        cxt.stroke();
+        cxt.closePath();
+        
+        cxt.beginPath();
+        cxt.strokeStyle="yellow";
+        cxt.lineWidth=8;
+        cxt.moveTo(40,40);
+        cxt.lineTo(100,40);
+        cxt.stroke();
+        cxt.closePath();
+        
+    </script>
+圆
+    <script>
+        var canvas=document.getElementById("cvs");
+        var cxt=canvas.getContext("2d");
+        
+        cxt.beginPath();
+        cxt.arc(100,100,50,0,1.5*Math.PI,false);
+        cxt.stroke();
+        cxt.closePath();
+
+        cxt.beginPath();
+        cxt.arc(200,200,50,0,1.5*Math.PI,true);
+        cxt.stroke();
+        cxt.closePath();
+    </script>
+填充
+
+    <script>
+        var canvas=document.getElementById("cvs");
+        var cxt=canvas.getContext("2d");
+        
+        cxt.beginPath();
+        cxt.fillStyle="blue";
+        cxt.arc(100,100,50,0,360*Math.PI/180,true);
+        cxt.fill();
+        cxt.stroke();
+        cxt.closePath();
+    </script>
+矩形
+    <script>
+        var canvas=document.getElementById("cvs");
+        var cxt=canvas.getContext("2d");
+        
+        cxt.beginPath();
+        cxt.rect(20,20,100,100);
+        cxt.stroke();
+        cxt.closePath();
+        
+        cxt.beginPath();
+        cxt.fillStyle="green";
+        cxt.rect(150,150,100,100);
+        cxt.fill();
+        cxt.stroke();
+        cxt.closePath();
+    </script>
+矩形r2
+    <script>
+        var canvas=document.getElementById("cvs");
+        var cxt=canvas.getContext("2d");
+        cxt.strokeRect(20,20,100,100);
+        cxt.fillStyle="green";
+        cxt.fillRect(150,150,100,50);
+    </script>

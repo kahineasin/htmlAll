@@ -1,0 +1,67 @@
+ipms_app
+Start-Process 'C:\Program Files (x86)\IIS Express\iisexpress.exe' /siteid:12 -windowstyle hidden
+ipms_app_publish
+Start-Process 'C:\Program Files (x86)\IIS Express\iisexpress.exe' /siteid:10 -windowstyle hidden
+
+doer_app
+
+doer_app_publish
+Start-Process 'C:\Program Files (x86)\IIS Express\iisexpress.exe' /siteid:9 -windowstyle hidden
+
+钟坚：运行 9 10
+
+地址:
+doer: 192.168.1.95:11502
+ipms: 192.168.1.95:8800
+
+【报错】
+1.xx can not be constructed
+  因为config里没配置app/res
+2.xx can not be resolved
+  bin时缺少app/res的dll
+3. System.Data.SqlClient.SqlException: 对象名 'dbo.Sys_Language' 无效。
+  因为数据库库连接错
+
+E:\My Documents\IISExpress\config 
+这个文件夹下设置站点 (applicationhost.config)
+
+192.168.1.95:8800
+
+<add key="ServiceType" value="EntityFramework" />  //发布时
+<add key="ServiceType" value="WCF" />  //调试时 debug
+
+在发布后的web.config里改(从wcf项目的config中复制过来)
+  <!-- unity 配置 -->
+  <unity xmlns="http://schemas.microsoft.com/practices/2010/unity">
+    <container>
+      <!--<register type="IPMS.ServiceContracts.IAccountService, IPMS.ServiceContracts" name="IAccountService" mapTo="IPMS.Web.ServiceProxy.AccountServiceProxy, IPMS.Web" >
+        <constructor>
+          <param name="endpointName" value="accountService"/>
+        </constructor>
+      </register>-->
+      <!--<register type="Rundong.Infrastructure.IStartupTask, Rundong.Infrastructure" name="SysStartupTask" mapTo="Rundong.Sys.Web.StartupTask, Rundong.Sys.Web" />-->
+      <register type="Rundong.Infrastructure.IStartupTask, Rundong.Infrastructure" name="Sys_RPStartUpTask" mapTo="Rundong.Sys.Repositories.StartupTask, Rundong.Sys.Repositories" />
+      <register type="Rundong.Infrastructure.IStartupTask, Rundong.Infrastructure" name="Sys_APStartupTask" mapTo="Rundong.Sys.Application.StartupTask, Rundong.Sys.Application" />
+
+    </container>
+  </unity>
+//原理config>global(.startup())->map(iservice,service)->application(startup)
+运行builer.bat
+下面的dll是要另外复制的:
+1.再把多个项目的app/res的dll文件copy过去 ,
+2.domain、ServiceContracts也需要(wcf项目下的除了wcf之外的dll也要)
+3.Microsoft.Web.Infrastructure.dll
+web.config里加回数据库连接(取消注释)
+  <connectionStrings>
+    <add name="ipms" connectionString="Data Source=192.168.1.100;Initial Catalog=IPMSNEW;User ID=sa ;Password=doer.;Connect Timeout=30" providerName="System.Data.SqlClient" />
+  </connectionStrings>
+
+临时发布的部署方法不一样，是直接在config里startup 仓储的
+因为是config设置，所以app的bin下会生成仓储的dll
+原项目是在.tt里引用仓储的,所以app的bin下不会生成仓储的dll
+
+复制dll时
+1.直接把原wcf项目下的bin（除了wcf本身的dll)复制过去就行了
+2.也要原app项目下的bin
+  包含IPMS.APP.Web.dll.config
+

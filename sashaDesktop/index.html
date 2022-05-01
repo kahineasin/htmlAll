@@ -1,0 +1,69 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <title>Princess Sasha Desktop</title>
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=0.46, maximum-scale=0.46">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta content="telephone=no" name="format-detection">
+
+    <script  type="text/JavaScript"  src="../js/jq/jquery-1.8.0.min.js" ></script>
+    <!--<script type="text/javascript" src="http://sellgirl.com/Content/js/sellgirl/EleResize.js"></script>-->
+    <script type="text/javascript" src="http://sellgirl.com/Content/js/sellgirl/sellgirl.js"></script>
+ <!--   <script type="text/javascript" src="../js/EleResize.js"></script>-->
+   <!-- <script type="text/javascript" src="../js/sellgirl.js"></script>-->
+  <!--  <script  type="text/JavaScript"  src="../js/pfUtil.js" ></script>-->
+    <!--<script type="text/javascript" src="http://192.168.1.52:19005/Content/js/sellgirl/EleResize.js"></script>
+    <script type="text/javascript" src="http://192.168.1.52:19005/Content/js/sellgirl/sellgirl.js"></script>-->
+    <style type="text/css">
+        #pcDesktop
+        {
+            width:1920px;
+            height:1080px;
+        }
+        #mobileDesktop
+        {
+            width:1080px;
+            height:2340px;
+        }
+        #pcDesktop img,
+        #mobileDesktop img
+        {
+            width:100%;
+        }
+    </style>
+    <script type="text/JavaScript"><!--
+        $(function() {
+
+            //            //前端的canvas在手机不便于保存,改为后端
+//            var pcDesktop = document.getElementById("pcDesktopFromJs");
+//              var backWidth = 1920;
+//              var backHeight = 1080;
+//            var sx = 650;
+//            var sy = 4000;
+//            var ex = 2900;
+//            var ey = sy - (ex - sx) * backWidth / backHeight;
+        //            sellgirl.backgroundImg(pcDesktop, 'https://pay.sellgirl.com:44303/sasha.jpg', { w: 3316, h: 4000, s: { x: sx, y: sy }, e: { x: ex, y: ey} }, { backgroundColor: 'red' });//js生成的会比java的清,那是因为java生成的image是4倍大的,只是用style缩回来(java不知道怎样才能生成同样清晰的image图,前提是不放大4倍)
+
+//        var mobileDesktop = document.getElementById("mobileDesktop");
+            //sellgirl.backgroundImg(mobileDesktop, 'https://pay.sellgirl.com:44303/sasha.jpg', { w: 3316, h: 4000, s: { x: 600, y: -300 }, e: { x: 2916, y: 4718} }, { backgroundColor: 'rgb(34,28,62)' });
+        });
+    //-->
+    </script>
+
+</head>
+<body style="margin: 0px;">
+    <p>pc桌面</p>
+   <!-- <div id="pcDesktop"><img src="https://pay.sellgirl.com:44303/sashapcdesktop.jpg" alt=""/></div>-->
+    <div id="pcDesktop"><img src="http://sellgirl.com:28303/sashapcdesktop.jpg" alt="" /></div>
+<!--    <p>pc桌面(from js)</p>
+    <div id="pcDesktopFromJs"></div>-->
+    <p>手机桌面</p>
+    <!--<div id="mobileDesktop"><img src="https://pay.sellgirl.com:44303/sashamobiledesktopflip.jpg" alt=""/></div>-->
+    <div id="mobileDesktop"><img src="http://sellgirl.com:28303/sashamobiledesktopflip.jpg" alt="" /></div>
+
+</body>
+</html>
