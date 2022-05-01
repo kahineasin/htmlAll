@@ -93,11 +93,15 @@ Next
         </ul>
         <!-- <p>无歌词</p> -->
     </div>
+    <%Response.Write "<input type='hidden' value='"&Request.QueryString("idx")&"' id='firstSongIdx' />" %>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function() {
-        sellgirl.createMusicPlayer($('.audioContainer')).ready();
+        //sellgirl.createMusicPlayer($('.audioContainer')).ready();
+        var idxStr = document.getElementById("firstSongIdx").value;
+        var idx = idxStr !== undefined && idxStr !== null && idxStr !== '' ? (parseInt(idxStr) - 1) : null;
+        sellgirl.createMusicPlayer($('.audioContainer'), { idx: idx }).ready();
     });
 </script>
 

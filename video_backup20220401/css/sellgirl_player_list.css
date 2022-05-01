@@ -1,0 +1,138 @@
+﻿
+.audioContainer {/*sellgirl_mp3Player.asp里生效*/
+    position: absolute;
+    z-index: 2;
+
+    display:flex;flex-flow:column;
+    height: 100%;
+    width:100%;
+    /*overflow:hidden;*/
+}
+/* .sellgirl_player_list {
+    position: absolute;
+} */
+.sellgirl_player_list_toolbar{
+    cursor: pointer;
+}
+.sellgirl_player_list_toolbar a{
+    white-space:nowrap;
+}
+.sellgirl_player_list_top{
+    /* height:0px; */
+    /* height:20px; */
+    overflow-y: auto;
+    /* text-overflow:ellipsis; */
+    
+    /* -webkit-transition: height 0.5s;
+    -o-transition-property: height;
+    -o-transition-duration: 0.5s;
+    -moz-transition-property: height;
+    -moz-transition-duration: 0.5s;
+    transition-property: height;
+    transition-duration: 0.5s; */
+}
+.sellgirl_player_list_top a {
+    float: left;/*在iphone中,如果没有这句,不会优先换行,但PC浏览器中没有这句也无区别*/
+}
+
+.sellgirl_player_lrcContainer {
+    /* clear: both; */
+    overflow:auto;
+    /* height:100%; */
+    /* -webkit-transition: -webkit-transform 1s,opacity 1s,background 1s,width 1s,height 1s,top 1s,left 1s,padding 1s,font-size 1s;
+    -o-transition-property: width,height,top,left,padding,-o-transform,background,font-size,opacity;
+    -o-transition-duration: 1s,1s,1s,1s,1s,1s,1s,1s,1s;
+    -moz-transition-property: width,height,top,left,padding,-o-transform,background,font-size,opacity;
+    -moz-transition-duration: 1s,1s,1s,1s,1s,1s,1s,1s,1s;
+    transition-property: width,height,top,left,padding,transform,background,font-size,opacity;
+    transition-duration: 1s,1s,1s,1s,1s,1s,1s,1s,1s; */
+}
+.sellgirl_player_lrcContainer ul{
+    transition-duration: 600ms;
+    /* position: absolute; */
+}
+.sellgirl_player_lrcContainer ul, .sellgirl_player_lrcContainer li{
+    list-style:none;
+    padding: 0;
+    margin: 0;
+}
+.sellgirl_player_lrcContainer li.on{
+    color: red;
+}
+.sellgirl_player_lrcContainer li a{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 16px;
+    line-height: 16px;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.sellgirl_player_list hr {
+    /* display: none; */
+    /* clear: both;
+    float: left; */
+    border-top: none;
+    width: 100%;
+    border: dotted;
+    border-top-width: medium;
+    border-top-style: dotted;
+    border-top-color: currentcolor;
+    color: #c3d4cf;
+    border-top: 0px;
+}
+
+.sellgirl_player_list {
+    display: flex;
+    flex-flow:column; 
+    height:100%;
+
+    background-color: white;
+    border: 3px double green;
+    /* for IE */
+    filter: alpha(opacity=60);
+    /* CSS3 standard */
+    opacity: 0.6;
+    /* clear: both; */
+
+}
+
+.sellgirl_player_list a {
+    /*float: left;*/
+    text-decoration: none;
+    /*color: #333;*/
+}
+
+.sellgirl_player_list_top a {
+    /*float: left;*/
+    margin-right: 5px;
+    padding: 0px 5px;
+    border-right: dotted 1px black;
+    border-bottom: dotted 1px black;
+    /*text-decoration: underline;*/
+    line-height: 22px;
+}
+
+.sellgirl_player_list_top a:hover {
+    text-decoration: underline;/*�����ʽ��ʹ.sellgirl_player_list_top a��ĸ���ʽ��Ч*/
+    background-color: #c7d1d6;
+}
+
+a:link, a:visited, a:active, a:hover {
+    color: black; /*#333;*/
+}
+.videoLayer
+{
+    max-height:50%;
+    max-width:100%;
+    position:relative;
+    }
+    .videoLayer video
+    {
+        height:100%;
+        width:100%;
+        }
