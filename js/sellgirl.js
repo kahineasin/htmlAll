@@ -1383,7 +1383,7 @@ sellgirl.createMusicPlayer = function (audioContainer,opts) {
                     }
                 });
             }
-            if (lrcJSONCache[li.innerHTML] === undefined) {
+            if (lrcJSONCache[li.innerHTML] === undefined && null!==li.attributes.getNamedItem('lrc')) {
                 //var lrcUtl = encodeURIComponent(li.attributes.getNamedItem('lrc').nodeValue);
                 var lrcUtl = encodeURI(li.attributes.getNamedItem('lrc').nodeValue);
                 //alert(lrcUtl);
