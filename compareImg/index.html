@@ -63,7 +63,7 @@
             /*background: url('image/puzzle_p3_btn001.png');*/
             /*background-color: red;*/
             font-size: 58px;
-            border:none;
+            /*border:none;*/
             background-color: rgb(194,193,193);
 			white-space: nowrap;
         }
@@ -128,7 +128,7 @@
             var picHeight = pic[0].offsetHeight;
             var picboxWidth = picbox.offsetWidth;
             var picboxHeight = picbox.offsetHeight;
-            var go = document.getElementById('go');
+            //var go = document.getElementById('go');
             var lockBtn = document.getElementById('lockBtn');
             var times = document.getElementById('times'); //定时。用于扩展
             var dx, dy, newLeft, newtop, startTime, endTime;
@@ -152,7 +152,7 @@
 //            }
 
             //var btnImg = document.querySelectorAll('.buttonDiv button img')[0];
-            var btnImg = document.querySelectorAll('.buttonDiv button')[0];
+            //var btnImg = document.querySelectorAll('.buttonDiv button')[0];
             var isGoing = false;
             var isLocking = false;
             var fileNames = ["淘宝版","benjamin版"];
@@ -194,7 +194,7 @@
                 //    picDes.className = picDes.className.replace('taobao', 'benjamin');
                 //    //btnImg.setAttribute('src', 'image/puzzle_p3_btn002.png');
                 //}
-                btnImg.innerHTML = "当前为" + fileNames[curIdx] + "(点击切换)";
+                //btnImg.innerHTML = "当前为" + fileNames[curIdx] + "(点击切换)";
                 picDes.innerHTML = fileNames[curIdx];
 
                 //$(pic[lastIdx]).hide();
@@ -221,6 +221,12 @@
             function nextImg() {
                 doGo(curIdx+1);
             }
+            function firstImg() {
+                doGo(0);
+            }
+            function lastImg() {
+                doGo(maxIdx);
+            }
 			function doLock(){
 				if(isLocking=!isLocking){
 				lockBtn.innerHTML = "固定";
@@ -229,11 +235,13 @@
 				}
 			}
 
-			sellgirl.onClick(go, nextImg);
+			//sellgirl.onClick(go, nextImg);
             sellgirl.onClick(lockBtn, doLock);
             sellgirl.onClick(picbox, nextImg);
             sellgirl.onClick($('#prevBtn')[0], prevImg);
             sellgirl.onClick($('#nextBtn')[0], nextImg);
+            sellgirl.onClick($('#firstBtn')[0], firstImg);
+            sellgirl.onClick($('#lastBtn')[0], lastImg);
             
             //sellgirl.onClick($('#selectImgBtn')[0], function (e) {
             //    debugger;
@@ -286,17 +294,23 @@
         <img src="http://neris.sellgirl.com/img/sashathumbnail_w800.jpg" alt="002" style="display:none;" />
     </div>
     <div class="buttonDiv">
-        <button id='go' class="taobao">
+   <!--     <button id='go' class="taobao">
             当前为淘宝版(点击切换)
-        </button>
+        </button>-->
         <button id='lockBtn' class="lockBtn">
             切换
         </button>
         <button id='prevBtn' class="">
-            上一张
+            上1张
         </button>
         <button id='nextBtn' class="">
-            下一张
+            下1张
+        </button>
+        <button id='firstBtn' class="">
+            第1张
+        </button>
+        <button id='lastBtn' class="">
+            最后1张
         </button>
             <input id="selectImgBtn" type="file" name="fileInputStream" multiple="multiple"/></div>
     <p id='outputSpan'>
