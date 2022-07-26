@@ -249,6 +249,7 @@
 
             $('#selectImgBtn').change(function (e) {
                 var me = this;
+                if (me.files.length < 1) { return;}
                 picbox.innerHTML = "";
                 fileNames = [];
                 for (var i = 0; i < me.files.length; i++) {
