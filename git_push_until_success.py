@@ -1,4 +1,5 @@
 import os
+import io
  
 #os.system("cd ..")
  
@@ -9,7 +10,7 @@ i = 1
 while not success:
 	print("start", i, "th git push.")
 	os.system("git push > git_push_result.txt 2>&1")
-	git_push_result = open('git_push_result.txt', encoding='UTF-8', errors='ignore')
+	git_push_result = io.open('git_push_result.txt', encoding='UTF-8', errors='ignore')
 	line = git_push_result.readlines()
 	for every_line in line:
 		print(every_line)
