@@ -764,6 +764,206 @@ sellgirl.backgroundImg = function (dom, imgUrl, imgSize, canvasProperty, opts) {
 };
 
 /*
+*增加自适应背景图
+*dom:背景图加的位置(canvas是作为dom的子对象添加的,如果图片不显示,调整canvas和dom的z-index关系)(dom支持直接使用document.body)
+*imgUrl:图片地址
+*imgSize:{w:宽,h:高,s:{x:,y:},e:{x:,y:}}  (s和e是图片与"浏览器的左上角到右下角的对角线"对齐的参照线的开始结束点的坐标)
+*opts:canvas对象的html属性
+*/
+sellgirl.backgroundImgInBuffer = function (dom,canvasRef,backgroundSize,
+    //imgUrl, 
+    image1,
+    imgSize, backgroundDiagonalLine,diagonalLine,opts) {
+       opts = opts || {};
+       //debugger;
+       var flip=opts.flip || false;
+       if (dom !== document.body && dom.style.zIndex === '') { dom.style.zIndex = '1'; }
+   
+       //debugger;
+           if (image1 != null&&image1!==undefined && (imgSize == null||imgSize == undefined)) {
+               imgSize={
+                   w:image1.width,
+                   width:image1.width,
+                   h:image1.height,
+                   height:image1.height
+               };
+           }
+       if (imgSize != null&&imgSize!==undefined && diagonalLine.isPercent) {
+               if(imgSize.width===undefined){
+                   imgSize.width=imgSize.w;
+                   imgSize.height=imgSize.h;
+               }
+               diagonalLine.s.x = imgSize.width * diagonalLine.s.x / 100;
+               diagonalLine.s.y = imgSize.height * diagonalLine.s.y / 100;
+               diagonalLine.e.x = imgSize.width * diagonalLine.e.x / 100;
+               diagonalLine.e.y = imgSize.height * diagonalLine.e.y / 100;
+               diagonalLine.isPercent = false;
+           }
+       if (flip) {//
+               var newSX = imgSize.width - diagonalLine.e.x;
+               var newEX = imgSize.width - diagonalLine.s.x;
+               diagonalLine.s.x = newSX;
+               diagonalLine.e.x = newEX;
+           }
+   
+       var getDevicePixelRatio = function () {//为了解决手机上因为viewport而模糊的问题-20171123
+           return window.devicePixelRatio || 1;//注意,就算这里放大2倍,也不会变得更高清,纯粹是增加了分辨率而已
+       }
+       var pixelTatio = getDevicePixelRatio();
+   
+       //var canvas = document.getElementById('h5Image');
+       //var canvas = document.getElementById(canvasId);
+       var canvas=canvasRef.canvas;
+       var ctx1=canvasRef.ctx1;
+       //debugger;
+       // if(undefined===canvas){
+       // 	canvas = document.createElement("canvas");
+       // 	canvas.style.position = 'absolute';
+       // 	canvas.style.zIndex = '-100';
+       // 	canvas.style.top = '0px';
+       // 	dom.appendChild(canvas);
+       // 	if (opts.opacity) {
+       // 		canvas.style.opacity = opts.opacity;
+       // 	};
+       // 	canvasRef.canvas=canvas;
+       // }
+   
+       // if(undefined===ctx1){
+       // 	ctx1 = canvas.getContext('2d');
+       // 	canvasRef.ctx1=ctx1;
+       // }
+       // var image1 = new Image();
+   
+       //目标是使"图片参照线"匹配到"浏览器的左上角到右下角的对角线
+   
+       //var src = 'img/web_sasha_1920x1080_02.jpg';
+       //var src = imgUrl;
+       var w = imgSize.w, h = imgSize.h;//图片尺寸
+       // var line = {//图片与"浏览器的左上角到右下角的对角线"对齐的参照线.如果人物是平躺的话,一般就取水平中分线
+       //     s: imgSize.s,
+       //     e: imgSize.e
+       // }
+           var line = diagonalLine;
+       //var w = 2300, h = 2300;//图片尺寸
+       //var line = {//图片与"浏览器的左上角到右下角的对角线"对齐的参照线.如果人物是平躺的话,一般就取水平中分线
+       //    s: { x: 0, y: 1150 },
+       //    e: { x: 2300, y: 1150 }
+       //}
+       var l = Math.sqrt(Math.pow(line.e.x - line.s.x, 2) + Math.pow(line.e.y - line.s.y, 2));
+   
+       function getAngle(start, end) {
+           var diff_x = end.x - start.x,
+               diff_y = end.y - start.y;
+           //返回角度,不是弧度
+           return 360 * Math.atan(diff_y / diff_x) / (2 * Math.PI);
+       }
+   
+       function setImageAngle() {
+           //当然你也可以写个简单的extend函数去添加方法
+   
+           var wWidth = 0;
+           var wHeight = 0;
+           // if (dom !== document.body) {
+           //     var domRect = dom.getBoundingClientRect();
+           //     var wWidth = domRect.width;
+           //     var wHeight = domRect.height;
+           // } else {
+           //     var wWidth = window.innerWidth;
+           //     var wHeight = window.innerHeight;
+               
+           // 	wWidth = backgroundSize.width;
+           // 	wHeight = backgroundSize.height;
+           // }
+           wWidth = backgroundSize.width;
+           wHeight = backgroundSize.height;
+           //首先计算浏览器对角线长度
+           // var diagonal = Math.sqrt(Math.pow(wWidth, 2) + Math.pow(wHeight, 2));
+           var diagonal = Math.sqrt(Math.pow((backgroundDiagonalLine.e.x - backgroundDiagonalLine.s.x), 2)
+                   + Math.pow((backgroundDiagonalLine.e.y - backgroundDiagonalLine.s.y), 2));
+   
+           //根据图片的三线比例计算宽高
+           var width = diagonal * w / l;
+           var height = diagonal * h / l;
+   
+           //求浏览器对角线与图片参照线(移动前)的差角
+           var angleOfDifference
+               = getAngle({ x: 0, y: 0 }, { x: wWidth, y: wHeight })
+               - getAngle({ x: line.s.x, y: line.s.y }, { x: line.e.x, y: line.e.y });
+           var angleOfDifference = getAngle({x:backgroundDiagonalLine.s.x, y:backgroundDiagonalLine.s.y},
+                   {x:backgroundDiagonalLine.e.x, y:backgroundDiagonalLine.e.y})
+                   - getAngle({x:line.s.x, y:line.s.y}, {x:line.e.x, y:line.e.y});
+   
+           // ////alert('宽'+width+' 高'+height);
+           // //canvas.width = window.innerWidth;
+           // //canvas.height = window.innerHeight;
+           // //为了解决手机上因为viewport而模糊的问题-20171123
+           // canvas.style.width = window.innerWidth + "px";
+           // canvas.style.height = window.innerHeight + "px";
+           // canvas.width = window.innerWidth * pixelTatio;
+           // canvas.height = window.innerHeight * pixelTatio;
+           
+       if(undefined===canvas){
+           canvas = document.createElement("canvas");
+           canvas.style.position = 'absolute';
+           canvas.style.zIndex = '-100';
+           canvas.style.top = '0px';
+           canvas.style.width = wWidth + "px";
+           canvas.style.height = wHeight + "px";
+           canvas.width = wWidth * pixelTatio;
+           canvas.height = wHeight * pixelTatio;
+           dom.appendChild(canvas);
+           if (opts.opacity) {
+               canvas.style.opacity = opts.opacity;
+           };
+           canvasRef.canvas=canvas;
+       }
+           
+           if(undefined===ctx1){
+               ctx1 = canvas.getContext('2d');
+               canvasRef.ctx1=ctx1;
+           }
+   
+           ctx1.rotate(angleOfDifference * Math.PI / 180);//旋转
+   
+           ////console.info('angleOfDifference:'+angleOfDifference+'--x:' + line.s.x * diagonal / l + '--y:' + line.s.y * diagonal / l+'--w:'+wWidth+'--h:'+wHeight);
+           //ctx1.drawImage(image1, -(line.s.x * diagonal / l), -(line.s.y * diagonal / l), width, height);//注意第二三个参数是位移,是旋转后的方向上的,是斜的
+           //为了解决手机上因为viewport而模糊的问题-20171123
+   
+           //ctx1.drawImage(image1, -(line.s.x * diagonal * pixelTatio / l), -(line.s.y * diagonal * pixelTatio / l), width * pixelTatio, height * pixelTatio);//注意第二三个参数是位移,是旋转后的方向上的,是斜的
+           
+           var drawX = -(line.s.x * diagonal * pixelTatio / l) + (backgroundDiagonalLine.s.x * pixelTatio)
+                   ;
+           var drawY = -(line.s.y * diagonal * pixelTatio / l) + (backgroundDiagonalLine.s.y * pixelTatio);
+           var drawWidth = width * pixelTatio;
+           var drawHeight = height * pixelTatio;
+           //debugger;
+           if (flip) {// 水平翻转
+               ctx1.scale(-1, 1);
+               ctx1.drawImage(image1, -drawX - drawWidth, drawY, drawWidth, drawHeight);
+               ctx1.scale(-1, 1);
+           } else {
+               ctx1.drawImage(image1, drawX, drawY, drawWidth, drawHeight);
+           }
+       }
+       // // image1.onload = function () {
+       // //     setImageAngle();
+       // // }
+       // // image1.src = src;
+       // if (dom !== document.body) {
+       //     EleResize.on(dom, function () { setImageAngle(); })
+       // } else {
+       //     window.onresize = function () {
+       //         setImageAngle();
+       //     };
+       // }
+       // //$(window).resize(function () {
+       // //    setImageAngle();
+       // //});
+       // //EleResize.on(dom, function () { alert(1);});
+       setImageAngle();
+   };
+
+/*
 根据图片创建拼图
 */
 sellgirl.createPuzzle = function (dom, imgUrl, rowQty, colQty, opts) {
