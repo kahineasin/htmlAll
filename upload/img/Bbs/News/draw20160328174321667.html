@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="myCanvas" width="1024" height="768" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+<script type="text/javascript">
+function getXY(rate,l)
+{
+	var j=((rate-1/4)*Math.PI*2);
+        var hl=l;//时针长度
+		var heX=200+(hl*Math.cos(j));
+		var heY=200+(hl*Math.sin(j));
+	return {x:heX,y:heY};
+}
+function refreshClock(){
+		var time=new Date();
+var c=document.getElementById("myCanvas");
+var ctx=c.getContext("2d");
+ctx.fillStyle="#0000ff";
+/*-----钟面--------*/
+        ctx.beginPath();
+        ctx.fillStyle="yellow";
+        ctx.arc(200,200,80,0,2*Math.PI,true);
+        ctx.fill();
+        ctx.stroke();;
+        ctx.closePath();
+		
+
+/*-----时针-------*/
+        ctx.fillStyle="red";
+        ctx.moveTo(200,200);
+//计算结束位置
+		//时针
+
+		
+        ctx.beginPath();
+        ctx.strokeStyle="black";
+        ctx.lineWidth=6;
+        ctx.moveTo(200,200);
+		var h=time.getHours();
+		var ho=new getXY(h/12,40);
+		ctx.lineTo(ho.x,ho.y);
+        ctx.stroke();
+        ctx.closePath();
+		//分针
+
+		
+        ctx.beginPath();
+        ctx.strokeStyle="blue";
+        ctx.lineWidth=4;
+        ctx.moveTo(200,200);
+		var m=time.getMinutes();
+		var mo=new getXY(m/60,70);
+        ctx.lineTo(mo.x,mo.y);
+        ctx.stroke();
+        ctx.closePath();
+		//计算秒针位置
+		
+        ctx.beginPath();
+        ctx.strokeStyle="red";
+        ctx.lineWidth=2;
+        ctx.moveTo(200,200);
+		var s=time.getSeconds();
+		var so=new getXY(s/60,90);
+        ctx.lineTo(so.x,so.y);
+        ctx.stroke();
+        ctx.closePath();
+	setTimeout(refreshClock, 1000);
+}
+
+setTimeout(refreshClock, 1000);
+
+
+</script>
+
+</body>
+</html>

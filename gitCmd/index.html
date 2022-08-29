@@ -1,0 +1,793 @@
+注意：win10系统自动隐藏.git文件夹<br />
+<br />
+git系统环境变量：<br />
+path:<br />
+C:\git-sdk-64\usr\bin<br />
+以前是设置了两个:<br />
+C:\git-sdk-64;C:\git-sdk-64\mingw64\bin;<br />
+发现angular有时会报错：<br />
+fatal: 'submodule' 像是一个 git 命令，但却无法运行。<br />
+这个命令似乎在C:\git-sdk-64\mingw64\libexec\git-core里<br />
+
+<br />
+github账号：<br />
+li@sellgirl.com:Z32...l<br />
+<br />
+<br />
+[Git GUI的方式]（当eclipse中直接用git连接不上时推荐使用)<br />
+cmd 进入项目目录:<br />
+git config --global user.email 'li@sellgirl.com'<br />
+git config --global user.name 'kahineasin'<br />
+上面的账号随便填，是本地的<br />
+<br />
+<br />
+window管理器进入项目目录，鼠标右键Git GUI<br />
+1.点击Stage Changed<br />
+2.Commit<br />
+3.Push<br />
+<br />
+<br />
+[cmd方式]<br />
+参考：https://www.jianshu.com/p/750a57374177<br />
+1.首先在eclipse里面commit<br />
+2.cmd进入项目目录如:D:\eclipse_workspace_sellgirlPay\sellgirlPay<br />
+&nbsp; (此目录下有隐藏的.git文件夹)<br />
+<p>
+	3.cmd依次输入：
+</p>
+<p>
+	//如果当前文件夹首次连接git,需要先 git init
+</p>
+<p>
+	<span style="color:#E53333;">////git remote add origin https://github.com/kahineasin/Python.git 不是必要，但如果有这句，下次push不用加地址</span> 
+</p>
+<p>
+	//修改本地文件之前先用git pull更新本地文件，然后在eclipse里面team-&gt;pull
+</p>
+<p>
+	////git pull https://gitee.com/sellgirl/Python.git
+</p>
+<p>
+	//修改本地文件后,在add或commit之前,可以用&nbsp;<span>git diff HEAD 查看版本差异</span> 
+</p>
+<p>
+	<span>//git clone -b stable&nbsp; https://github.com/technomancy/leiningen.git&nbsp; //如果没有stable就改为master</span> 
+</p>
+<p>
+	<span></span> 
+</p>
+<p>
+	<span style="color:blue;">git add .&nbsp; </span>&nbsp; &nbsp; &nbsp; //这句应该是操作本地repository（所以第1步是不需要的）
+</p>
+git commit&nbsp; &nbsp; &nbsp;//这样需要:wq 退出<br />
+<span style="color:blue;">git commit -m 'your message'&nbsp; </span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;//这句应该是操作本地repository<br />
+<p>
+	<span style="color:blue;">git push --set-upstream https://github.com/kahineasin/PaySellgirl.git master&nbsp; (第二次之后直接&nbsp;git push 就行了)</span> 
+</p>
+<p>
+	<span style="color:blue;"><br />
+</span> 
+</p>
+<p>
+	<span>[第一次提交]</span> 
+</p>
+<p>
+	<span>一、新仓库，本地已有项目的情况</span> 
+</p>
+<p>
+	<span>1.gitee网页上建仓库</span> 
+</p>
+<p>
+	<span>2.git init&nbsp;</span> 
+</p>
+<p>
+	<span>3.git remote add origin...</span> 
+</p>
+<p>
+	<span>4.(在<span>.git/config</span>里设置git帐号密码)</span> 
+</p>
+<p>
+	<span>5.git pull origin master (如果仓库是空的,这句会报错,那就继续下面的步骤)</span> 
+</p>
+<p>
+	<span>6.git add .</span> 
+</p>
+<p>
+	<span>7.git commit -m'firstTime'</span> 
+</p>
+<p>
+	<span>8.git push --set-upstream ...&nbsp;&nbsp;</span> 
+</p>
+<p>
+	<span>&nbsp; 或&nbsp;<span>git push --set-upstream&nbsp;<span>origin master</span></span></span> 
+</p>
+<p>
+	<br />
+</p>
+<p>
+	<span><br />
+</span> 
+</p>
+<p>
+	<span>如果中途出现在问题,可以直接删除.git文件夹,然后从init重新开始</span> 
+</p>
+<p>
+	<span><br />
+</span> 
+</p>
+<p>
+	或者试试这样:
+</p>
+<p>
+	<br />
+</p>
+<p>
+	cd existing_folder
+</p>
+<p>
+	git init
+</p>
+<p>
+	git remote add origin xxx.git
+</p>
+<p>
+	git add .
+</p>
+<p>
+	git commit -m "Initial commit"
+</p>
+<p>
+	git push -u origin master
+</p>
+<p>
+	<br />
+</p>
+<p>
+	二、非空仓库的情况
+</p>
+<p>
+	似乎这样更好
+</p>
+<p>
+	1.git clone -b master xxx&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (gitlab里clone后似乎会自动生成.git文件夹)
+</p>
+<p>
+	2.现在开始已经能直接 git pull 了&nbsp; (打开config加帐号密码就行了)
+</p>
+<p>
+	<br />
+</p>
+<p>
+	[更新项目]<br />
+	当远程项目有更新时,更新本地项目的正确步骤应该是:<br />
+	1.git add .
+	2.git commit -m'xxx' 
+	3.git pull  //如果pull之前没有先commit,会报错:本地未commit的修改会掉失,结果pull失败
+	4.修改冲突
+	5.git push
+</p>
+<p>
+	[切换仓库]
+</p>
+<p>
+	https://www.cnblogs.com/zwh1993/p/13156253.html
+</p>
+<p>
+	git remote set-url origin URL&nbsp;
+</p>
+<p>
+	不要这样做，有可能会用本地的替换掉online的
+</p>
+<p>
+	<span><br />
+</span> 
+</p>
+<p>
+	<span>[免密码]</span> 
+</p>
+<p>
+	<span>git clone http://帐号:密码@gitlab.perfect99.com/wxw/report-service.git<br />
+</span> 
+</p>
+<p>
+	帐号密码里如果有@要转义为 %40
+</p>
+<p>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ;要转义为&nbsp;%3b
+</p>
+<p>
+	<br />
+</p>
+<p>
+	相当于把config文件改为:
+</p>
+<p>
+	[remote "origin"]<br />
+<span> </span>url = "http://帐号:密码@gitlab.perfect99.com/wxw/report-service.git"<br />
+<span> </span>fetch = +refs/heads/*:refs/remotes/origin/*
+</p>
+<p>
+	<br />
+</p>
+<p>
+	<br />
+</p>
+<p>
+	[注意的地方]
+</p>
+<p>
+	1.不要随意删除本地的文件,因为之后再pull是不能把远程的重新拉下来的<span>(而且有可能会不小心提交之后使远程上的也被删除)</span>.
+</p>
+<p>
+	&nbsp; 如果删除了,可以用服务器的复盖本地(本地修改会丢失),执行: git reset --hard master
+</p>
+<p>
+	<br />
+</p>
+<p>
+	[git合并冲突]
+</p>
+<p>
+	方法1.
+</p>
+<p>
+	右键项目文件夹,git-ui
+</p>
+<p>
+	merge staged
+</p>
+<p>
+	方法2.
+</p>
+<p>
+	<span style="color:#333333;font-family:-apple-system, &quot;font-size:14px;background-color:#FFFFFF;">git mergetool</span> 
+</p>
+<p>
+	<a href="https://blog.csdn.net/luoww1/article/details/80855873">https://blog.csdn.net/luoww1/article/details/80855873</a> 
+</p>
+<p>
+	方法3.
+</p>
+<p>
+	1.pull
+</p>
+<p>
+	2.打开文件手动改冲突部分(事实证明直接用txt编辑是可以的，当然也可以用vs code等来合并)
+</p>
+<p>
+	3.git commit -m'editConflict'
+</p>
+<p>
+	4.pull(冲突已解决)
+</p>
+<p>
+	<br />
+</p>
+注意，如果报错 error: You have not concluded your merge (MERGE_HEAD exists).
+那是因为，解决完冲突之后，还要再执行一遍 add -> commit ,之后才可以 push -> pull
+<p>
+	[撤销commit]
+</p>
+<p>
+	撤销已提交到本地的内容(与远程无关)
+</p>
+<p>
+	git reset --soft HEAD^&nbsp; &nbsp; &nbsp;//这句好像不行
+</p>
+<p>
+	git reset --soft HEAD~1&nbsp; &nbsp; //回退一个版本,测试可以
+</p>
+<p>
+	https://www.cnblogs.com/lfxiao/p/9378763.html
+</p>
+<p>
+	<br />
+</p>
+<p>
+	[remote预览]
+</p>
+<p>
+	比较本地已提交的版本和远程的版本,即push前的预览:
+</p>
+<p>
+	<br />
+</p>
+<p>
+	1.win7下运行git sdk窗口（类似但不是cmd）
+</p>
+<p>
+	&nbsp; 可以考虑把 C:\git-sdk-64 加到 Path 环境变量，然后进入项目地址，shift+鼠标右键打开 cmd，输入 git-bash
+</p>
+<p>
+	2.cd d:/wxj/learningMaterial&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; //注意要用正斜杠
+</p>
+<p>
+	3.git diff --stat master origin/maste&nbsp; &nbsp; &nbsp;//cmd下会报错error: cannot spawn less: No such file or directory
+</p>
+<p>
+	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; //去掉--stat可以看到文件内容的变化
+</p>
+<p>
+	4.比较完后,输入q,然后按Enter 退出
+</p>
+<p>
+	<br />
+</p>
+<p>
+	[add]<br />
+	//git rm -r --cached some-directory  //如果想同步删除本地已经删除的文件到远程(也删除),执行这句
+	git add .     //不会提交本地删除的文件
+</p>
+<p>
+	<br />
+</p>
+<p>
+	[add预览] <span style="color:#337FE5;">(推荐)</span> 
+</p>
+<p>
+	<a href="https://blog.csdn.net/wq6ylg08/article/details/88798254" target="_blank">https://blog.csdn.net/wq6ylg08/article/details/88798254</a> 
+</p>
+<p>
+	修改本地文件后,在add之前,可以用 git diff HEAD 查看版本差异
+</p>
+<p>
+	git diff HEAD~1
+</p>
+<p>
+	git diff HEAD~X
+</p>
+<p>
+	<span>git diff HEAD~&nbsp; &nbsp; &nbsp;//这样好像可以看之前的多个版本</span> 
+</p>
+<p>
+	<br />
+</p>
+<p>
+	[ignore]
+</p>
+<p>
+	logs/：忽略当前路径下的logs目录，包含logs下的所有子目录和文件<br />
+/logs.txt：忽略根目录下的logs.txt文件<br />
+*.class：忽略所有后缀为.class的文件<br />
+!/classes/a.class：不忽略classes目录下的a.class文件<br />
+tmp/*.txt：只忽略tmp目录下的.txt文件<br />
+**/foo：可以忽略/foo, a/foo, a/b/foo等
+</p>
+<p>
+	java中.gitignore的例子:
+</p>
+<p>
+	/target/<br />
+target/<br />
+.class<br />
+/bin/<br />
+bin/<br />
+/.settings/<br />
+.settings/<br />
+.classpath<br />
+</p>
+<p>
+	<br />
+</p>
+<p>
+	.gitignore规则不生效<br />
+.gitignore只能忽略那些原来没有被track的文件，如果某些文件已经被纳入了版本管理中，则修改.gitignore是无效的。所以一定要养成在项目开始就创建.gitignore文件的习惯。<br />
+解决方法就是先把本地缓存删除(改变成未track状态)，然后再提交：<br />
+<br />
+git rm -r --cached .<br />
+git add .<br />
+git commit -m "msg"
+</p>
+<p>
+	<br />
+</p>
+<p>
+	[git配置]
+</p>
+<p>
+	.git/.config文件:
+</p>
+<p>
+	<span style="font-family:&quot;font-size:14px;background-color:#FAFAFA;"> </span> 
+</p>
+<div style="color:#D4D4D4;background-color:#1E1E1E;font-family:Consolas, &quot;font-size:14px;">
+	<div>
+		[core]
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">repositoryformatversion</span>&nbsp;=&nbsp;0
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">filemode</span>&nbsp;=&nbsp;false
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">bare</span>&nbsp;=&nbsp;false
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">logallrefupdates</span>&nbsp;=&nbsp;true
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">symlinks</span>&nbsp;=&nbsp;false
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">ignorecase</span>&nbsp;=&nbsp;true
+	</div>
+	<div>
+		[remote&nbsp;"origin"]
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">url</span>&nbsp;=&nbsp;https://帐号:密码@gitee.com/sellgirl/PaySellgirl.git
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">fetch</span>&nbsp;=&nbsp;+refs/heads/*:refs/remotes/origin/*
+	</div>
+	<div>
+		[http]&nbsp;&nbsp;
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">postBuffer</span>&nbsp;=&nbsp;524288000
+	</div>
+	<div>
+		[branch&nbsp;"master"]
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">remote</span>&nbsp;=&nbsp;origin
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">merge</span>&nbsp;=&nbsp;refs/heads/master
+	</div>
+<br />
+</div>
+<p>
+	或者
+</p>
+<p>
+	<br />
+</p>
+<div style="color:#D4D4D4;background-color:#1E1E1E;font-family:Consolas, &quot;font-size:14px;">
+	<div>
+		[core]
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">repositoryformatversion</span>&nbsp;=&nbsp;0
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">filemode</span>&nbsp;=&nbsp;false
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">bare</span>&nbsp;=&nbsp;false
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">logallrefupdates</span>&nbsp;=&nbsp;true
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">symlinks</span>&nbsp;=&nbsp;false
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">ignorecase</span>&nbsp;=&nbsp;true
+	</div>
+	<div>
+		[http]
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">postBuffer</span>&nbsp;=&nbsp;524288000
+	</div>
+	<div>
+		[branch&nbsp;"master"]
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">remote</span>&nbsp;=&nbsp;https://<span style="color:#D4D4D4;font-family:Consolas, &quot;font-size:14px;background-color:#1E1E1E;">帐号:密码</span>@gitee.com/sellgirl/PFCSharpHelper.git
+	</div>
+	<div>
+		&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">merge</span>&nbsp;=&nbsp;refs/heads/master
+	</div>
+<br />
+</div>
+<p>
+	<br />
+</p>
+<p>
+	<br />
+</p>
+<p>
+	<span style="font-family:&quot;font-size:14px;background-color:#FAFAFA;"></span><span></span> 
+</p>
+<p>
+	<br />
+</p>
+<p>
+	或修改全局配置:
+</p>
+<p>
+	<span style="color:rgba(0, 0, 0, 0.75);font-family:&quot;font-size:16px;background-color:#FFFFFF;">&nbsp; git config --edit --global</span> 
+</p>
+<p>
+	<span style="color:rgba(0, 0, 0, 0.75);font-family:&quot;font-size:16px;background-color:#FFFFFF;">&nbsp; 修改后Esc-&gt;:wq! 回车 ,保存退出</span> 
+</p>
+<p>
+	<br />
+</p>
+<p>
+	网络问题报错:&nbsp;
+</p>
+<p>
+	fatal: 过早的文件结束符（EOF）
+</p>
+<p>
+	解决办法
+</p>
+<p>
+	git config --global http.postBuffer 524288000
+</p>
+<p>
+	git config --list
+</p>
+<p>
+	<br />
+</p>
+<p>
+	[覆盖本地]<span style="color:#337FE5;">(推荐)</span> 
+</p>
+<p>
+	<br />
+</p>
+<p style="color:#333333;font-family:verdana, Arial, Helvetica, sans-serif;font-size:14px;background-color:#FFFFFF;">
+	&nbsp; &nbsp;git强制覆盖本地命令（分步执行）：
+</p>
+<p style="color:#333333;font-family:verdana, Arial, Helvetica, sans-serif;font-size:14px;background-color:#FFFFFF;">
+	&nbsp; &nbsp; git fetch --all<br />
+&nbsp;&nbsp;&nbsp;&nbsp;git reset --hard origin/master<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-family:&quot;background-color:#FFFFFF;">git push --set-upstream https://github.com/kahineasin/PaySellgirl.git develop&nbsp; &nbsp; &nbsp; &nbsp; //或&nbsp;</span>git pull
+</p>
+<p>
+	<br />
+</p>
+<p>
+	<br />
+</p>
+<p>
+	[git合作开发]
+</p>
+<p>
+	<span style="color:#222222;font-family:Consolas, &quot;background-color:#FFFFFF;"><a href="https://gitee.com/osbzr/openerp-china">https://gitee.com/osbzr/openerp-china</a></span> 
+</p>
+<p>
+	<br />
+</p>
+<ol style="color:#40485B;font-family:-apple-system, BlinkMacSystemFont, &quot;font-size:16px;background-color:#FFFFFF;">
+	<li>
+		<p>
+			在openerp-china项目上点击fork按钮，形成你自己的项目
+		</p>
+	</li>
+	<li>
+		<p>
+			clone你自己的项目到本地
+		</p>
+	</li>
+	<li>
+		<p>
+			添加 osbzr 的 remote 只需要做一次 git remote add osbzr&nbsp;<a href="http://git.oschina.net/osbzr/openerp-china.git">http://git.oschina.net/osbzr/openerp-china.git</a> 
+		</p>
+	</li>
+	<li>
+		<p>
+			拉 主干代码到本地 git fetch osbzr
+		</p>
+	</li>
+	<li>
+		<p>
+			合并 主干代码到本地 git merge osbzr/master
+		</p>
+	</li>
+	<li>
+		<p>
+			推送 本地合并后的代码到 fork 项目 git push origin master
+		</p>
+	</li>
+	<li>
+		<p>
+			向主项目提交合并请求
+		</p>
+	</li>
+</ol>
+<p>
+	<br />
+</p>
+<p>
+	[ssh]
+</p>
+<p>
+	https://www.cnblogs.com/mingyue5826/p/11141324.html
+</p>
+<p>
+	https://blog.csdn.net/m0_37649018/article/details/82414600<br />
+1.eclipse保存ssh<br />
+C:\Users\Administrator\.ssh<br />
+密码:[完美工号]<br />
+2.在GitLab中添加SSH Key(粘贴1步生成的.pub里面的代码)
+</p>
+<p>
+	3.GIT_SSH environment variable is pointing to C:\Program Files (x86)\Git\bin\ssh.exe
+</p>
+<p>
+	&nbsp;&nbsp;https://stackoverflow.com/questions/10574267/cannot-spawn-ssh-when-connecting-to-github-but-ssh-t-gitgithub-com-works
+</p>
+<p>
+	<br />
+</p>
+<p>
+	[服务器搭建]
+</p>
+<p>
+	3种方式:
+</p>
+<p>
+	git(无视图介面)
+</p>
+<p>
+	gitblit
+</p>
+<p>
+	gitlab(排挤中国)
+</p>
+<p>
+	<br />
+</p>
+<p>
+	[bug]
+</p>
+<p>
+	1.修复提交过的大文件
+</p>
+<p>
+	https://gitee.com/help/articles/4232#article-header2
+</p>
+<p>
+	https://blog.csdn.net/qq997843911/article/details/88979051
+</p>
+<p>
+	报错时很可能会告诉你怎么找到大文件,如:git rev-list --objects --all | grep e93bae43f2f300efbaa32383a25baac0f30cadcd
+</p>
+<p>
+	git filter-branch --tree-filter 'rm -f target/pfTransferTask-0.0.1-SNAPSHOT.jar' --tag-name-filter cat -- --all<br />
+git push origin --tags --force<br />
+git push origin --all --force
+</p>
+<p>
+	<br /><br />
+	或者<br />
+	git filter-branch --force --index-filter 'git rm -rf --cached --ignore-unmatch pfTransferTask.zip' --prune-empty --tag-name-filter cat -- --all<br />
+	git push origin master --force
+</p>
+<br />
+<p>
+	2.拉取报错
+</p>
+<p>git OpenSSL SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443
+</p>
+<p>https://blog.csdn.net/daerzei/article/details/79528153
+</p>
+<p>解决办法:
+</p>
+<p>git config --unset http.proxy
+</p>
+<p>
+	[分支管理]
+</p>
+<p>benjamin的方案是：<br />
+1 master分出develop，master设置为保护分支<br />
+2 git branch -a     // 看看有没有目标分支<br />
+git fetch   // 取所有分支,之后再执行第2步不会报错了<br />
+每台开发机都要切换到develop(git check out develop)，也是提交到develop<br />
+https://blog.csdn.net/wankui/article/details/53328369<br />
+注意如果git fetch没反应, 要输入git fetch origin(可能需要先执行add origin xx.git命令)<br />
+3 有空的时候再到gitee的Web管理平台上把develop合并到master(Pull Request)<br />
+4 如果远程删除了分支，本地分支不会自动更新的，要执行下面命令<br />
+  git remote update origin --prune<br />
+  git remote prune origin<br />
+5 切换到develop分支后的配置文件大概是这样的<br />
+[core]<br />
+	&nbsp;&nbsp;symlinks = false<br />
+	&nbsp;&nbsp;repositoryformatversion = 0<br />
+	&nbsp;&nbsp;filemode = false<br />
+	&nbsp;&nbsp;logallrefupdates = true<br />
+[branch "master"]<br />
+	&nbsp;&nbsp;remote = origin<br />
+	&nbsp;&nbsp;merge = refs/heads/master<br />
+	&nbsp;&nbsp;rebase = false<br />
+[gui]<br />
+	&nbsp;&nbsp;wmstate = normal<br />
+	&nbsp;&nbsp;geometry = 893x435+758+210 175 196<br />
+[remote "origin"]<br />
+	&nbsp;&nbsp;url = https://gitee.com/sellgirl/PaySellgirl.git<br />
+	&nbsp;&nbsp;fetch = +refs/heads/*:refs/remotes/origin/*<br />
+[branch "develop"]<br />
+	&nbsp;&nbsp;remote = origin<br />
+	&nbsp;&nbsp;merge = refs/heads/develop<br />
+
+</p>
+<p>
+	https://blog.csdn.net/fifteen718/article/details/80347550
+</p>
+<p>
+	Git分支主要分为主分支(master)、开发分支(develop)、辅助分支(dev-*、release-*、hotfix-*)。<br />
+<br />
+<br />
+主分支<br />
+命名：master&nbsp;<br />
+要求：团队成员可以从主分支上获得线上（正式环境）的代码
+</p>
+<p>
+	<br />
+开发分支<br />
+命名：develop
+</p>
+<p>
+	要求：团队成员可以从开发分支上获得最新开发进展的代码
+</p>
+<p>
+	<br />
+辅助分支
+</p>
+<p>
+	命名：dev-* 或 release-* 或 hotfix-*
+</p>
+<p>
+	要求：辅助分支大体包括以下几类：<br />
+<br />
+<br />
+“管理功能开发”的分支、“帮助构建可发布代码”的分支、“可以便捷的修复发布版本关键 BUG”的分支，等等。<br />
+<br />
+<br />
+相对应的我们可以设以下几类分支：<br />
+<br />
+<br />
+Feature branches：命名以 dev- 开头，从develop分支上拉取，用于开发新版本功能，完成之后合并至develop分支。<br />
+<br />
+<br />
+Release branches：命名以 release- 开头，从develop分支上拉取，用于预发布新版本及修复预发布版本Bug，完成之后分别合并至master分支和develop分支。<br />
+<br />
+<br />
+Hotfix branches：命名以 hotfix- 开头，从master分支上拉取，用于快速修复线上Bug，完成之后分别合并至master分支和develop分支。
+</p>
+<p>
+	<br />
+</p>
+<p>
+	[切换分支]<span style="color:#337FE5;">(推荐)</span> 
+</p>
+<p>
+	https://blog.csdn.net/weixin_39746869/article/details/112228871
+</p>
+<p>
+	<span style="color:#383A42;font-family:&quot;font-size:14px;background-color:#FAFAFA;">$ git status<br />
+位于分支 dev<br />
+无文件要提交，干净的工作区<br />
+$ git checkout master<br />
+切换到分支 'master'<br />
+您的分支领先 'origin/master' 共 8 个提交。<br />
+&nbsp; (使用 "git push" 来发布您的本地提交)<br />
+$ git status<br />
+位于分支 master<br />
+您的分支领先 'origin/master' 共 8 个提交。<br />
+&nbsp; (使用 "git push" 来发布您的本地提交)<br />
+无文件要提交，干净的工作区<br />
+<br />
+</span>[合并分支]<span style="color:#337FE5;">(推荐)</span> 
+<br>//已提交到develop,想合到master
+<br>方法1.官方
+<br>git checkout master
+<br>git pull https://gitee.com/sellgirl/PaySellgirl.git develop
+<br>git push origin master
+
+<br>方法2.官方
+<br>    使用gitee.com网站的合并功能
+(Pull Request)<br/><br/>
+这种方式在GitLab中如果报错Validate branchesCannot Create: This merge request already existed<br/>
+要这么做：https://blog.csdn.net/qq_36722039/article/details/80137454<br/>
+Merge Requests->找到以前的合并请求记录点Edit->Delete<br />
+<br />
+gitlab合并分支时默认删除分支,更改为默认不删除分支的方法:<br />
+Setting->General->Merge requests->Enable 'Delete source branch' option by default
+</p>

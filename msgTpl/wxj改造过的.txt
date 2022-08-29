@@ -1,0 +1,6 @@
+这三个是混淆前的
+    <script src="./js/pfUtil.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/util.js"></script>
+这个是混淆后的
+merge.min.js

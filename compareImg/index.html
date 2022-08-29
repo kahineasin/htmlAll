@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CompareSasha</title>
+    <!--<meta name="viewport" id="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">-->
+    <meta name="viewport" id="Meta1" content="width=device-width,initial-scale=1.0">
+    
+<!--    <script language="javascript" type="text/javascript" src="http://sellgirl.com/Content/js/jquery/jquery-1.8.1.min.js"></script>-->
+    <!--<script type="text/javascript" src="http://sellgirl.com/Content/js/sellgirl/sellgirl.js"></script>-->
+    <script language="javascript" type="text/javascript" src="../js/jq/jquery-1.8.0.min.js"></script>
+    <script language="javascript" type="text/javascript" src="../js/sellgirl.js"></script>
+    <script language="javascript" type="text/javascript" src="../js/pfUtil.js"></script>
+
+    <style type="text/css">
+        html, body, ul, li, ol, dl, dd, dt, p, h1, h2, h3, h4, h5, h6, form, fieldset, legend, img
+        {
+            margin: 0;
+            padding: 0;
+        }
+        body
+        {
+            /*background: pink;*/
+            background: rgb(194,193,193);
+        }
+        #picbox
+        {
+            width: 1000px;
+            /*width: 100%;*/
+            /*width:400px;*//*手机宽度*/
+            /*height: 300px;*/ 
+            /*background: url('image/puzzle_001_300x300.jpg');*/
+            position: relative;
+            /*margin: 50px auto;*/
+            /*margin: 50px auto 0px auto;*/
+            margin: 0px auto 0px auto;
+            /*text-align:center;
+            vertical-align:middle;*/
+        }
+        .pic
+        {
+            width: 97px;
+            height: 97px;
+            float: left;
+            /*background: url('image/puzzle_002_300x300.jpg');*/
+            position: absolute;
+            transition: all 0.5s ease 0s;
+        }
+
+        #outputSpan
+        {
+            overflow: auto;
+        }
+        .buttonDiv
+        {
+            text-align: center;
+        }
+        .buttonDiv button
+        {
+            /*width: 200px;*/
+            /*height: 100px;*/
+            border-radius: 3px;
+            /*background: url('image/puzzle_p3_btn001.png');*/
+            /*background-color: red;*/
+            font-size: 58px;
+            /*border:none;*/
+            background-color: rgb(194,193,193);
+			white-space: nowrap;
+        }
+        .buttonDiv button img
+        {
+            width: 100%;
+            /*height: 100px;*/
+        }
+        .buttonDiv button:focus
+        {
+            outline:0;
+        }
+        #picbox img
+        {
+            width:100%;
+              /*filter:Alpha(opacity=100);
+            transition: opacity 0.5s;*/
+        }
+
+        .picDes {
+            position:fixed;
+            top:0px;
+            left:0px;
+            width:100%;
+            text-align:center;
+            color:white;
+            /*font-weight:bold;*/
+            font-size:58px;
+        }
+        .picDes.benjamin 
+        {
+            color:Blue;
+        }
+        .picDes.taobao 
+        {
+            color:rgb(255,80,0);
+        }
+        .buttonDiv button.benjamin
+        {
+            background-color:Blue;
+            color:White;
+        }
+        .buttonDiv button.taobao
+        {
+            background-color:rgb(255,80,0);
+            color:White;
+        }
+        .buttonDiv button.lockBtn
+        {
+            background-color:red;
+            color:White;
+        }
+    </style>
+    
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function() {
+            var picbox = document.getElementById('picbox');
+            //        var pic = document.querySelectorAll('.pic');
+            var pic = document.querySelectorAll('#picbox img');
+            var answer = document.querySelectorAll('.answerDiv input');
+            var picWidth = pic[0].offsetWidth;
+            var picHeight = pic[0].offsetHeight;
+            var picboxWidth = picbox.offsetWidth;
+            var picboxHeight = picbox.offsetHeight;
+            //var go = document.getElementById('go');
+            var lockBtn = document.getElementById('lockBtn');
+            var times = document.getElementById('times'); //定时。用于扩展
+            var dx, dy, newLeft, newtop, startTime, endTime;
+            var dragging = '';
+            var allSuccess = false;
+            var outputSpan = document.getElementById('outputSpan'); //日志,便于测试
+            var maxIdx = 1;
+            var curIdx = 0;
+            var imgDefaultDisplay = pic[0].style.display;
+            //alert(1);
+            var picDes = document.querySelectorAll('.picDes')[0];
+
+            sellgirl.asyncLoadImage(pic[0], pic[0].getAttribute('src').replace('_849x1024', ''));
+            //sellgirl.asyncLoadImage(pic[1], 'https://pay.sellgirl.com:44303/sasha.jpg');
+            //sellgirl.asyncLoadImage(pic[1], 'https://sellgirl.com:44303/sasha.jpg'); //使用ssl时都用一级域名
+            //sellgirl.asyncLoadImage(pic[1], 'http://sellgirl.com:28303/sasha.jpg'); //使用ssl时都用一级域名
+            sellgirl.asyncLoadImage(pic[1], 'http://neris.sellgirl.com/img/sashathumbnail_w2000.jpg'); //使用ssl时都用一级域名
+            
+//            for (var i = 0; i < pic.length; i++) {
+//                sellgirl.asyncLoadImage(pic[i], pic[i].getAttribute('src').replace('_849x1024', ''));
+//            }
+
+            //var btnImg = document.querySelectorAll('.buttonDiv button img')[0];
+            //var btnImg = document.querySelectorAll('.buttonDiv button')[0];
+            var isGoing = false;
+            var isLocking = false;
+            var fileNames = ["淘宝版","benjamin版"];
+            function doGo(num) {
+				if(isLocking){return;}
+                if (isGoing) { return; }
+                //alert(1);
+                isGoing = true;
+                //go.setAttribute('disabled', 'disabled');
+                var lastIdx = curIdx;
+                //if (curIdx === maxIdx) {
+                //    curIdx = 0;
+                //} else {
+                //    curIdx++;
+                //}
+                if (num > maxIdx) {
+                    curIdx = 0;
+                } else if (num < 0) {
+                    curIdx = maxIdx;
+                } else {
+                    curIdx = num;
+                }
+                //if (curIdx === 0) {
+                //    btnImg.innerHTML = "当前为淘宝版(点击切换)";
+                //    picDes.innerHTML = "淘宝版";
+                //    var taobaoColor = 'rgb(255,80,0)';
+                //    //                    btnImg.style.color = taobaoColor;
+                //    //                    picDes.style.color = taobaoColor;
+                //    btnImg.className = btnImg.className.replace('benjamin', 'taobao');
+                //    picDes.className = picDes.className.replace('benjamin', 'taobao');
+                //    //btnImg.setAttribute('src', 'image/puzzle_p3_btn001.png');
+                //} else {
+                //    btnImg.innerHTML = "当前为benjamin修改版(点击切换)";
+                //    picDes.innerHTML = "benjamin版";
+                //    var benjaminColor = 'blue';
+                //    //                    btnImg.style.color = benjaminColor;
+                //    //                    picDes.style.color = benjaminColor;
+                //    btnImg.className = btnImg.className.replace('taobao', 'benjamin');
+                //    picDes.className = picDes.className.replace('taobao', 'benjamin');
+                //    //btnImg.setAttribute('src', 'image/puzzle_p3_btn002.png');
+                //}
+                //btnImg.innerHTML = "当前为" + fileNames[curIdx] + "(点击切换)";
+                picDes.innerHTML = fileNames[curIdx];
+
+                //$(pic[lastIdx]).hide();
+                //$(pic[curIdx]).show();
+                //$('#picbox img').eq(lastIdx).hide();
+                //$('#picbox img').eq(curIdx).show();
+                $(picbox.children[lastIdx]).hide();
+                $(picbox.children[curIdx]).show();
+                isGoing = false;
+
+                ////$(pic[lastIdx]).animate({fadeOut:500},).fadeOut(500);
+
+                //$(pic[lastIdx]).fadeOut(200, function () {
+                //    $(pic[curIdx]).fadeIn(300, function () {
+                //        isGoing = false;
+                //    });
+                //});
+
+                //go.removeAttribute('disabled');
+            }
+            function prevImg() {
+                doGo(curIdx - 1);
+            }
+            function nextImg() {
+                doGo(curIdx+1);
+            }
+            function firstImg() {
+                doGo(0);
+            }
+            function lastImg() {
+                doGo(maxIdx);
+            }
+			function doLock(){
+				if(isLocking=!isLocking){
+				lockBtn.innerHTML = "固定";
+				}else{
+				lockBtn.innerHTML = "切换";
+				}
+			}
+
+			//sellgirl.onClick(go, nextImg);
+            sellgirl.onClick(lockBtn, doLock);
+            sellgirl.onClick(picbox, nextImg);
+            sellgirl.onClick($('#prevBtn')[0], prevImg);
+            sellgirl.onClick($('#nextBtn')[0], nextImg);
+            sellgirl.onClick($('#firstBtn')[0], firstImg);
+            sellgirl.onClick($('#lastBtn')[0], lastImg);
+            
+            //sellgirl.onClick($('#selectImgBtn')[0], function (e) {
+            //    debugger;
+            //});
+
+            $('#selectImgBtn').change(function (e) {
+                var me = this;
+                if (me.files.length < 1) { return;}
+                picbox.innerHTML = "";
+                fileNames = [];
+                for (var i = 0; i < me.files.length; i++) {
+                    var file=me.files[i];
+                    var canvas = document.createElement("img");
+                    //dialogDiv.className = 'agentDialog';
+                    //dialogDiv.innerHTML = '<iframe src="" style="width:100%"></iframe>';
+                    //canvas.style.position = 'absolute';
+                    //canvas.style.zIndex = '-100';
+                    //canvas.style.top = '0px';
+                    canvas.src =
+                    window.URL.createObjectURL(file);
+                    fileNames.push(file.name);
+                    if (i > 0) {
+                        canvas.style.display = 'none';
+                    }
+
+                    picbox.appendChild(canvas);                    
+                }
+                maxIdx = me.files.length - 1;
+                curIdx = 0;
+            });
+
+            function writeLog(s) {
+                //outputSpan.innerHTML +=s;
+            }
+            function showLog(s) {
+                outputSpan.innerHTML = s;
+            }
+            function pfPreventDefault(e) {
+                e.preventDefault();
+                //$pf.stopPropagation(e);
+            }
+
+ 
+        });
+    </script>
+</head>
+<body>
+    <div id='picbox'>
+        <img src="image/sasha_taobao_849x1024.jpg" alt="001" style="" />
+        <!-- <img src="https://sellgirl.com:44303/sashathumbnail?w=849&h=1024" alt="002" style="display:none;" /> -->
+<!--        <img src="http://sellgirl.com:28303/sashathumbnail?w=849&h=1024&t=Normal" alt="002" style="display:none;" />-->
+        <img src="http://neris.sellgirl.com/img/sashathumbnail_w800.jpg" alt="002" style="display:none;" />
+    </div>
+    <div class="buttonDiv">
+   <!--     <button id='go' class="taobao">
+            当前为淘宝版(点击切换)
+        </button>-->
+        <button id='lockBtn' class="lockBtn">
+            切换
+        </button>
+        <button id='prevBtn' class="">
+            上1张
+        </button>
+        <button id='nextBtn' class="">
+            下1张
+        </button>
+        <button id='firstBtn' class="">
+            第1张
+        </button>
+        <button id='lastBtn' class="">
+            最后1张
+        </button>
+            <input id="selectImgBtn" type="file" name="fileInputStream" multiple="multiple"/></div>
+    <p id='outputSpan'>
+    </p>
+    <div class="picDes taobao"><p>淘宝版</p></div>
+
+
+</body>
+</html>

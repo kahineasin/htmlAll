@@ -6,11 +6,11 @@
     <!--<meta name="viewport" id="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">-->
     <meta name="viewport" id="Meta1" content="width=device-width,initial-scale=1.0">
     
- <!--   <script language="javascript" type="text/javascript" src="../js/jq/jquery-1.8.0.min.js"></script>-->
-    <script language="javascript" type="text/javascript" src="http://sellgirl.com/Content/js/jquery/jquery-1.8.1.min.js"></script>
+<!--    <script language="javascript" type="text/javascript" src="http://sellgirl.com/Content/js/jquery/jquery-1.8.1.min.js"></script>-->
+    <!--<script type="text/javascript" src="http://sellgirl.com/Content/js/sellgirl/sellgirl.js"></script>-->
+    <script language="javascript" type="text/javascript" src="../js/jq/jquery-1.8.0.min.js"></script>
+    <script language="javascript" type="text/javascript" src="../js/sellgirl.js"></script>
     <script language="javascript" type="text/javascript" src="../js/pfUtil.js"></script>
-<!--    <script language="javascript" type="text/javascript" src="../js/sellgirl.js"></script>-->
-    <script type="text/javascript" src="http://sellgirl.com/Content/js/sellgirl/sellgirl.js"></script>
 
     <style type="text/css">
         html, body, ul, li, ol, dl, dd, dt, p, h1, h2, h3, h4, h5, h6, form, fieldset, legend, img
@@ -144,7 +144,8 @@
             sellgirl.asyncLoadImage(pic[0], pic[0].getAttribute('src').replace('_849x1024', ''));
             //sellgirl.asyncLoadImage(pic[1], 'https://pay.sellgirl.com:44303/sasha.jpg');
             //sellgirl.asyncLoadImage(pic[1], 'https://sellgirl.com:44303/sasha.jpg'); //使用ssl时都用一级域名
-            sellgirl.asyncLoadImage(pic[1], 'http://sellgirl.com:28303/sasha.jpg'); //使用ssl时都用一级域名
+            //sellgirl.asyncLoadImage(pic[1], 'http://sellgirl.com:28303/sasha.jpg'); //使用ssl时都用一级域名
+            sellgirl.asyncLoadImage(pic[1], 'http://neris.sellgirl.com/img/sashathumbnail_w2000.jpg'); //使用ssl时都用一级域名
             
 //            for (var i = 0; i < pic.length; i++) {
 //                sellgirl.asyncLoadImage(pic[i], pic[i].getAttribute('src').replace('_849x1024', ''));
@@ -231,7 +232,8 @@
     <div id='picbox'>
         <img src="image/sasha_taobao_849x1024.jpg" alt="001" style="" />
         <!-- <img src="https://sellgirl.com:44303/sashathumbnail?w=849&h=1024" alt="002" style="display:none;" /> -->
-        <img src="http://sellgirl.com:28303/sashathumbnail?w=849&h=1024&t=Normal" alt="002" style="display:none;" />
+<!--        <img src="http://sellgirl.com:28303/sashathumbnail?w=849&h=1024&t=Normal" alt="002" style="display:none;" />-->
+        <img src="http://neris.sellgirl.com/img/sashathumbnail_w800.jpg" alt="002" style="display:none;" />
     </div>
     <div class="buttonDiv">
         <button id='go' class="taobao">
