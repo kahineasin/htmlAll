@@ -1,4 +1,18 @@
-注意：win10系统自动隐藏.git文件夹<br />
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title></title>
+  <meta charset="utf-8" />
+  <style  type="text/css">
+	ul{
+		list-style-type: decimal;
+	}
+  </style>
+</head>
+
+<body>注意：win10系统自动隐藏.git文件夹<br />
 <br />
 git系统环境变量：<br />
 path:<br />
@@ -634,6 +648,24 @@ C:\Users\Administrator\.ssh<br />
 <p>
 	<br />
 </p>
+
+<p>
+	[大文件][lfs]
+</p>
+<p>
+	上传.psd等超过50MB大文件时会有warning,最好使用以下方式,实测可用.(<a href="https://git-lfs.github.com/" target="_blank">https://git-lfs.github.com/</a>)
+</p>
+<ul>
+	<li>安装 git lfs install</li>
+	<li>In each Git repository where you want to use Git LFS, cmd: git lfs track "*.psd"</li>
+	<li>make sure .gitattributes is tracked, cmd: git add .gitattributes</li>
+	<li>git add ./ps/file.psd<br/>
+		git commit -m "Add design file"<br/>
+		git push origin main</li>
+</ul>
+<p>
+	<br />
+</p>
 <p>
 	[bug]
 </p>
@@ -791,3 +823,7 @@ Merge Requests->找到以前的合并请求记录点Edit->Delete<br />
 gitlab合并分支时默认删除分支,更改为默认不删除分支的方法:<br />
 Setting->General->Merge requests->Enable 'Delete source branch' option by default
 </p>
+
+</body>
+
+</html>
