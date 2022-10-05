@@ -1584,9 +1584,9 @@ sellgirl.createMusicPlayer = function (audioContainer,opts) {
                     }
                 });
             }
-            if (lrcJSONCache[li.innerHTML] === undefined && null!==li.attributes.getNamedItem('lrc')) {
+            if (lrcJSONCache[li.innerHTML] === undefined ) {
                 //var lrcUtl = encodeURIComponent(li.attributes.getNamedItem('lrc').nodeValue);
-                if ('' !== li.attributes.getNamedItem('lrc').nodeValue) {
+                if (null!==li.attributes.getNamedItem('lrc')&&'' !== li.attributes.getNamedItem('lrc').nodeValue) {
 
                     var lrcUtl = encodeURI(li.attributes.getNamedItem('lrc').nodeValue);
                     //alert(lrcUtl);
