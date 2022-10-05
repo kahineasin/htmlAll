@@ -1584,97 +1584,100 @@ sellgirl.createMusicPlayer = function (audioContainer,opts) {
                     }
                 });
             }
-            if (lrcJSONCache[li.innerHTML] === undefined && null!==li.attributes.getNamedItem('lrc')) {
+            if (lrcJSONCache[li.innerHTML] === undefined ) {
                 //var lrcUtl = encodeURIComponent(li.attributes.getNamedItem('lrc').nodeValue);
-                var lrcUtl = encodeURI(li.attributes.getNamedItem('lrc').nodeValue);
-                //alert(lrcUtl);
-                $.get(lrcUtl, null, function (data) {
-                    if (data !== undefined && data !== null && data !== '') {
-                        // $("#lrclist").css('transform','translateY(26px)');
+                if (null!==li.attributes.getNamedItem('lrc')&&'' !== li.attributes.getNamedItem('lrc').nodeValue) {
 
-                        var lrcArray = data.indexOf('\r\n') > -1 ? data.split('\r\n') : data.split('\n');// linux系统是\n换行(如github的web系统里面)
+                    var lrcUtl = encodeURI(li.attributes.getNamedItem('lrc').nodeValue);
+                    //alert(lrcUtl);
+                    $.get(lrcUtl, null, function (data) {
+                        if (data !== undefined && data !== null && data !== '') {
+                            // $("#lrclist").css('transform','translateY(26px)');
 
-                        var lrcTitle = '';
-                        var lrcJSON = {};
-                        var lrcJSONArray = [];
-                        // debugger;
-                        lrcJSON['[00:00.00]'] = '';//顺序对后面$.foreach是有影响的
-                        function isTimeLine(s){
-                            return s!==null&&s!==undefined&&s.length>9&&s[0]==='['&&s[3]===':'&&s[9]===']';
-                        }
-                        function setLineToTime(line){//为了适应压缩版的歌词(一行有多个时间标签)
-                            var timeArr=[];
-                            while(isTimeLine(line)){
-                                timeArr.push(line.substr(0,10));
-                                line=line.substr(10,line.length-10);
-                            }
-//                            if(isTimeLine(line)){
-//                                lrcJSON[line.substr(0,10)] = line.substr(10,line.length-10);
-//                            }
-                            for(var i=0;i<timeArr.length;i++){
-                                lrcJSON[timeArr[i]] = line;
-                                lrcJSONArray.push({t:timeArr[i],l:line});
-                            }
-                        }
-                        function keyToTime(key){
-                            return parseFloat(key.substr(1, 3)) * 60 + parseFloat(key.substring(4, 10));
-                        }
-                        for (var j = 0; j < lrcArray.length; j++) {
-//                            if (lrcArray[j].indexOf(']') === 9) {
-                            if (isTimeLine(lrcArray[j])) {
-////                                var lrcRow = lrcArray[j].split(']');
-////                                lrcJSON[lrcRow[0] + ']'] = lrcRow[1];
-//                                lrcJSON[lrcArray[j].substr(0,10)] = lrcArray[j].substr(10,lrcArray[j].length-10);
-                                setLineToTime(lrcArray[j]);
-                            } else {
-                                lrcTitle += lrcArray[j];
-                            }
-                        }
-                        //if (lrcJSON['[00:00.00]'] === undefined && lrcJSON['[00:00:00]'] === undefined) {
-                        lrcJSON['[00:00.00]'] = lrcTitle;
-                       lrcJSONArray.push({t:'[00:00.00]',l:lrcTitle});
-//                        
-//                            var aa=$.sort(lrcJSON, function (a,b){
-//                                return parseInt(a.replace(':','').replace('.',''))-parseInt(b.replace(':','').replace('.',''));
-//                            });
+                            var lrcArray = data.indexOf('\r\n') > -1 ? data.split('\r\n') : data.split('\n');// linux系统是\n换行(如github的web系统里面)
 
-                        try{
-                            //压缩版歌词需要重新排序--benjamin 20201205
-                            var lrcJSONArraySort=lrcJSONArray.sort( function (a,b){
-                                //return parseInt(a.t.replace(':','').replace('.',''))-parseInt(b.t.replace(':','').replace('.',''));
-                                return keyToTime(a.t)-keyToTime(b.t);
+                            var lrcTitle = '';
+                            var lrcJSON = {};
+                            var lrcJSONArray = [];
+                            // debugger;
+                            lrcJSON['[00:00.00]'] = '';//顺序对后面$.foreach是有影响的
+                            function isTimeLine(s) {
+                                return s !== null && s !== undefined && s.length > 9 && s[0] === '[' && s[3] === ':' && s[9] === ']';
+                            }
+                            function setLineToTime(line) {//为了适应压缩版的歌词(一行有多个时间标签)
+                                var timeArr = [];
+                                while (isTimeLine(line)) {
+                                    timeArr.push(line.substr(0, 10));
+                                    line = line.substr(10, line.length - 10);
+                                }
+                                //                            if(isTimeLine(line)){
+                                //                                lrcJSON[line.substr(0,10)] = line.substr(10,line.length-10);
+                                //                            }
+                                for (var i = 0; i < timeArr.length; i++) {
+                                    lrcJSON[timeArr[i]] = line;
+                                    lrcJSONArray.push({ t: timeArr[i], l: line });
+                                }
+                            }
+                            function keyToTime(key) {
+                                return parseFloat(key.substr(1, 3)) * 60 + parseFloat(key.substring(4, 10));
+                            }
+                            for (var j = 0; j < lrcArray.length; j++) {
+                                //                            if (lrcArray[j].indexOf(']') === 9) {
+                                if (isTimeLine(lrcArray[j])) {
+                                    ////                                var lrcRow = lrcArray[j].split(']');
+                                    ////                                lrcJSON[lrcRow[0] + ']'] = lrcRow[1];
+                                    //                                lrcJSON[lrcArray[j].substr(0,10)] = lrcArray[j].substr(10,lrcArray[j].length-10);
+                                    setLineToTime(lrcArray[j]);
+                                } else {
+                                    lrcTitle += lrcArray[j];
+                                }
+                            }
+                            //if (lrcJSON['[00:00.00]'] === undefined && lrcJSON['[00:00:00]'] === undefined) {
+                            lrcJSON['[00:00.00]'] = lrcTitle;
+                            lrcJSONArray.push({ t: '[00:00.00]', l: lrcTitle });
+                            //                        
+                            //                            var aa=$.sort(lrcJSON, function (a,b){
+                            //                                return parseInt(a.replace(':','').replace('.',''))-parseInt(b.replace(':','').replace('.',''));
+                            //                            });
+
+                            try {
+                                //压缩版歌词需要重新排序--benjamin 20201205
+                                var lrcJSONArraySort = lrcJSONArray.sort(function (a, b) {
+                                    //return parseInt(a.t.replace(':','').replace('.',''))-parseInt(b.t.replace(':','').replace('.',''));
+                                    return keyToTime(a.t) - keyToTime(b.t);
+                                });
+                                lrcJSON = {};
+                                for (var i = 0; i < lrcJSONArraySort.length; i++) {
+                                    lrcJSON[lrcJSONArraySort[i].t] = lrcJSONArraySort[i].l;
+                                }
+                            } catch (e) {
+
+                            }
+
+
+                            lrcJSONCache[li.innerHTML] = lrcJSON;
+
+                            var lrcTime = []; //歌词对应的时间数组
+                            i = 0;
+                            $.each(lrcJSON, function (key, value) {//遍历lrc
+                                //lrcTime[i++] = parseFloat(key.substr(1, 3)) * 60 + parseFloat(key.substring(4, 10)); //00:00.000转化为00.000格式
+                                lrcTime[i++] = keyToTime(key);
+                                // ul.innerHTML += "<li><p>"+lrcJSON[key]+"</p></li>";//ul里填充歌词
                             });
-                            lrcJSON={};
-                            for(var i=0;i<lrcJSONArraySort.length;i++){
-                                lrcJSON[lrcJSONArraySort[i].t]=lrcJSONArraySort[i].l;
-                            }
-                        }catch(e){
-                        
+                            lrcTimeCache[li.innerHTML] = lrcTime;
+                            showLrc();
+                            setLrcModel(nextLrcModeBtn[0]);
+
+                        } else {
+                            delete lrcJSONCache[li.innerHTML];
+                            delete lrcTimeCache[li.innerHTML];
+                            var ul = $("#lrclist")[0]; //获取ul
+                            $("#lrclist").empty();
+                            ul.innerHTML = "<li>无歌词</li>";
+
                         }
-                        
-                        
-                        lrcJSONCache[li.innerHTML] = lrcJSON;
-
-                        var lrcTime = []; //歌词对应的时间数组
-                        i = 0;
-                        $.each(lrcJSON, function (key, value) {//遍历lrc
-                            //lrcTime[i++] = parseFloat(key.substr(1, 3)) * 60 + parseFloat(key.substring(4, 10)); //00:00.000转化为00.000格式
-                            lrcTime[i++] =keyToTime(key);
-                            // ul.innerHTML += "<li><p>"+lrcJSON[key]+"</p></li>";//ul里填充歌词
-                        });
-                        lrcTimeCache[li.innerHTML] = lrcTime;
-                        showLrc();
-                        setLrcModel(nextLrcModeBtn[0]);
-
-                    } else {
-                        delete lrcJSONCache[li.innerHTML];
-                        delete lrcTimeCache[li.innerHTML];
-                        var ul = $("#lrclist")[0]; //获取ul
-                        $("#lrclist").empty();
-                        ul.innerHTML = "<li>无歌词</li>";
-
-                    }
-                });
+                    });
+                }
             } else {
                 showLrc();
             }
