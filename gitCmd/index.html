@@ -615,6 +615,29 @@ git commit -m "msg"
 	注意,fork别人项目后,需要在自己那边再建1个分支,再checkout到本地电脑开发(因为fork的别人的分支,在自己电脑上是push不了的,只能push自己建的分支)
 </p>
 <p>
+	[branches]
+</p>
+<p>
+	分支版本号1般写2位, 如 release-2.2
+	分支可以 pull push merge 等
+</p>
+<p>
+	[SNAPSHOT]
+</p>
+<p>
+	有些项目如flink-cdc, 版本号是这样的 <version>2.2-SNAPSHOT</version>, 这就是快照版本 <br />
+	
+	假设有两个小组负责维护两个组件，example-service和example-ui,其中example-ui项目依赖于example-service。而这两个项目每天都会构建多次，如果每次构建你都要升级example-service的版本，那么你会疯掉。这个时候SNAPSHOT版本就派上用场了。每天日常构建时你可以构建example-service的快照版本，比如example-service-1.0-SNAPSHOT.jar，而example-ui依赖该快照版本。每次example-ui构建时，会优先去远程仓库中查看是否有最新的example-service-1.0-SNAPSHOT.jar，如果有则下载下来使用。即使本地仓库中已经有了example-service-1.0-SNAPSHOT.jar，它也会尝试去远程仓库中查看同名的jar是否是最新的。
+</p>
+<p>
+	[tags]
+</p>
+<p>
+	tag的版本号1般写3位,如 release-2.2<br />
+	tags好像是zip那种包, 可以 git clone -b release-2.2.1 https://github.com/kahineasin/flink-cdc-connectors.git 拉下来, 但不能push管理<br />
+	当fork开源项目的tag时,一般自己要按tag的版本号建一个自己的branch来管理
+</p>
+<p>
 	[ssh]
 </p>
 <p>
