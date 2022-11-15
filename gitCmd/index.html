@@ -627,7 +627,16 @@ git commit -m "msg"
 <p>
 	有些项目如flink-cdc, 版本号是这样的 <version>2.2-SNAPSHOT</version>, 这就是快照版本 <br />
 	
-	假设有两个小组负责维护两个组件，example-service和example-ui,其中example-ui项目依赖于example-service。而这两个项目每天都会构建多次，如果每次构建你都要升级example-service的版本，那么你会疯掉。这个时候SNAPSHOT版本就派上用场了。每天日常构建时你可以构建example-service的快照版本，比如example-service-1.0-SNAPSHOT.jar，而example-ui依赖该快照版本。每次example-ui构建时，会优先去远程仓库中查看是否有最新的example-service-1.0-SNAPSHOT.jar，如果有则下载下来使用。即使本地仓库中已经有了example-service-1.0-SNAPSHOT.jar，它也会尝试去远程仓库中查看同名的jar是否是最新的。
+	假设有两个小组负责维护两个组件，example-service和example-ui,其中example-ui项目依赖于example-service。而这两个项目每天都会构建多次，如果每次构建你都要升级example-service的版本，那么你会疯掉。这个时候SNAPSHOT版本就派上用场了。每天日常构建时你可以构建example-service的快照版本，比如example-service-1.0-SNAPSHOT.jar，而example-ui依赖该快照版本。每次example-ui构建时，会优先去远程仓库中查看是否有最新的example-service-1.0-SNAPSHOT.jar，如果有则下载下来使用。即使本地仓库中已经有了example-service-1.0-SNAPSHOT.jar，它也会尝试去远程仓库中查看同名的jar是否是最新的。<br />
+	<br />
+	把SNAPSHOT打包为正式版本时,可以这么做:<br />
+	<ol>
+		<li>先本地父项目install SNAPSHOT的版本(这是为了保证本地找不到正式版本时可以用SNAPSHOT版本,不会报错找不到引用)</li>
+		<li>把子项目A改为正式版本号如 2.2.3 (可以考虑增加 properties <old-cdc.version>2.2.1</old-cdc.version> ,便于指定父项目版本号) </li>
+		<li>父项目P改为正式版本号如 2.2.1 , 父项目注释掉未改为正式版本号的 module, 只留下想发布的module 如子项目A </li>
+		<li>在父项目下执行mvn install, 然后mvn deploy(注意nexus仓库中已经有父项目的正式版本,那么只需要进子项目A里面单独deploy 子项目A 就行了.</li>
+		<li>注意有些快照分支如flink-cdc2.2, 如果加入自己的文件, 可能打包时会要求在.java文件的package行之前加上 Licensed to 的内容(具体还未清楚要怎么加, 随便写上 Licensed to Benjamin(li@sellgirl.com) )</li>
+	</ol>
 </p>
 <p>
 	[tags]
