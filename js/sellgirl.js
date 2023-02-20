@@ -1683,6 +1683,12 @@ sellgirl.createMusicPlayer = function (audioContainer,opts) {
             }
 
         }
+
+        //下载按钮,因为发现只有华为浏览器上的html5 mp3播放器才带下载按钮,但很多浏览器都不带下载按钮 -- benjamin 20230200
+        var downloadFileBtn=audioContainer.find('#downloadFileBtn');
+        if(null!=downloadFileBtn&&undefined!=downloadFileBtn){
+            downloadFileBtn.setAttribute("href",src+'.'+(fmts.length>0?fmts[0]:'mp3'));
+        }
     }
     function play(idx) {
         var lis = getPlayLis();
