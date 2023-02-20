@@ -1688,6 +1688,8 @@ sellgirl.createMusicPlayer = function (audioContainer,opts) {
         var downloadFileBtn=audioContainer.find('#downloadFileBtn');
         if(null!=downloadFileBtn&&undefined!=downloadFileBtn&&downloadFileBtn.length>0){
             downloadFileBtn[0].setAttribute("href",src+'.'+(fmts.length>0?fmts[0]:'mp3'));
+            downloadFileBtn[0].setAttribute("download",li.innerHTML);
+            
         }
     }
     function play(idx) {
