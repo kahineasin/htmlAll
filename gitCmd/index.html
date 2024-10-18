@@ -863,6 +863,19 @@ gitlab合并分支时默认删除分支,更改为默认不删除分支的方法:
 Setting->General->Merge requests->Enable 'Delete source branch' option by default
 </p>
 
+<p>
+	[下载单个目录]
+</p>
+<p>1.<br />
+# 过滤掉blob文件<br />
+git clone --filter=blob:none --sparse <your-git-url> <br />
+<br />
+2.<br />
+# 指定git拉取的目录文件(实测输入完这句，就能下载完成) <br />
+git sparse-checkout add <your-folder> <br />
+# 或者 <br />
+git sparse-checkout set <your-folder> <br />
+</p>
 </body>
 
 </html>
