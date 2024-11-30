@@ -1912,9 +1912,14 @@ sellgirl.createMusicPlayer = function (audioContainer,opts) {
             //        if (oldOnLoad) { oldOnLoad(); }
 
             var lis = getPlayLis();
+
+
             var idxs = [];
             for (var i = 0; i < lis.length; i++) {
                 idxs.push(i);
+
+                //为了不用在dom上写sgidx--benjamin20241130
+                lis[i].setAttribute('sgidx',i.toString());
             }
             randomPlayContainer = $pf.listRandomTakeContainer(idxs);
 
