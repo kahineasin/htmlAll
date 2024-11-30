@@ -152,6 +152,14 @@ git commit&nbsp; &nbsp; &nbsp;//这样需要:wq 退出<br />
 </p>
 <p>
 	git push -u origin master
+	<br /><br />
+	这样才是最好的：
+	<br />git init
+<br />git add README.md
+<br />git commit -m "first commit"
+<br />git branch -M main
+<br />git remote add origin git@github.com:kahineasin/sgGamepadTool.git
+<br />git push -u origin main
 </p>
 <p>
 	<br />
@@ -863,6 +871,19 @@ gitlab合并分支时默认删除分支,更改为默认不删除分支的方法:
 Setting->General->Merge requests->Enable 'Delete source branch' option by default
 </p>
 
+<p>
+	[下载单个目录]
+</p>
+<p>1.<br />
+# 过滤掉blob文件<br />
+git clone --filter=blob:none --sparse &lt;your-git-url&gt; <br />
+<br />
+2.<br />
+# 指定git拉取的目录文件(实测输入完这句，就能下载完成) <br />
+git sparse-checkout add &lt;your-folder&gt; <br />
+# 或者 <br />
+git sparse-checkout set &lt;your-folder&gt; <br />
+</p>
 </body>
 
 </html>
