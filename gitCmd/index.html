@@ -367,8 +367,7 @@ git commit&nbsp; &nbsp; &nbsp;//这样需要:wq 退出<br />
 <p>
 	[ignore]
 </p>
-<p>方法1.
-	<br />
+<p>
 	logs/：忽略当前路径下的logs目录，包含logs下的所有子目录和文件<br />
 /logs.txt：忽略根目录下的logs.txt文件<br />
 *.class：忽略所有后缀为.class的文件<br />
@@ -377,11 +376,6 @@ tmp/*.txt：只忽略tmp目录下的.txt文件<br />
 **/foo：可以忽略/foo, a/foo, a/b/foo等<br />
 .idea/  忽略所有.idea目录
 <br />
-<br />
-方法2. 对于已经提高的文件比如/lwjgl3/proguard.map<br />
-1. 在.ignore中加/lwjgl3/proguard.map, cmd:git push<br />
-2. 在浏览器登陆github，在web中删除proguard.map文件<br />
-3. cmd:git pull. (这样就可以了，以后add都会忽略proguard.map)
 </p>
 <p>
 	java中.gitignore的例子:
@@ -401,8 +395,14 @@ bin/<br />
 </p>
 <p>
 	.gitignore规则不生效<br />
+	方法1.<br />
 .gitignore只能忽略那些原来没有被track的文件，如果某些文件已经被纳入了版本管理中，则修改.gitignore是无效的。所以一定要养成在项目开始就创建.gitignore文件的习惯。<br />
 解决方法就是先把本地缓存删除(改变成未track状态)，然后再提交：<br />
+<br />
+方法2. 对于已经提高的文件比如/lwjgl3/proguard.map<br />
+1. 在.ignore中加/lwjgl3/proguard.map, cmd:git push<br />
+2. 在浏览器登陆github，在web中删除proguard.map文件<br />
+3. cmd:git pull. (这样就可以了，以后add都会忽略proguard.map)
 <br />
 git rm -r --cached .<br />
 git add .<br />
