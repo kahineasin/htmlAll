@@ -887,8 +887,10 @@ git clone --filter=blob:none --sparse &lt;your-git-url&gt; <br />
 2.<br />
 # 指定git拉取的目录文件(实测输入完这句，就能下载完成) <br />
 git sparse-checkout add &lt;your-folder&gt; <br />
+// 如果报错, 就用下面的 set <br />
 # 或者 <br />
-git sparse-checkout set &lt;your-folder&gt; <br />
+git sparse-checkout set &lt;your-folder&gt;  //注意其它目录会丢掉<br />
+// 之后正常方式 git add->commit->push 即可 <br />
 </p>
 </body>
 
