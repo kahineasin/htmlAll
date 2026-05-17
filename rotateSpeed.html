@@ -1,0 +1,36 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    
+    <title>htmlAll-目录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+
+	<script language="javascript">
+        function beforeSubmit(form){
+            var tarSpeed= document.getElementById("tarSpeed").value;
+            var curSetting= document.getElementById("curSetting").value;
+            // var curSpeed= document.getElementById("curSpeed").value;
+            var curRound= document.getElementById("curRound").value;
+            var curSecond= document.getElementById("curSecond").value;
+            var result=tarSpeed/((360*curRound)/(curSecond*curSetting));
+            document.getElementById("result").value=result;
+            // alert("got result");
+            return false;
+        }
+	</script>
+</head>
+<body style="margin: 0px;">
+    <form  onsubmit="return beforeSubmit(this)">
+        <ul>
+            <li>目标速度(度/秒)<input name="tarSpeed"  id="tarSpeed" type="number" value="228" /></li>
+            <li>游戏当前视角速度(单位x)<input name="curSetting"  id="curSetting"  type="number" value="70" /></li>
+            <li>实际测试:<input name="curRound"  id="curRound"  type="number" value="10" />周/<input name="curSecond"  id="curSecond"  type="number" value="10" />秒</li>
+            <li><input  type="submit" value="计算" /></li>
+            <li>计算结果(单位x):<input  name="result"  id="result" type="number"  /></li>
+        </ul>
+    </form>
+</body>
+</html>
