@@ -145,7 +145,8 @@
             //sellgirl.asyncLoadImage(pic[1], 'https://pay.sellgirl.com:44303/sasha.jpg');
             //sellgirl.asyncLoadImage(pic[1], 'https://sellgirl.com:44303/sasha.jpg'); //使用ssl时都用一级域名
             //sellgirl.asyncLoadImage(pic[1], 'http://sellgirl.com:28303/sasha.jpg'); //使用ssl时都用一级域名
-            sellgirl.asyncLoadImage(pic[1], 'http://neris.sellgirl.com/img/sashathumbnail_w2000.jpg'); //使用ssl时都用一级域名
+            //sellgirl.asyncLoadImage(pic[1], 'http://neris.sellgirl.com/img/sashathumbnail_w2000.jpg'); //使用ssl时都用一级域名
+            sellgirl.asyncLoadImage(pic[1], pic[1].getAttribute('src').replace('_w800', '_w2000')); //使用ssl时都用一级域名
             
 //            for (var i = 0; i < pic.length; i++) {
 //                sellgirl.asyncLoadImage(pic[i], pic[i].getAttribute('src').replace('_849x1024', ''));
@@ -293,7 +294,8 @@
         <img src="image/sasha_taobao_849x1024.jpg" alt="001" style="" />
         <!-- <img src="https://sellgirl.com:44303/sashathumbnail?w=849&h=1024" alt="002" style="display:none;" /> -->
 <!--        <img src="http://sellgirl.com:28303/sashathumbnail?w=849&h=1024&t=Normal" alt="002" style="display:none;" />-->
-        <img src="http://neris.sellgirl.com/img/sashathumbnail_w800.jpg" alt="002" style="display:none;" />
+        <!--<img src="http://neris.sellgirl.com/img/sashathumbnail_w800.jpg" alt="002" style="display:none;" />-->
+        <img src="image/sashathumbnail_w800.jpg" alt="002" style="display:none;" />
     </div>
     <div class="buttonDiv">
    <!--     <button id='go' class="taobao">
