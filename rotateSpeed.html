@@ -9,16 +9,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
 
 	<script language="javascript">
+        var isUse2=false;
         function beforeSubmit(form){
+            //公式
+            //speed=a*setting+b
+            //即解y=ax+b
+//(360*curRound)/curSecond = a*curSetting+b
+//(360*curRound2)/curSecond2 = a*curSetting2+b
             var tarSpeed= document.getElementById("tarSpeed").value;
+
             var curSetting= document.getElementById("curSetting").value;
-            // var curSpeed= document.getElementById("curSpeed").value;
             var curRound= document.getElementById("curRound").value;
             var curSecond= document.getElementById("curSecond").value;
-            var result=tarSpeed/((360*curRound)/(curSecond*curSetting));
-            document.getElementById("result").value=result;
+
+            //b为0的情况(可能不一定?)
+            // debugger;
+            isUse2=document.getElementById("use2").checked;
+            debugger;
+            if(!isUse2){
+                var result=tarSpeed/((360*curRound)/(curSecond*curSetting));
+                document.getElementById("result").value=result;//.toFixed(1);
+                return false;
+            }
+            //b不为0时
+            var speed1=(360*curRound)/(curSecond);
+            
+            var curSetting2= document.getElementById("curSetting2").value;
+            var curRound2= document.getElementById("curRound2").value;
+            var curSecond2= document.getElementById("curSecond2").value;
+            var speed2=(360*curRound2)/(curSecond2);
+
+            // debugger;
+            if(
+            //     (0.0001>curSetting2-curSetting&&-0.0001<curSetting2-curSetting)
+            // ||(0.0001>speed2-speed1&&-0.0001<speed2-speed1)
+           ( 0==curSetting2-curSetting)||(0==speed2-speed1)
+        ){
+                alert("配置1和2的速度和设置必须不同!");
+                return false;
+            }
+            var a=(speed2-speed1)/(curSetting2-curSetting);
+            var b=speed1-(a*curSetting);
+
+            var result2=(tarSpeed-b)/a;
+            document.getElementById("result").value=result2.toFixed(4);
+            document.getElementById("result2").value='(a='+a.toFixed(2)+' b='+b.toFixed(2)+')';
+            
+            //document.getElementById("result").value=result;
             // alert("got result");
             return false;
+        }
+        // var gotDef=false;
+        // var defWhen=false;
+        // var defVal='';
+        function change2(input){
+            // alert(input.value);
+            // alert(input.getAttribute('checked'));
+            // alert(input.checked);
+            // alert(input.style.display);
+
+            // alert(gotDef);
+            // if(!gotDef){
+            //     defWhen=!input.checked;
+            //     defVal=input.checked?'none':input.style.display;
+            //     gotDef=true;
+            // }
+            isUse2=input.checked;
+            if(input.checked){
+                // document.getElementById("list2").style.display=(gotDef&&defWhen==input.checked)?defVal:'';
+                document.getElementById("list1").style.display='';
+                document.getElementById("list2").style.display='';
+                document.getElementById("result2").style.display='';
+            }else{
+                // debugger;
+                // document.getElementById("list2").style.display=(gotDef&&defWhen==input.checked)?defVal:'none';
+                document.getElementById("list1").style.display='none';
+                document.getElementById("list2").style.display='none';
+                document.getElementById("result2").style.display='none';
+            }
+            // debugger;
         }
 	</script>
 </head>
@@ -26,10 +95,19 @@
     <form  onsubmit="return beforeSubmit(this)">
         <ul>
             <li>目标速度(度/秒)<input name="tarSpeed"  id="tarSpeed" type="number" value="228" /></li>
+            <li>双配置计算<input name="use2"  id="use2"  type="checkbox" value="双配置计算" onchange="change2(this)"/></li>
+            <li id="list1" style="display: none;">配置1:</li>
             <li>游戏当前视角速度(单位x)<input name="curSetting"  id="curSetting"  type="number" value="70" /></li>
             <li>实际测试:<input name="curRound"  id="curRound"  type="number" value="10" />周/<input name="curSecond"  id="curSecond"  type="number" value="10" />秒</li>
+            <li>
+                <ul id="list2" style="display: none;">
+            <li>配置2:</li>
+            <li>游戏当前视角速度(单位x)<input name="curSetting2"  id="curSetting2"  type="number" value="70" /></li>
+            <li>实际测试:<input name="curRound2"  id="curRound2"  type="number" value="10" />周/<input name="curSecond2"  id="curSecond2"  type="number" value="10" />秒</li>
+                </ul>
+            </li>
             <li><input  type="submit" value="计算" /></li>
-            <li>计算结果(单位x):<input  name="result"  id="result" type="number"  /></li>
+            <li>计算结果(单位x):<input  name="result"  id="result" type="number"  step="any"/><input  name="result2"  id="result2" type="text" style="display: none;"/></li>
         </ul>
     </form>
 </body>
